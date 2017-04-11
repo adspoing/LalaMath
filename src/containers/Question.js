@@ -108,7 +108,7 @@ class Question extends React.Component {
         console.log(questype);
         return (
         	<div>
-        		<div className="wrapper">
+        		<div className="questionwrapper">
                 <div className="inner-wrapper">
                     <div className="questionHeader">
                         <Breadcrumb>
