@@ -1,0 +1,260 @@
+*{margin:0;padding:0;}
+#container{
+    height:100%
+}
+#container>div{
+        height:100%;
+    }
+#container>div>div{
+    height:100%;
+}#container>div>div>div{
+    height:100%;
+}#container>div>div>div>div{
+    height:100%;
+}
+body{
+height:100%
+}
+.Header{
+	-webkit-transition: opacity .5s;
+    transition: opacity .5s;
+    height: 50px;
+    margin-bottom: 24px;
+    padding: 0 48px;
+    width: 100%;
+    background-color: #f8f8f8;
+    border-color: #e7e7e7;
+   	font-family:sans-serif;
+    -moz-box-shadow:0px 3px 3px #A3A3A3; 
+    -webkit-box-shadow:0px 3px 3px #A3A3A3; 
+    box-shadow:0px 3px 3px #A3A3A3;
+    font-size: 14px;
+}
+
+.header-brand{
+	float: left;
+    height: 50px;
+    padding: 15px 15px;
+    font-size: 18px;
+    line-height: 20px;
+}
+
+
+
+.header-right{
+	margin-right: 0;
+	float: right!important;
+}
+.header-right li{
+	    display: inline-block;
+}
+.header-right li a{
+	 padding: 15px;
+    min-height: 50px;
+        position: relative;
+    display: block;
+}
+
+/*
+sidebar
+*/
+.sidebar{
+	z-index: 1;
+    position: absolute;
+    width: 250px;
+    .ant-menu-inline .ant-menu-item, .ant-menu-inline .ant-menu-submenu-title, .ant-menu-vertical .ant-menu-item, .ant-menu-vertical .ant-menu-submenu-title{font-size: 14px !important;}
+}
+/* 
+question
+*/
+.wrapper{
+    position: inherit;
+    // margin: 0 0 0 250px;
+    margin: 0 auto; 
+    // padding: 20px 30px;
+    width: 900px;
+    background:#ffffff;
+    height:100%;
+}
+.inner-wrapper{
+    max-height:100%;
+    overflow: auto;
+}
+.questionHeader{
+    background:#d1e4ef;
+    height:100px;
+    padding-top:40px;
+    padding-left: 50px;
+    padding-right:50px;
+    overflow: auto; zoom: 1;
+}
+.questionCanvas{
+	// padding-top:60px;
+    padding: 2px;
+}
+.questionstem{
+    border: 1px solid #000;
+    padding-left: 50px;
+    padding-right:50px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.questionchoice{
+    margin-top: 2px;
+    border: 1px solid #000;
+    padding-left: 50px;
+    padding-right:50px;
+    padding-top: 50px;
+    padding-bottom: 50px; 
+}
+.questionanswer{
+    margin-top: 2px;
+    padding-left: 50px;
+    padding-right:50px;
+    padding-top: 50px;
+    padding-bottom: 50px; 
+}
+// .choice
+// {
+//     display:block;
+// }
+.questionresult{
+    margin-top: 20px;
+}
+.questionbutton{
+    margin-left: 300px;
+}
+.submitQuestion{
+    width:200px;
+}
+.prevQuestion{
+    // margin-top: 40px;
+}
+.nextQuestion{
+    // margin-top: 40px;
+}
+.pannel{
+    position: relative;
+    float:right;
+    margin-top: -25px;
+}
+.exam-bg{
+    background:#333;
+}
+.exam-bg > div{
+    height:100%;
+}
+.exam-bg > div > div{
+    height:100%
+}
+/*
+Card
+*/
+.dashboardName .ant-row {
+  margin-left: -8px;
+  margin-right: -8px;
+  margin-top: 10px
+}
+.dashboardName .ant-row > div {
+  padding: 0 8px;
+}
+/*
+Home
+*/
+.allWrapper{
+    min-height:100%;
+    padding-bottom:120px;
+}
+.home-Banner {
+    width: 100%;
+    min-width: 1180px;
+    height: 350px;
+    background: url(../imgs/slider-large-math-degree.jpg) 0 0 no-repeat #2b3749;
+    background-size:100%
+}
+
+.banner-mask{
+    width:100%; 
+    min-width: 1180px;
+    position: absolute;
+    height: 350px;
+    z-index:100; 
+    background-color:#000000; 
+    filter:alpha(opacity=50); 
+    -moz-opacity:0.5; 
+    opacity:0.5; 
+} 
+
+.slogan{
+    width:100%; 
+    top:100px;
+    left:100px;
+    min-width: 1180px;
+    position: absolute;
+    font-size: 56px;
+    color:#fff;
+    z-index:101; 
+}
+.slogan .slo-btn{
+    background: #419cff;
+    height: 58px;
+    width: 96px;
+    margin-left: 8px;
+    margin-right: 3px;
+    color: #fff;
+    border: 0;
+    font-size: 24px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 2px;
+}
+
+/*
+Chart
+*/
+.chart{
+    width: 800px;
+    height:600px;
+}
+/*
+Footer
+*/
+.Footer{
+    border-top: 1px solid #eee;
+    padding: 40px 0;
+    line-height: 1.6;
+    vertical-align: top;
+    margin-top:-120px
+}
+.container{
+    width: 1140px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 20px;
+    .row{
+        margin-left: -15px;
+        margin-right: -15px
+    }
+}
+.container:after, .container:before{
+    content: " ";
+    display: table;
+}
+.foot-col{
+    width: 33%;
+    float:left;
+    dt {
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+}
+.foot-col2{
+    width: 33%;
+    float:left;
+    dt {
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+}
