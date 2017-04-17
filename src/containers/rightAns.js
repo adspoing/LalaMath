@@ -15,7 +15,7 @@ class rightAns extends React.Component {
 	        	<Header />
                 <SideBar />
                 <div className="wrapper">
-                    aa
+                    
                 </div>
         	</div>
         )

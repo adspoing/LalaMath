@@ -37,14 +37,14 @@ class ViewQuestion extends React.Component {
     render() {
         return (
             <div>
-                <div className="allWrapper">
-                <Header />
-                <SideBar />
-                <Question clickSubmitQuestion={this._clickSubmitQuestion}
-                            clickNextQuestion={this._clickNextQuestion}
-                            clickPrevQuestion={this._clickPrevQuestion}
-                            questionIndex={this.props.index}
-                            MathJax={MathJax}/>
+                <div className="exam-bg">
+                <div> 
+                    <Question clickSubmitQuestion={this._clickSubmitQuestion}
+                                clickNextQuestion={this._clickNextQuestion}
+                                clickPrevQuestion={this._clickPrevQuestion}
+                                questionIndex={this.props.index}
+                                MathJax={MathJax}/>
+                 </div>
                 </div>
             </div>
         )

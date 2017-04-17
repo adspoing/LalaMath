@@ -1,22 +1,25 @@
+import '../css/QuestionList.less';
+
 import React from 'react';
 import { Menu, Dropdown, Icon } from 'antd';
 import Header from './Header.js';
 import SideBar from './SideBar.js';
 import Question from './Question.js';
-import { Tree, Input, Button,Select} from 'antd';
+import { Tree, Input, Button,Select,Breadcrumb,TreeSelect} from 'antd';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import {changeindex} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 let queryValue;
+let queryType;
 
 const TreeNode = Tree.TreeNode;
 const Search = Input.Search;
 
-const x = 3;
-const y = 2;
-const z = 1;
+const x = 10;
+const y = 10;
+const z = 0;
 const gData = [];
 
 const generateData = (_level, _preKey, _tns) => {
@@ -102,12 +105,14 @@ class QuestionList extends React.Component {
           autoExpandParent: true,
         });
       }
+      onSelectChange = (e) => {
+          queryType = e.target.value;
+      }
       showQuestion =()=>{
-          console.log(queryValue);
           this.props.actions.changeindex(queryValue);
       }
     render() {
-        console.log(Input);
+          console.log(Input);
           const { searchValue, expandedKeys, autoExpandParent } = this.state;
           const loop = data => data.map((item) => {
           const index = item.key.search(searchValue);
@@ -134,13 +139,50 @@ class QuestionList extends React.Component {
           for(var i=0;i<quesdata.length;i++){
               quesList.push(<div>{quesdata[i].fields.code}</div>);
           }
-          console.log(quesList);
+          console.log(gData);
+          console.log(this.props.questionData);
+          let myData=new Array();
+          for(var i=0;i<=7;i++){
+            let tm=new Object();
+            tm.key=i+"";
+            tm.value=i+"";
+            tm.label=i+"";
+            tm.children=new Array();
+                        for(var j=0;j<=15;j++){
+                            let tm2=new Object();
+                            tm2.key=i+"."+j;
+                            tm2.value=i+"."+j;
+                            tm2.label=i+"."+j;
+                            tm2.children=new Array();
+                            for(var k=0;k<=15;k++){
+                                let tm3=new Object();
+                                tm3.key=i+"."+j+"."+k;
+                                tm3.value=i+"."+j+"."+k;
+                                tm3.label=i+"."+j+"."+k;
+                                tm3.children=new Array();
+                                tm2.children.push(tm3);
+                            }
+                            tm.children.push(tm2);
+                        }
+            myData.push(tm);
+          }
+          console.log(myData);
         return (
             <div>
                 <Header />
                 <SideBar />
                 <div className="wrapper">
-                    <Select
+                    <Breadcrumb>
+                        <Breadcrumb.Item href="">
+                          <Link to="/Home"><Icon type="home" /></Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item href=""> <Link to="/QuestionList">
+                          <Icon type="book" />
+                          <span>Qustion List</span></Link>
+                        </Breadcrumb.Item>
+                    </Breadcrumb>
+                    <div className="questionlistcontainer">
+                    <Select onChange={this.onSelectChange} 
                         showSearch
                         style={{ width: 120 }}
                         placeholder="Select a type"
@@ -153,6 +195,22 @@ class QuestionList extends React.Component {
                     </Select>
                     <Search  style={{ width: 300 }} placeholder="Search" onChange={this.onChange}  />
                     <Button onClick = {this.showQuestion}><Link to="/ViewQuestion">Show</Link></Button>
+                    <Tree
+                      onExpand={this.onExpand}
+                      expandedKeys={expandedKeys}
+                      autoExpandParent={autoExpandParent}
+                      >
+                      {loop(myData)}
+                    </Tree>
+                    <TreeSelect
+                      showSearch
+                      style={{ width: 300 }}
+                      value={this.state.value}
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      treeData={myData}
+                      placeholder="Please select"
+                    />
+                  </div>
                 </div>
             </div>
         )
@@ -175,10 +233,3 @@ function mapDispatchToProps (dispatch){
     };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionList);
-// <Tree
-                    //   onExpand={this.onExpand}
-                    //   expandedKeys={expandedKeys}
-                    //   autoExpandParent={autoExpandParent}
-                    //   >
-                    //   {loop(gData)}
-                    // </Tree>

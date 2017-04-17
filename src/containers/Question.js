@@ -4,12 +4,16 @@ import Data from '../data.js';
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import { Button,Radio } from 'antd';
+import {changeindexbyid} from '../actions/actions.js'
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 
 var selvalue;
-
+var twinProblem;
+var RecommendProblem;
 class Question extends React.Component {
     constructor(props) {
         super(props);
@@ -68,6 +72,25 @@ class Question extends React.Component {
         });
         selvalue=e.target.value;
       }
+      showQuestion =(e)=>{
+        console.log(e.target.value);
+          // this.props.actions.changeindex(queryValue);
+      }
+      twinProblemChange = (value) =>{
+        twinProblem=value;
+      }
+      RecommendProblemChange = (value) =>{
+        RecommendProblem=value;
+      }
+      showTwinProblem = () =>{
+        this.props.actions.changeindexbyid(twinProblem);
+        this.setState({ showResults: false,showAns: false, value: 0});
+      }
+      showRecommendProblem = () =>{
+        this.props.actions.changeindexbyid(RecommendProblem);
+        this.setState({ showResults: false,showAns: false, value: 0});
+      }
+
     render() {
         var choiceA=Data[this.props.questionIndex].fields.choicesa;
         var choiceB="";
@@ -105,7 +128,31 @@ class Question extends React.Component {
             questype="DIY  ";
         if(Data[this.props.questionIndex].fields.category==5)
             questype="Quiz  ";
-        console.log(questype);
+        var twinOption=[];
+        // var defaultOption;
+        // defaultOption=Data[this.props.questionIndex].fields.twinproblems[0];
+        for(var i=0;i<Data[this.props.questionIndex].fields.twinproblems.length;i++){
+            var indexx=Data[this.props.questionIndex].fields.twinproblems[i];
+            var iddd=Data[indexx].fields.code;
+            twinOption.push(<Option value={Data[this.props.questionIndex].fields.twinproblems[i]}>{iddd}</Option>)
+        }
+        var recommendOption=[];
+        if(Data[this.props.questionIndex].fields.answer==selvalue){
+            for(var i=0;i<Data[this.props.questionIndex].fields.rightproblems.length;i++){
+            var indexx=Data[this.props.questionIndex].fields.rightproblems[i];
+            var iddd=Data[indexx].fields.code;
+            recommendOption.push(<Option value={Data[this.props.questionIndex].fields.rightproblems[i]}>{iddd}</Option>)
+            }
+        }
+        else{
+            for(var i=0;i<Data[this.props.questionIndex].fields.wrongproblems.length;i++){
+            var indexx=Data[this.props.questionIndex].fields.wrongproblems[i];
+            var iddd=Data[indexx].fields.code;
+            recommendOption.push(<Option value={Data[this.props.questionIndex].fields.wrongproblems[i]}>{iddd}</Option>)
+            }
+        }
+
+
         return (
         	<div>
         		<div className="questionwrapper">
@@ -134,12 +181,12 @@ class Question extends React.Component {
                         <div id="output" className="questionstem">{Data[this.props.questionIndex].fields.problem}</div>
                         <div className="questionchoice">
                          <RadioGroup onChange={this.onChange} value={this.state.value}>
-                            <div>{choiceA==""?"":<Radio style={radioStyle} value={"A"}>{choiceA}</Radio>}</div>
-                            <div>{choiceB==""?"":<Radio style={radioStyle} value={"B"}>{choiceB}</Radio>}</div>
-                            <div>{choiceC==""?"":<Radio style={radioStyle} value={"C"}>{choiceC}</Radio>}</div>
-                            <div>{choiceD==""?"":<Radio style={radioStyle} value={"D"}>{choiceD}</Radio>}</div>
-                            <div>{choiceE==""?"":<Radio style={radioStyle} value={"E"}>{choiceE}</Radio>}</div>
-                            <div>{choiceF==""?"":<Radio style={radioStyle} value={"F"}>{choiceF}</Radio>}</div>
+                            <div>{choiceA==""?"":<div><Radio style={radioStyle} value={"A"}>{choiceA}</Radio></div>}</div>
+                            <div>{choiceB==""?"":<div><Radio style={radioStyle} value={"B"}>{choiceB}</Radio></div>}</div>
+                            <div>{choiceC==""?"":<div><Radio style={radioStyle} value={"C"}>{choiceC}</Radio></div>}</div>
+                            <div>{choiceD==""?"":<div><Radio style={radioStyle} value={"D"}>{choiceD}</Radio></div>}</div>
+                            <div>{choiceE==""?"":<div><Radio style={radioStyle} value={"E"}>{choiceE}</Radio></div>}</div>
+                            <div>{choiceF==""?"":<div><Radio style={radioStyle} value={"F"}>{choiceF}</Radio></div>}</div>
                           </RadioGroup>
                         </div>
                         <div className="questionanswer">
@@ -147,7 +194,39 @@ class Question extends React.Component {
                                 <Button className="submitQuestion" type="submit" onClick = {this.submitQuestion}>Submit</Button>
                           </div>
                           <div className="questionbutton">{ this.state.showResults?<Button className="submitQuestion" onClick = {this.showAns}>Show Result</Button>: null }</div>
-                          <div className="questionresult">{ this.state.showAns?Data[this.props.questionIndex].fields.solutions: null }</div>
+                          <div className="questionresult">
+                          { this.state.showAns?<div>Twin problems: </div>: null }
+                          <div>{ this.state.showAns?
+                             <Select
+                                style={{ width: 120 }}
+                                // defaultValue={twinOption[0]}
+                                placeholder="Select a twin problem"
+                                optionFilterProp="children"
+                                onChange={this.twinProblemChange}
+                                filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                              >
+                                 
+                                 {twinOption}
+                              </Select>:null}
+                           { this.state.showAns?<Button onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
+                           </div>
+                            { this.state.showAns?<div>Recommend problems: </div>: null }
+                           <div>{ this.state.showAns?
+                             <Select
+                                style={{ width: 120 }}
+                                // defaultValue={twinOption[0]}
+                                placeholder="Select a Recommend problem"
+                                optionFilterProp="children"
+                                onChange={this.RecommendProblemChange}
+                                filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                              >
+                                 
+                                 {recommendOption}
+                              </Select>:null}
+                           { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
+                           </div>
+                          { this.state.showAns?Data[this.props.questionIndex].fields.solutions: null }
+                          </div>
                         </div>
                       </div>
                   </div>
@@ -156,28 +235,20 @@ class Question extends React.Component {
         )
     }
 }
-export default Question;
-     //<div className="choice">
-       //                     <p><b>{choiceA==""?"":"A: "}</b>{choiceA}</p>
-         //                   <p><b>{choiceB==""?"":"B: "}</b>{choiceB}</p>
-           //                 <p><b>{choiceC==""?"":"C: "}</b>{choiceC}</p>
-             //               <p><b>{choiceD==""?"":"D: "}</b>{choiceD}</p>
-               //             <p><b>{choiceE==""?"":"E: "}</b>{choiceE}</p>
-                 //           <p><b>{choiceF==""?"":"F: "}</b>{choiceF}</p>
-                   //     </div>
 
-   // <Select
-   //                      showSearch
-   //                      style={{ width: 120 }}
-   //                      placeholder="Select a answer"
-   //                      optionFilterProp="children"
-   //                      onChange={this.handleChange}
-   //                      filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-   //                    >
-   //                      <Option value="A">A</Option>
-   //                      <Option value="B">B</Option>
-   //                      <Option value="C">C</Option>
-   //                      <Option value="D">D</Option>
-   //                      <Option value="E">E</Option>
-   //                      <Option value="F">F</Option>
-   //                    </Select>
+function mapStateToProps (state){
+    return { 
+            // index:state.question.index,
+            // questionData:state.question.questionData
+        }
+}
+
+function mapDispatchToProps (dispatch){
+    return{
+        actions: bindActionCreators({
+            changeindexbyid
+        },dispatch)
+    };
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Question);
+

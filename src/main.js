@@ -1,4 +1,5 @@
-require('./css/index.less');
+// require('./css/index.less');
+import './css/index.less';
 
 // import React from 'react';
 // import ReactDom from 'react-dom';

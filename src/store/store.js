@@ -18,10 +18,12 @@
 // export default finalCreateStore
 
 
-import {createStore} from 'redux';
+import {createStore,applyMiddleware} from 'redux';
+import promiseMiddleware from 'redux-promise';
+
 import reducers from '../reducers/index.js';
+const store = createStore(reducers, applyMiddleware(promiseMiddleware));
 
-
-let store = createStore(reducers, window.devToolsExtension && window.devToolsExtension());
+// let store = createStore(reducers, window.devToolsExtension && window.devToolsExtension());
 export default store;
 

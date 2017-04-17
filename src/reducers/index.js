@@ -9,7 +9,7 @@ import { routerReducer } from 'react-router-redux' // 将routerReducer一起合�
 // })
 
 import {handleActions} from 'redux-actions';
-import {SUBMIT_QUESTION, PREV_QUESTION, NEXT_QUESTION, CHANGE_INDEX, RANDOM_PLAY} from '../actions/constants.js';
+import {SUBMIT_QUESTION, PREV_QUESTION, NEXT_QUESTION, CHANGE_INDEX, RANDOM_PLAY,CHANGE_INDEX_BYID} from '../actions/constants.js';
 
 import Data from '../data.js'
 
@@ -42,6 +42,12 @@ let question =  handleActions({
 			}
 		}
 		console.log(state.index);
+		return {
+			index: state.index
+		}
+	},
+	[CHANGE_INDEX_BYID]: (state,action) => {
+		state.index=action.payload;
 		return {
 			index: state.index
 		}
