@@ -3,6 +3,8 @@ import { Menu, Dropdown, Icon } from 'antd';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {changeindexbyid,sideopenchange,sideclick} from '../actions/actions.js'
+
 const SubMenu = Menu.SubMenu;
 
 
@@ -17,6 +19,7 @@ class SideBar extends React.Component {
   }
   handleClick = (e) => {
     // console.log('Clicked: ', e);
+    this.props.actions.sideclick(e.key);
     // this.setState({ current: e.key });
   }
   onOpenChange = (openKeys) => {
@@ -31,7 +34,8 @@ class SideBar extends React.Component {
     if (latestCloseKey) {
       nextOpenKeys = this.getAncestorKeys(latestCloseKey);
     }
-    // this.setState({ openKeys: nextOpenKeys });
+     // this.props.actions.sideopenchange(nextOpenKeys);
+    this.setState({ openKeys: nextOpenKeys });
   }
   getAncestorKeys = (key) => {
     const map = {
@@ -43,12 +47,15 @@ class SideBar extends React.Component {
     console.log("haha");
   }
     render() {
+      console.log(this.props.openKeys);
         return (
             <div className="sidebar">
             	<Menu
                     mode="inline"
                     openKeys={this.state.openKeys}
-                    selectedKeys={[this.state.current]}
+                    // openKeys={this.props.openKeys}
+                    // selectedKeys={[this.state.current]}
+                    selectedKeys={[this.props.current]}
                     style={{ width: 240 }}
                     onOpenChange={this.onOpenChange}
                     onClick={this.handleClick}
@@ -82,6 +89,9 @@ class SideBar extends React.Component {
 }
 function mapStateToProps (state){
     return { 
+        // current:
+        current:state.question.current,
+        openKeys:state.question.openKeys,
         }
 }
 

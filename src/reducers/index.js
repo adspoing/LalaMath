@@ -69,11 +69,15 @@ let question =  handleActions({
 	[SIDE_OPEN_CHANGE]: (state,action) => {
 		return {
 			index: state.index,
-			questionData: state.questionData
+			questionData: state.questionData,
+			openKeys:action.payload,
+			current:state.current
 		}
 	},
 	[SIDE_CLICK]: (state,action) => {
 		return {
+			openKeys:state.openKeys,
+			current:action.payload,
 			index: state.index,
 			questionData: state.questionData
 		}
@@ -81,7 +85,8 @@ let question =  handleActions({
 },{
 	index:1,
 	questionData:[],
-	current:17
+	current:'0',
+	openKeys:[]
 	// axios.get("http://lala.ust.hk:8000/get/questions/all")
  //                 .then(function(response) {
  //                 	console.log(response.data)

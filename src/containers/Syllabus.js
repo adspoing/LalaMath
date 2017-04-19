@@ -32,7 +32,7 @@ class Syllabus extends React.Component {
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className="belowbread"> 
-                <iframe src="https://app.box.com/embed/s/ev3uk197rmr4rcwvb50ba1rvghg8ujrh" width="800" height="550" frameborder="0" allowfullscreen webkitallowfullscreen msallowfullscreen></iframe>             
+                <iframe src="https://app.box.com/embed/s/ev3uk197rmr4rcwvb50ba1rvghg8ujrh" width="800" height="550" frameborder="0"></iframe>             
                 </div>
                 </div>
             </div>
