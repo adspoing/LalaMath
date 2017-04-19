@@ -33,9 +33,7 @@ class Player extends React.Component {
     _clickPrevQuestion = () =>{
         this.props.actions.prevquestion();
     }
-// <div className="allWrapper">
-//                 <Header />
-//                 <SideBar />
+
     render() {
         return (
         	<div className="exam-bg">

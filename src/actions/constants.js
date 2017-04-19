@@ -5,3 +5,5 @@ export const PLAY_MODULE =  'playmodule';
 export const RANDOM_PLAY = 'randomplay';
 export const CHANGE_INDEX = 'changeindex';
 export const CHANGE_INDEX_BYID = 'changeindexbyid';
+export const SIDE_OPEN_CHANGE = 'sideopenchange';
+export const SIDE_CLICK = 'sideclick';

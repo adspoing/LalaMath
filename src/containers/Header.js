@@ -43,7 +43,7 @@ class Header extends React.Component {
         return (
         	<div>
         		<div className="Header">
-                    <span className="header-brand"><Link to="/Home">LaLa</Link></span>
+                    <span className="header-brand"><Link to="/Dashboard">LaLa</Link></span>
                     <ul className="header-right">
                         <li>
                             About

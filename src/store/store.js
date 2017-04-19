@@ -20,9 +20,11 @@
 
 import {createStore,applyMiddleware} from 'redux';
 import promiseMiddleware from 'redux-promise';
+import thunkMiddleware from 'redux-thunk';
 
 import reducers from '../reducers/index.js';
-const store = createStore(reducers, applyMiddleware(promiseMiddleware));
+// const store = createStore(reducers, applyMiddleware(promiseMiddleware));
+let store = applyMiddleware(thunkMiddleware)(createStore)(reducers);
 
 // let store = createStore(reducers, window.devToolsExtension && window.devToolsExtension());
 export default store;

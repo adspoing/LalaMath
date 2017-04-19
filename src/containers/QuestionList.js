@@ -174,7 +174,7 @@ class QuestionList extends React.Component {
                 <div className="wrapper">
                     <Breadcrumb>
                         <Breadcrumb.Item href="">
-                          <Link to="/Home"><Icon type="home" /></Link>
+                          <Link to="/Home"><Icon type="home" />Home</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item href=""> <Link to="/QuestionList">
                           <Icon type="book" />

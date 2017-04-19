@@ -37,6 +37,7 @@ class Question extends React.Component {
             var config={};
             config.description=Data[this.props.questionIndex].fields.messagesuccess;
             config.message="success";
+            config.duration=0;
             notification.success(config);
         }
         else
@@ -44,6 +45,7 @@ class Question extends React.Component {
             var config={};
             config.description=Data[this.props.questionIndex].fields.messagefailure;
             config.message="error";
+            config.duration=0;
             notification.error(config);
         }
         this.setState({ showResults: true });
@@ -74,7 +76,6 @@ class Question extends React.Component {
       }
       showQuestion =(e)=>{
         console.log(e.target.value);
-          // this.props.actions.changeindex(queryValue);
       }
       twinProblemChange = (value) =>{
         twinProblem=value;
@@ -92,16 +93,19 @@ class Question extends React.Component {
       }
 
     render() {
-        var choiceA=Data[this.props.questionIndex].fields.choicesa;
+        // let Data=this.props.Data;
+        console.log(Data)
+        console.log(this.props.questionIndex)
+        var choiceA="";
         var choiceB="";
         var choiceC="";
         var choiceD="";
         var choiceE="";
         var choiceF="";
         var result="";
-        // if(Data[this.props.questionIndex].fields.choicesa!=null){
-        //     choiceA+=Data[this.props.questionIndex].fields.choicesa;
-        // }
+        if(Data[this.props.questionIndex].fields.choicesa!=null){
+            choiceA+=Data[this.props.questionIndex].fields.choicesa;
+        }
         const radioStyle = {
           height: '30px',
           lineHeight: '30px',
@@ -152,7 +156,6 @@ class Question extends React.Component {
             }
         }
 
-
         return (
         	<div>
         		<div className="questionwrapper">
@@ -160,7 +163,7 @@ class Question extends React.Component {
                     <div className="questionHeader">
                         <Breadcrumb>
                         <Breadcrumb.Item href="">
-                          <Link to="/Home"><Icon type="home" /></Link>
+                          <Link to="/Dashboard"><Icon type="home" />Home</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item href=""> <Link to="/QuestionList">
                           <Icon type="book" />
@@ -238,8 +241,9 @@ class Question extends React.Component {
 
 function mapStateToProps (state){
     return { 
-            // index:state.question.index,
+            Data:state.question.questionData,
             // questionData:state.question.questionData
+            index:state.question.index
         }
 }
 
