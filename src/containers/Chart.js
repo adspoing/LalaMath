@@ -2,13 +2,14 @@ import ReactEcharts from 'echarts-for-react';  // or var ReactEcharts = require(
 import React from 'react';
 import Header from './Header.js';
 import SideBar from './SideBar.js';
-import { Button,Breadcrumb,Icon,Select } from 'antd';
+import { Button,Breadcrumb,Icon,Select} from 'antd';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import echarts from 'echarts';
 import {fetchnode,fetchlink,fetchusernode} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import axios from 'axios';
+import '../css/Chart.less';
 
 
 
@@ -31,7 +32,6 @@ class Chart extends React.Component {
             {
                 var node = {
 
-                    tooltip:{formatter:'node'},
                     name: '',
                     x: 0,
                     y: 0,
@@ -55,7 +55,8 @@ class Chart extends React.Component {
                     },
                 }
                 node.name = NodeRawdata[i].fields.names.replace(/\\n|\/n/g,"\n").replace(/\\pi/g,"π").replace(/\\beta/g,"β").replace(/\\gamma/g,"γ").replace(/\\delta/g,"Δ").replace(/\\phi/g,"φ");
-                node.tooltip.formatter = NodeRawdata[i].fields.detail.replace(/\\n|\/n/g,"\n");
+                node.detail = NodeRawdata[i].fields.detail.replace(/\\n|\/n/g,"\n");
+                node.title = NodeRawdata[i].fields.title;
                 node.x = NodeRawdata[i].fields.x;
                 node.y = NodeRawdata[i].fields.y;
                 switch(NodeRawdata[i].fields.typ) {
@@ -134,7 +135,7 @@ class Chart extends React.Component {
             }
             var option = {
             title: {text: 'Chapter'+chapter},
-            tooltip:{position:[10,10]},
+            //tooltip:{position:[10,10]},
             animationDurationUpdate: 1500,
             animationEasingUpdate: 'quinticInOut',
             series : [{
@@ -182,7 +183,15 @@ class Chart extends React.Component {
                         })
                     })
             })
-        this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"graphics");
+        myChart.on('click', function (params) {
+                //console.log(document.getElementById("detail").value);
+                let detail = "<b>Neuron Name:</br></b>" + params.data.title + "<b></br>Neuron Detail:</br></b>" + params.data.detail;
+                document.getElementById('detail').innerHTML = detail;
+                console.log(that.state.mathjax)
+                that.state.mathjax.Hub.Queue(["Typeset",that.state.mathjax.Hub],"detail");
+        });
+
+        //this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"graphics");
     }
 
     componentDidMount= ()=> {
@@ -196,15 +205,10 @@ class Chart extends React.Component {
     }
 
     componentDidUpdate = () =>{
-        if (this.props.nodedata.length != 0){
-            let option = this.process(this.props.nodedata,this.props.userdata,this.props.linkdata);
-            let myChart = echarts.init(this.refs.graphics) //初始化echarts
-            myChart.setOption(options)
-        }
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"graphics");
     }
     handleChange = (value)=>{
-    	console.log(value)
+    	//console.log(value)
     	if(value==0)this.getOptionByChapter('1&2');
     	if(value==1)this.getOptionByChapter(3);
     	if(value==2)this.getOptionByChapter(4);
@@ -244,7 +248,11 @@ class Chart extends React.Component {
                         <Option value="4"><Icon type="picture" />Chapter 6</Option>
                         <Option value="5"><Icon type="picture" />Chapter 7</Option>
                      </Select>
+                    <div>
 	            	<div ref="graphics" id="graphics" className="chart" ></div>
+                    <div className="neuraldetail" id="detail">{this.detail}
+                    </div>
+                    </div>
 	            </div>
 	            </div>
         	</div>
