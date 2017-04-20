@@ -65,7 +65,7 @@ class SideBar extends React.Component {
                     <Menu.Item key="4"><Link to="/Chart"><Icon type="picture" />Knowledge Graph</Link></Menu.Item>
                     <Menu.Item key="5"><Link to="/Example"><Icon type="database" />Show room</Link></Menu.Item>
                     <SubMenu key="sub1" title={<span><Icon type="book" /><span>Play ground</span></span>}>
-                      <Menu.Item key="6"><Link to="/Questions">Exercise</Link></Menu.Item>
+                      <Menu.Item key="6"><Link to="/Exercise">Exercise</Link></Menu.Item>
                       <Menu.Item key="7">Problem</Menu.Item>
                       <Menu.Item key="8">DIY</Menu.Item>
                     </SubMenu>

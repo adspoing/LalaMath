@@ -1,7 +1,9 @@
 import {createAction} from 'redux-actions';
 import axios from 'axios';
 
-import {SUBMIT_QUESTION, NEXT_QUESTION, PREV_QUESTION, PLAY_MODULE, RANDOM_PLAY,CHANGE_INDEX,CHANGE_INDEX_BYID,SIDE_OPEN_CHANGE,SIDE_CLICK,PREV_EXAMPLE,NEXT_EXAMPLE,CHANGE_EXAMPLE} from './constants';
+import {SUBMIT_QUESTION, NEXT_QUESTION, PREV_QUESTION, PLAY_MODULE, RANDOM_PLAY,CHANGE_INDEX,CHANGE_INDEX_BYID,SIDE_OPEN_CHANGE,SIDE_CLICK,PREV_EXAMPLE,NEXT_EXAMPLE,CHANGE_EXAMPLE,PREV_EXERCISE,NEXT_EXERCISE,CHANGE_EXERCISE
+,PREV_PROBLEM,NEXT_PROBLEM,CHANGE_PROBLEM
+} from './constants';
 
 export const submitquestion = createAction(SUBMIT_QUESTION);
 export const nextquestion = createAction(NEXT_QUESTION);
@@ -15,6 +17,12 @@ export const sideclick = createAction(SIDE_CLICK);
 export const prevexample = createAction(PREV_EXAMPLE);
 export const nextexample = createAction(NEXT_EXAMPLE);
 export const changeexample = createAction(CHANGE_EXAMPLE);
+export const prevexercise = createAction(PREV_EXERCISE);
+export const nextexercise = createAction(NEXT_EXERCISE);
+export const changeexercise = createAction(CHANGE_EXERCISE);
+export const prevproblem = createAction(PREV_PROBLEM);
+export const nextproblem = createAction(NEXT_PROBLEM);
+export const changeproblem = createAction(CHANGE_PROBLEM);
 
 export const fetchthing = function() {
 	return dispatch => {

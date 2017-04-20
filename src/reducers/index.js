@@ -9,7 +9,9 @@ import { routerReducer } from 'react-router-redux' // 将routerReducer一起合�
 // })
 
 import {handleActions} from 'redux-actions';
-import {SUBMIT_QUESTION, PREV_QUESTION, NEXT_QUESTION, CHANGE_INDEX, RANDOM_PLAY,CHANGE_INDEX_BYID,SIDE_OPEN_CHANGE,SIDE_CLICK,PREV_EXAMPLE,NEXT_EXAMPLE,CHANGE_EXAMPLE} from '../actions/constants.js';
+import {SUBMIT_QUESTION, PREV_QUESTION, NEXT_QUESTION, CHANGE_INDEX, RANDOM_PLAY,CHANGE_INDEX_BYID,SIDE_OPEN_CHANGE,SIDE_CLICK,PREV_EXAMPLE,NEXT_EXAMPLE,CHANGE_EXAMPLE,NEXT_EXERCISE,PREV_EXERCISE,CHANGE_EXERCISE
+,NEXT_PROBLEM,PREV_PROBLEM,CHANGE_PROBLEM
+} from '../actions/constants.js';
 
 // import Data from '../data.js'
 
@@ -21,7 +23,9 @@ let question =  handleActions({
 			index:state.index,
 			questionData: state.questionData,
 			current:state.current,
-			exampleIndex:state.exampleIndex
+			exampleIndex:state.exampleIndex,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex: state.problemIndex,
 		}
 	},
 	[PREV_QUESTION]: (state,action) => {
@@ -30,7 +34,9 @@ let question =  handleActions({
 			index: state.index == 0 ? 0 : state.index-1,
 			questionData: state.questionData,
 			current:state.current,
-			exampleIndex:state.exampleIndex
+			exampleIndex:state.exampleIndex,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex: state.problemIndex,
 		}
 	},
 	[NEXT_QUESTION]: (state,action) => {
@@ -39,7 +45,9 @@ let question =  handleActions({
 			index: state.index+1,
 			questionData: state.questionData,
 			current:state.current,
-			exampleIndex:state.exampleIndex
+			exampleIndex:state.exampleIndex,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex: state.problemIndex,
 		}
 	},
 	[CHANGE_INDEX]: (state,action) => {
@@ -56,7 +64,9 @@ let question =  handleActions({
 			index: state.index,
 			questionData: state.questionData,
 			current:state.current,
-			exampleIndex:state.exampleIndex
+			exampleIndex:state.exampleIndex,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex: state.problemIndex,
 		}
 	},
 	[CHANGE_INDEX_BYID]: (state,action) => {
@@ -65,7 +75,9 @@ let question =  handleActions({
 			index: state.index,
 			questionData: state.questionData,
 			current:state.current,
-			exampleIndex:state.exampleIndex
+			exampleIndex:state.exampleIndex,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex: state.problemIndex,
 		}
 	},
 	[CHANGE_EXAMPLE]: (state,action) => {
@@ -81,7 +93,46 @@ let question =  handleActions({
 			index: state.index,
 			questionData: state.questionData,
 			current:state.current,
-			exampleIndex:indexx
+			exampleIndex:indexx,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex: state.problemIndex,
+		}
+	},
+	[CHANGE_EXERCISE]: (state,action) => {
+		var indexx;
+		if(action.payload=="3")
+			indexx=1;
+		else if(action.payload=="4")
+			indexx=22;
+		else
+			indexx=1;
+		return {
+			index: state.index,
+			questionData: state.questionData,
+			current:state.current,
+			exampleIndex:state.exampleIndex,
+			exerciseIndex:indexx,
+			problemIndex: state.problemIndex,
+		}
+	},
+	[CHANGE_PROBLEM]: (state,action) => {
+		console.log(action.payload);
+		var indexx;
+		if(action.payload=="3")
+			indexx=1;
+		else if(action.payload=="4")
+			indexx=32;
+		else if(action.payload=="7")
+			indexx=48;
+		else
+			indexx=1;
+		return {
+			index: state.index,
+			questionData: state.questionData,
+			current:state.current,
+			exampleIndex:state.exampleIndex,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex: indexx,
 		}
 	},
 	['FETCH_THING']:(state,action) => {
@@ -91,7 +142,9 @@ let question =  handleActions({
 			questionData:action.payload,
 			index: state.index,
 			current:state.current,
-			exampleIndex:state.exampleIndex
+			exampleIndex:state.exampleIndex,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex: state.problemIndex,
 		}
 	},
 	[SIDE_OPEN_CHANGE]: (state,action) => {
@@ -99,7 +152,9 @@ let question =  handleActions({
 			index: state.index,
 			questionData: state.questionData,
 			current:state.current,
-			exampleIndex:state.exampleIndex
+			exampleIndex:state.exampleIndex,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex: state.problemIndex,
 		}
 	},
 	[SIDE_CLICK]: (state,action) => {
@@ -107,7 +162,9 @@ let question =  handleActions({
 			current:action.payload,
 			index: state.index,
 			questionData: state.questionData,
-			exampleIndex:state.exampleIndex
+			exampleIndex:state.exampleIndex,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex: state.problemIndex,
 		}
 	},
 	[PREV_EXAMPLE]: (state,action) => {
@@ -116,6 +173,8 @@ let question =  handleActions({
 			questionData: state.questionData,
 			current:state.current,
 			index: state.index,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex: state.problemIndex,
 		}
 	},
 	[NEXT_EXAMPLE]: (state,action) => {
@@ -125,11 +184,56 @@ let question =  handleActions({
 			questionData: state.questionData,
 			current:state.current,
 			index: state.index,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex: state.problemIndex,
+		}
+	},
+	[PREV_EXERCISE]: (state,action) => {
+		return {
+			exampleIndex: state.exampleIndex,
+			questionData: state.questionData,
+			current:state.current,
+			index: state.index,
+			problemIndex: state.problemIndex,
+			exerciseIndex:state.exerciseIndex == 0 ? 0 : state.exerciseIndex-1
+		}
+	},
+	[NEXT_EXERCISE]: (state,action) => {
+		return {
+			exampleIndex: state.exampleIndex,
+			questionData: state.questionData,
+			current:state.current,
+			index: state.index,
+			problemIndex: state.problemIndex,
+			exerciseIndex:state.exerciseIndex == 32 ? 32:state.exerciseIndex+1
+		}
+	},
+	[PREV_PROBLEM]: (state,action) => {
+		return {
+			exampleIndex: state.exampleIndex,
+			questionData: state.questionData,
+			current:state.current,
+			index: state.index,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex:state.problemIndex == 0 ? 0:state.problemIndex-1
+		}
+	},
+	[NEXT_PROBLEM]: (state,action) => {
+		console.log("next");
+		return {
+			exampleIndex: state.exampleIndex,
+			questionData: state.questionData,
+			current:state.current,
+			index: state.index,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex:state.problemIndex == 61 ? 61:state.problemIndex+1
 		}
 	}
 },{
 	index:1,
 	exampleIndex:1,
+	exerciseIndex:1,
+	problemIndex:1,
 	questionData:[],
 	current:'0',
 	openKeys:[]

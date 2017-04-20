@@ -192,7 +192,7 @@ class Question extends React.Component {
                         </Breadcrumb.Item>
                         </Breadcrumb>
                           <div className="pannel">
-                                <Button><Link to="/Dashboard">Quit</Link></Button>
+                                <Button><Link to="/Example">Quit</Link></Button>
                                 <Button type="prev" className="prevQuestion" onClick = {this.prevQuestion}>Prev</Button>
                                 <Button type="next" className="nextQuestion" onClick = {this.nextQuestion}>Next</Button>
                           </div>

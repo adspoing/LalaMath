@@ -1,6 +1,6 @@
 import React from 'react' // 引入react
 import { Route, IndexRoute } from 'react-router' // 引入react路由
-import { Home, App, Player, Question, QuestionList, Select, SideBar,Header,rightAns,Chart,Dashboard,ViewQuestion,Syllabus,Example,LectureNotes,ExampleList} from './containers' // 引入各容器组件
+import { Home, App, Player, Question, QuestionList, Select, SideBar,Header,rightAns,Chart,Dashboard,ViewQuestion,Syllabus,Example,LectureNotes,ExampleList,Exercise,ExerciseList,Problem,ProblemList} from './containers' // 引入各容器组件
 
 export default (
     <Route path="/" component={App}>
@@ -17,5 +17,9 @@ export default (
         <Route path="Example" component={Example}/>
         <Route path="LectureNotes" component={LectureNotes}/>
         <Route path="ExampleList" component={ExampleList}/>
+        <Route path="Exercise" component={Exercise}/>
+        <Route path="ExerciseList" component={ExerciseList}/>
+        <Route path="Problem" component={Problem}/>
+        <Route path="ProblemList" component={ProblemList}/>
     </Route>
 )

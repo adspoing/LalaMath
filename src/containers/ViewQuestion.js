@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Header from './Header.js';
 import SideBar from './SideBar.js';
-import Question from './Question.js';
+import VQuestion from './VQuestion.js';
 import MyFooter from './MyFooter.js';
 
 
@@ -39,7 +39,7 @@ class ViewQuestion extends React.Component {
             <div>
                 <div className="exam-bg">
                 <div> 
-                    <Question clickSubmitQuestion={this._clickSubmitQuestion}
+                    <VQuestion clickSubmitQuestion={this._clickSubmitQuestion}
                                 clickNextQuestion={this._clickNextQuestion}
                                 clickPrevQuestion={this._clickPrevQuestion}
                                 questionIndex={this.props.index}
