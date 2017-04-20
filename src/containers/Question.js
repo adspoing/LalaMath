@@ -138,21 +138,21 @@ class Question extends React.Component {
         for(var i=0;i<Data[this.props.questionIndex].fields.twinproblems.length;i++){
             var indexx=Data[this.props.questionIndex].fields.twinproblems[i];
             var iddd=Data[indexx].fields.code;
-            twinOption.push(<Option value={Data[this.props.questionIndex].fields.twinproblems[i]}>{iddd}</Option>)
+            twinOption.push(<Option key={iddd+""} value={Data[this.props.questionIndex].fields.twinproblems[i]}>{iddd.toString()}</Option>)
         }
         var recommendOption=[];
         if(Data[this.props.questionIndex].fields.answer==selvalue){
             for(var i=0;i<Data[this.props.questionIndex].fields.rightproblems.length;i++){
             var indexx=Data[this.props.questionIndex].fields.rightproblems[i];
             var iddd=Data[indexx].fields.code;
-            recommendOption.push(<Option value={Data[this.props.questionIndex].fields.rightproblems[i]}>{iddd}</Option>)
+            recommendOption.push(<Option key={iddd+""} value={Data[this.props.questionIndex].fields.rightproblems[i]}>{iddd.toString()}</Option>)
             }
         }
         else{
             for(var i=0;i<Data[this.props.questionIndex].fields.wrongproblems.length;i++){
             var indexx=Data[this.props.questionIndex].fields.wrongproblems[i];
             var iddd=Data[indexx].fields.code;
-            recommendOption.push(<Option value={Data[this.props.questionIndex].fields.wrongproblems[i]}>{iddd}</Option>)
+            recommendOption.push(<Option key={iddd+""} value={Data[this.props.questionIndex].fields.wrongproblems[i]}>{iddd.toString()}</Option>)
             }
         }
 

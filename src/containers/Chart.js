@@ -2,7 +2,7 @@ import ReactEcharts from 'echarts-for-react';  // or var ReactEcharts = require(
 import React from 'react';
 import Header from './Header.js';
 import SideBar from './SideBar.js';
-import { Button,Breadcrumb,Icon } from 'antd';
+import { Button,Breadcrumb,Icon,Select } from 'antd';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import echarts from 'echarts';
 import {fetchnode,fetchlink,fetchusernode} from '../actions/actions.js'
@@ -203,6 +203,15 @@ class Chart extends React.Component {
         }
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"graphics");
     }
+    handleChange = (value)=>{
+    	console.log(value)
+    	if(value==0)this.getOptionByChapter('1&2');
+    	if(value==1)this.getOptionByChapter(3);
+    	if(value==2)this.getOptionByChapter(4);
+    	if(value==3)this.getOptionByChapter(5);
+    	if(value==4)this.getOptionByChapter(6);
+    	if(value==5)this.getOptionByChapter(7);
+    }
     render() {
      	//console.log(MathJax)
         return (
@@ -216,16 +225,27 @@ class Chart extends React.Component {
                     </Breadcrumb.Item>
                     <Breadcrumb.Item href=""> <Link to="/Chart">
                       <Icon type="picture" />
-                      <span>Chart</span></Link>
+                      <span>Knowledge Graph</span></Link>
                     </Breadcrumb.Item>
                 </Breadcrumb>
-                    <Button onClick = {this.getOptionByChapter.bind(this,'1&2')}>chapter 1&2 </Button>
-                    <Button onClick = {this.getOptionByChapter.bind(this,3)}>chapter 3 </Button>
-                    <Button onClick = {this.getOptionByChapter.bind(this,4)}>chapter 4 </Button>
-                    <Button onClick = {this.getOptionByChapter.bind(this,5)}>chapter 5 </Button>
-                    <Button onClick = {this.getOptionByChapter.bind(this,6)}>chapter 6 </Button>
-                    <Button onClick = {this.getOptionByChapter.bind(this,7)}>chapter 7 </Button>
+                <div className="belowbread"> 
+                	<Select
+                        style={{ width: 200 }}
+                        placeholder="Select a chapter"
+                        // onChange={handleChange}
+                        optionFilterProp="children"
+                        onChange={this.handleChange}
+                        filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                      >
+                      <Option value="0"><Icon type="picture" />Chapter 1&2</Option>
+                        <Option value="1"><Icon type="picture" />Chapter 3</Option>
+                        <Option value="2"><Icon type="picture" />Chapter 4</Option>
+                        <Option value="3"><Icon type="picture" />Chapter 5</Option>
+                        <Option value="4"><Icon type="picture" />Chapter 6</Option>
+                        <Option value="5"><Icon type="picture" />Chapter 7</Option>
+                     </Select>
 	            	<div ref="graphics" id="graphics" className="chart" ></div>
+	            </div>
 	            </div>
         	</div>
         )
@@ -233,9 +253,9 @@ class Chart extends React.Component {
 }
 function mapStateToProps (state){
     return { 
-            nodedata:state.chart.nodeData,
-            userdata:state.chart.userData,
-            linkdata:state.chart.linkData,
+            // nodedata:state.chart.nodeData,
+            // userdata:state.chart.userData,
+            // linkdata:state.chart.linkData,
         }
 }
 

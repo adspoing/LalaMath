@@ -9,6 +9,7 @@ import {fetchthing} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import '../css/Syllabus.less';
+import {changeexample} from '../actions/actions.js'
 
 // var AMUIReact = require('amazeui-react');
 // var Footer = AMUIReact.Footer;
@@ -19,9 +20,13 @@ class Example extends React.Component {
         this.displayName = 'Example';
     }
     componentDidMount = () =>{   
-        console.log("oye");
-        this.props.actions.fetchthing();
+        // console.log("oye");
+        // this.props.actions.fetchthing();
     }
+    showexample =(value)=>{
+          console.log(value);
+          this.props.actions.changeexample(value);
+      }
      render() {
         return (
         	<div>
@@ -40,35 +45,26 @@ class Example extends React.Component {
                 <div className="belowbread"> 
                 <div className="dashboardName" style={{ background: '#ECECEC', padding: '30px' }}>
                                 <Row>
-                                  <Col span="8">
-                                    <Card title="Chapter 1&2" bordered={false}>chapter 1&2 content</Card>
+                                  <Col span="8" onClick = {this.showexample.bind(this,"1&2")}>
+                                    <Card  title="Chapter 1&2" bordered={false}>chapter 1&2 content</Card>
                                   </Col>
-                                  <Col span="8">
-                                    <Card title="Chapter 3" bordered={false}>chapter 3 content</Card>
+                                  <Col span="8" onClick = {this.showexample.bind(this,"3")}>
+                                    <Link to="/ExampleList"><Card title="Chapter 3" bordered={false}>chapter 3 content</Card></Link>
                                   </Col>
-                                  <Col span="8">
-                                    <Link to="/Questions"><Card title="Chapter3" bordered={false}>chapter3 content</Card></Link>
+                                  <Col span="8" onClick = {this.showexample.bind(this,"4")}  >
+                                    <Link to="/ExampleList"><Card title="Chapter 4" bordered={false}>chapter4 content</Card></Link>
                                   </Col>
                                 </Row>
                                  <Row>
-                                  <Col span="8">
-                                    <Card title="Chapter4" bordered={false}>chapter4 content</Card>
+                                  <Col span="8" onClick = {this.showexample.bind(this,"5")} >
+                                    <Card title="Chapter 5" bordered={false}>chapter5 content</Card>
                                   </Col>
-                                  <Col span="8">
-                                    <Card title="Chapter5" bordered={false}>chapter5 content</Card>
+                                  <Col span="8" onClick = {this.showexample.bind(this,"6")} >
+                                    <Card title="Chapter 6" bordered={false}>chapter6 content</Card>
                                   </Col>
-                                  <Col span="8">
-                                    <Card title="Chapter6" bordered={false}>chapter6 content</Card>
+                                  <Col span="8" onClick = {this.showexample.bind(this,"7")} >
+                                    <Card title="Chapter 7" bordered={false}>chapter7 content</Card>
                                   </Col>
-                                </Row>
-                                <Row>
-                                  <Col span="8">
-                                    <Card title="Chapter7" bordered={false}>chapter7 content</Card>
-                                  </Col>
-                                  <Col span="8">
-                                    <Card title="Chapter8" bordered={false}>chapter8 content</Card>
-                                  </Col>
-                                 
                                 </Row>
                     </div>              
                 </div>
@@ -87,7 +83,7 @@ function mapStateToProps (state){
 function mapDispatchToProps (dispatch){
     return{
         actions: bindActionCreators({
-          fetchthing
+          changeexample
         },dispatch)
     };
 }

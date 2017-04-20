@@ -9,7 +9,7 @@ import { routerReducer } from 'react-router-redux' // 将routerReducer一起合�
 // })
 
 import {handleActions} from 'redux-actions';
-import {SUBMIT_QUESTION, PREV_QUESTION, NEXT_QUESTION, CHANGE_INDEX, RANDOM_PLAY,CHANGE_INDEX_BYID,SIDE_OPEN_CHANGE,SIDE_CLICK} from '../actions/constants.js';
+import {SUBMIT_QUESTION, PREV_QUESTION, NEXT_QUESTION, CHANGE_INDEX, RANDOM_PLAY,CHANGE_INDEX_BYID,SIDE_OPEN_CHANGE,SIDE_CLICK,PREV_EXAMPLE,NEXT_EXAMPLE,CHANGE_EXAMPLE} from '../actions/constants.js';
 
 // import Data from '../data.js'
 
@@ -19,21 +19,27 @@ let question =  handleActions({
 	[SUBMIT_QUESTION]: (state,action) => {
 		return {
 			index:state.index,
-			questionData: state.questionData
+			questionData: state.questionData,
+			current:state.current,
+			exampleIndex:state.exampleIndex
 		}
 	},
 	[PREV_QUESTION]: (state,action) => {
 		console.log(state.index);
 		return {
 			index: state.index == 0 ? 0 : state.index-1,
-			questionData: state.questionData
+			questionData: state.questionData,
+			current:state.current,
+			exampleIndex:state.exampleIndex
 		}
 	},
 	[NEXT_QUESTION]: (state,action) => {
 		console.log(state.index);
 		return {
 			index: state.index+1,
-			questionData: state.questionData
+			questionData: state.questionData,
+			current:state.current,
+			exampleIndex:state.exampleIndex
 		}
 	},
 	[CHANGE_INDEX]: (state,action) => {
@@ -48,14 +54,34 @@ let question =  handleActions({
 		console.log(state.index);
 		return {
 			index: state.index,
-			questionData: state.questionData
+			questionData: state.questionData,
+			current:state.current,
+			exampleIndex:state.exampleIndex
 		}
 	},
 	[CHANGE_INDEX_BYID]: (state,action) => {
 		state.index=action.payload;
 		return {
 			index: state.index,
-			questionData: state.questionData
+			questionData: state.questionData,
+			current:state.current,
+			exampleIndex:state.exampleIndex
+		}
+	},
+	[CHANGE_EXAMPLE]: (state,action) => {
+		console.log(action.payload);
+		var indexx;
+		if(action.payload=="3")
+			indexx=1;
+		else if(action.payload=="4")
+			indexx=12;
+		else
+			indexx=1;
+		return {
+			index: state.index,
+			questionData: state.questionData,
+			current:state.current,
+			exampleIndex:indexx
 		}
 	},
 	['FETCH_THING']:(state,action) => {
@@ -63,27 +89,47 @@ let question =  handleActions({
 		console.log(action.payload);
 		return {
 			questionData:action.payload,
-			index: state.index
+			index: state.index,
+			current:state.current,
+			exampleIndex:state.exampleIndex
 		}
 	},
 	[SIDE_OPEN_CHANGE]: (state,action) => {
 		return {
 			index: state.index,
 			questionData: state.questionData,
-			openKeys:action.payload,
-			current:state.current
+			current:state.current,
+			exampleIndex:state.exampleIndex
 		}
 	},
 	[SIDE_CLICK]: (state,action) => {
 		return {
-			openKeys:state.openKeys,
 			current:action.payload,
 			index: state.index,
-			questionData: state.questionData
+			questionData: state.questionData,
+			exampleIndex:state.exampleIndex
+		}
+	},
+	[PREV_EXAMPLE]: (state,action) => {
+		return {
+			exampleIndex: state.exampleIndex == 0 ? 0 : state.exampleIndex-1,
+			questionData: state.questionData,
+			current:state.current,
+			index: state.index,
+		}
+	},
+	[NEXT_EXAMPLE]: (state,action) => {
+		console.log(state.index);
+		return {
+			exampleIndex: state.exampleIndex == 15 ? 15:state.exampleIndex+1,
+			questionData: state.questionData,
+			current:state.current,
+			index: state.index,
 		}
 	}
 },{
 	index:1,
+	exampleIndex:1,
 	questionData:[],
 	current:'0',
 	openKeys:[]

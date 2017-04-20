@@ -7,3 +7,6 @@ export const CHANGE_INDEX = 'changeindex';
 export const CHANGE_INDEX_BYID = 'changeindexbyid';
 export const SIDE_OPEN_CHANGE = 'sideopenchange';
 export const SIDE_CLICK = 'sideclick';
+export const PREV_EXAMPLE = 'prevexample';
+export const NEXT_EXAMPLE = 'nextexample';
+export const CHANGE_EXAMPLE = 'changeexmaple';

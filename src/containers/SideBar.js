@@ -44,10 +44,8 @@ class SideBar extends React.Component {
     return map[key] || [];
   }
   fetchThings = () =>{
-    console.log("haha");
   }
     render() {
-      console.log(this.props.openKeys);
         return (
             <div className="sidebar">
             	<Menu
