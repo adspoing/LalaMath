@@ -54,12 +54,12 @@ class Chart extends React.Component {
                         }
                     },
                 }
-                node.name = NodeRawdata[i].fields.names.replace(/\\n|\/n/g,"\n").replace(/\\pi/g,"π").replace(/\\beta/g,"β").replace(/\\gamma/g,"γ").replace(/\\delta/g,"Δ").replace(/\\phi/g,"φ");
-                node.detail = NodeRawdata[i].fields.detail.replace(/\\n|\/n/g,"\n");
-                node.title = NodeRawdata[i].fields.title;
-                node.x = NodeRawdata[i].fields.x;
-                node.y = NodeRawdata[i].fields.y;
-                switch(NodeRawdata[i].fields.typ) {
+                node.name = NodeRawdata[i].names.replace(/\\n|\/n/g,"\n").replace(/\\pi/g,"π").replace(/\\beta/g,"β").replace(/\\gamma/g,"γ").replace(/\\delta/g,"Δ").replace(/\\phi/g,"φ");
+                node.detail = NodeRawdata[i].detail.replace(/\\n|\/n/g,"\n");
+                node.title = NodeRawdata[i].title;
+                node.x = NodeRawdata[i].x;
+                node.y = NodeRawdata[i].y;
+                switch(NodeRawdata[i].typ) {
                     case 1:
                         node.label.normal.textStyle.fontStyle = "normal";
                         break;
@@ -73,7 +73,7 @@ class Chart extends React.Component {
                         node.label.normal.textStyle.fontStyle = "normal";
                         break;
                 }
-                switch(NodeRawdata[i].fields.difficulty) {
+                switch(NodeRawdata[i].difficulty) {
                     case 1:
                         node.symbol = "circle";
                         node.symbolSize = 15;
@@ -90,7 +90,7 @@ class Chart extends React.Component {
                         break;
                 }
                 nodedata.push(node);
-                NodeMap[NodeRawdata[i].pk] = i;
+                NodeMap[NodeRawdata[i].id] = i;
             }
 
             for (var i=0;i<userdata.length;i++)
