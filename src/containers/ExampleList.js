@@ -29,7 +29,8 @@ class Question extends React.Component {
              mathjax: MathJax,
              showResults: false,
              showAns: false,
-             value: 0
+             value: 0,
+             // pkIndex:[]
         }
     }
     handleChange(value){
@@ -90,13 +91,22 @@ class Question extends React.Component {
     //     selvalue=e.target.value;
     //   }
       showQuestion =(e)=>{
-        console.log(e.target.value);
+        // console.log(e.target.value);
       }
       twinProblemChange = (value) =>{
-        twinProblem=value;
+        // console.log(value);
+        var pkIndex=[];
+        for(var i=0;i<AllData.length;i++){
+          pkIndex[AllData[i].pk]=i;
+        }
+        twinProblem=pkIndex[value];
       }
       RecommendProblemChange = (value) =>{
-        RecommendProblem=value;
+        var pkIndex=[];
+        for(var i=0;i<AllData.length;i++){
+          pkIndex[AllData[i].pk]=i;
+        }
+        RecommendProblem=pkIndex[value];
       }
       showTwinProblem = () =>{
         this.props.actions.changeindexbyid(twinProblem);
@@ -108,67 +118,42 @@ class Question extends React.Component {
       }
 
     render() {
-        // let Data=this.props.Data;
-        // console.log(this.state.mathjax);
-        // console.log(Data)
-        // console.log(this.props.exampleIndex)
-        // var choiceA="";
-        // var choiceB="";
-        // var choiceC="";
-        // var choiceD="";
-        // var choiceE="";
-        // var choiceF="";
-        // var result="";
-        // if(Data[this.props.exampleIndex].fields.choicesa!=null){
-        //     choiceA+=Data[this.props.exampleIndex].fields.choicesa;
-        // }
-        // const radioStyle = {
-        //   height: '30px',
-        //   lineHeight: '30px',
-        // };
-        // if(Data[this.props.exampleIndex].fields.choicesb!=null){
-        //     choiceB+=Data[this.props.exampleIndex].fields.choicesb;
-        // }if(Data[this.props.exampleIndex].fields.choicesc!=null){
-        //     choiceC+=Data[this.props.exampleIndex].fields.choicesc;
-        // }if(Data[this.props.exampleIndex].fields.choicesd!=null){
-        //     choiceD+=Data[this.props.exampleIndex].fields.choicesd;
-        // }if(Data[this.props.exampleIndex].fields.choicese!=null){
-        //     choiceE+=Data[this.props.exampleIndex].fields.choicese;
-        // }if(Data[this.props.exampleIndex].fields.choicesf!=null){
-        //     choiceF+=Data[this.props.exampleIndex].fields.choicesf;
-        // }
-        let questype;
-        if(Data[this.props.exampleIndex].fields.category==1)
-            questype="Example  ";
-        if(Data[this.props.exampleIndex].fields.category==2)
-            questype="Exercise  ";
-        if(Data[this.props.exampleIndex].fields.category==3)
-            questype="Problem  ";
-        if(Data[this.props.exampleIndex].fields.category==4)
-            questype="DIY  ";
-        if(Data[this.props.exampleIndex].fields.category==5)
-            questype="Quiz  ";
+        var pkIndex=[];
+        for(var i=0;i<AllData.length;i++){
+          pkIndex[AllData[i].pk]=i;
+        }
+        let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
+        // if(Data[this.props.exampleIndex].fields.category==1)
+        //     questype="Example  ";
+        // if(Data[this.props.exampleIndex].fields.category==2)
+        //     questype="Exercise  ";
+        // if(Data[this.props.exampleIndex].fields.category==3)
+        //     questype="Problem  ";
+        // if(Data[this.props.exampleIndex].fields.category==4)
+        //     questype="DIY  ";
+        // if(Data[this.props.exampleIndex].fields.category==5)
+        //     questype="Quiz  ";
         var twinOption=[];
         // var defaultOption;
         // defaultOption=Data[this.props.exampleIndex].fields.twinproblems[0];
         for(var i=0;i<Data[this.props.exampleIndex].fields.twinproblems.length;i++){
             var indexx=Data[this.props.exampleIndex].fields.twinproblems[i];
-            var iddd=AllData[indexx].fields.code;
-            twinOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.twinproblems[i]}>{iddd}</Option>)
+            var iddd=AllData[pkIndex[indexx]].fields.code;
+            twinOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
         }
         var recommendOption=[];
         if(Data[this.props.exampleIndex].fields.answer==selvalue){
             for(var i=0;i<Data[this.props.exampleIndex].fields.rightproblems.length;i++){
             var indexx=Data[this.props.exampleIndex].fields.rightproblems[i];
-            var iddd=AllData[indexx].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.exampleIndex].fields.rightproblems[i]}>{iddd}</Option>)
+            var iddd=AllData[pkIndex[indexx]].fields.code;
+            recommendOption.push(<Option key={iddd+""} value={Data[this.props.exampleIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
             }
         }
         else{
             for(var i=0;i<Data[this.props.exampleIndex].fields.wrongproblems.length;i++){
             var indexx=Data[this.props.exampleIndex].fields.wrongproblems[i];
-            var iddd=AllData[indexx].fields.code;
-            recommendOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.wrongproblems[i]}>{iddd}</Option>)
+            var iddd=AllData[pkIndex[indexx]].fields.code;
+            recommendOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
             }
         }
 
@@ -187,7 +172,7 @@ class Question extends React.Component {
                           <span>Qustion List</span></Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            {questype}
+                            {questype[Data[this.props.exampleIndex].fields.category]}
                             {Data[this.props.exampleIndex].fields.code}
                         </Breadcrumb.Item>
                         </Breadcrumb>

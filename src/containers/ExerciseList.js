@@ -84,10 +84,20 @@ class ExerciseList extends React.Component {
         console.log(e.target.value);
       }
       twinProblemChange = (value) =>{
-        twinProblem=value;
+        var pkIndex=[];
+        for(var i=0;i<AllData.length;i++){
+          pkIndex[AllData[i].pk]=i;
+        }
+        twinProblem=pkIndex[value];
+        // twinProblem=value;
       }
       RecommendProblemChange = (value) =>{
-        RecommendProblem=value;
+        var pkIndex=[];
+        for(var i=0;i<AllData.length;i++){
+          pkIndex[AllData[i].pk]=i;
+        }
+        RecommendProblem=pkIndex[value];
+        // RecommendProblem=value;
       }
       showTwinProblem = () =>{
         this.props.actions.changeindexbyid(twinProblem);
@@ -100,8 +110,12 @@ class ExerciseList extends React.Component {
 
     render() {
         // let Data=this.props.Data;
-        console.log(Data)
-        console.log(this.props.exerciseIndex)
+        // console.log(Data)
+        // console.log(this.props.exerciseIndex)
+        var pkIndex=[];
+        for(var i=0;i<AllData.length;i++){
+          pkIndex[AllData[i].pk]=i;
+        }
         var choiceA="";
         var choiceB="";
         var choiceC="";
@@ -127,38 +141,38 @@ class ExerciseList extends React.Component {
         }if(Data[this.props.exerciseIndex].fields.choicesf!=null){
             choiceF+=Data[this.props.exerciseIndex].fields.choicesf;
         }
-        let questype;
-        if(Data[this.props.exerciseIndex].fields.category==1)
-            questype="Example  ";
-        if(Data[this.props.exerciseIndex].fields.category==2)
-            questype="Exercise  ";
-        if(Data[this.props.exerciseIndex].fields.category==3)
-            questype="Problem  ";
-        if(Data[this.props.exerciseIndex].fields.category==4)
-            questype="DIY  ";
-        if(Data[this.props.exerciseIndex].fields.category==5)
-            questype="Quiz  ";
+        let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
+        // if(Data[this.props.exerciseIndex].fields.category==1)
+        //     questype="Example  ";
+        // if(Data[this.props.exerciseIndex].fields.category==2)
+        //     questype="Exercise  ";
+        // if(Data[this.props.exerciseIndex].fields.category==3)
+        //     questype="Problem  ";
+        // if(Data[this.props.exerciseIndex].fields.category==4)
+        //     questype="DIY  ";
+        // if(Data[this.props.exerciseIndex].fields.category==5)
+        //     questype="Quiz  ";
         var twinOption=[];
         // var defaultOption;
         // defaultOption=Data[this.props.exerciseIndex].fields.twinproblems[0];
         for(var i=0;i<Data[this.props.exerciseIndex].fields.twinproblems.length;i++){
             var indexx=Data[this.props.exerciseIndex].fields.twinproblems[i];
-            var iddd=AllData[indexx].fields.code;
-            twinOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.twinproblems[i]}>{iddd.toString()}</Option>)
+            var iddd=AllData[pkIndex[indexx]].fields.code;
+            twinOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
         }
         var recommendOption=[];
         if(Data[this.props.exerciseIndex].fields.answer==selvalue){
             for(var i=0;i<Data[this.props.exerciseIndex].fields.rightproblems.length;i++){
             var indexx=Data[this.props.exerciseIndex].fields.rightproblems[i];
-            var iddd=AllData[indexx].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.rightproblems[i]}>{iddd.toString()}</Option>)
+            var iddd=AllData[pkIndex[indexx]].fields.code;
+            recommendOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
             }
         }
         else{
             for(var i=0;i<Data[this.props.exerciseIndex].fields.wrongproblems.length;i++){
             var indexx=Data[this.props.exerciseIndex].fields.wrongproblems[i];
-            var iddd=AllData[indexx].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.wrongproblems[i]}>{iddd.toString()}</Option>)
+            var iddd=AllData[pkIndex[indexx]].fields.code;
+            recommendOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
             }
         }
 
@@ -174,10 +188,10 @@ class ExerciseList extends React.Component {
                         </Breadcrumb.Item>
                         <Breadcrumb.Item href=""> <Link to="/QuestionList">
                           <Icon type="book" />
-                          <span>Qustion List</span></Link>
+                          <span>Exercise List</span></Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            {questype}
+                            {questype[Data[this.props.exerciseIndex].fields.category]}
                             {Data[this.props.exerciseIndex].fields.code}
                         </Breadcrumb.Item>
                         </Breadcrumb>

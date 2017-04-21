@@ -222,7 +222,7 @@ class Chart extends React.Component {
         	<div>
         		<Header />
         		<SideBar />
-                <div className="wrapper">
+                <div className="chartwrapper">
                 <Breadcrumb>
                     <Breadcrumb.Item href="">
                       <Link to="/Home"><Icon type="home" />Home</Link>
