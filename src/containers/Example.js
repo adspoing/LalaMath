@@ -19,8 +19,6 @@ class Example extends React.Component {
         this.displayName = 'Example';
     }
     componentDidMount = () =>{   
-        // console.log("oye");
-        // this.props.actions.fetchthing();
     }
     showexample =(value)=>{
           console.log(value);

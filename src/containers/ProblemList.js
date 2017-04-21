@@ -1,5 +1,5 @@
 import React from 'react';
-import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
+import {Select, Breadcrumb, Menu, Dropdown, Icon, notification,Rate } from 'antd';
 import Data from '../problem.js';
 import AllData from '../data.js'
 import mySelect from './Select.js';
@@ -41,11 +41,11 @@ class ProblemList extends React.Component {
     }   
     submitQuestion = () =>{
         // this.props.clickSubmitQuestion();
-        if(Data[this.props.problemIndex].fields.answer==selvalue){
+        if(Data[this.props.problemIndex].fields.answer==this.state.selvalue){
             var config={};
             config.description=Data[this.props.problemIndex].fields.messagesuccess;
             config.message="Right";
-            config.duration=0;
+            config.duration=10;
             notification.success(config);
         }
         else
@@ -53,7 +53,7 @@ class ProblemList extends React.Component {
             var config={};
             config.description=Data[this.props.problemIndex].fields.messagefailure;
             config.message="Wrong";
-            config.duration=0;
+            config.duration=10;
             notification.error(config);
         }
         this.setState({ showResults: true });
@@ -76,7 +76,7 @@ class ProblemList extends React.Component {
         this.setState({ showAns: true});
     }
     onChange = (e) => {
-        console.log('radio checked', e.target.value);
+        // console.log('radio checked', e.target.value);
         this.setState({
           value: e.target.value,
           selvalue: e.target.value
@@ -84,7 +84,7 @@ class ProblemList extends React.Component {
         // selvalue=e.target.value;
       }
       showQuestion =(e)=>{
-        console.log(e.target.value);
+        // console.log(e.target.value);
       }
       twinProblemChange = (value) =>{
          var pkIndex=[];
@@ -116,6 +116,7 @@ class ProblemList extends React.Component {
         // console.log(Data)
         // console.log(AllData)
         // console.log(this.props.problemIndex)
+        // console.log(this.state.selvalue);
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
@@ -275,6 +276,8 @@ class ProblemList extends React.Component {
                            return <div>{i}</div>;
                           }): null }
                           </div>
+                          <div className="problemcomment"> { this.state.showAns?"Giving an comment on this problem":null}</div>
+                           { this.state.showAns?<Rate />:null}
                         </div>
                       </div>
                   </div>

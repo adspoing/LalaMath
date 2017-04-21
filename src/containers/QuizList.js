@@ -41,11 +41,11 @@ class QuizList extends React.Component {
     }   
     submitQuestion = () =>{
         // this.props.clickSubmitQuestion();
-        if(Data[this.props.quizIndex].fields.answer==this.stateselvalue){
+        if(Data[this.props.quizIndex].fields.answer==this.state.selvalue){
             var config={};
             config.description=Data[this.props.quizIndex].fields.messagesuccess;
             config.message="Right";
-            config.duration=0;
+            config.duration=10;
             notification.success(config);
         }
         else
@@ -53,7 +53,7 @@ class QuizList extends React.Component {
             var config={};
             config.description=Data[this.props.quizIndex].fields.messagefailure;
             config.message="Wrong";
-            config.duration=0;
+            config.duration=10;
             notification.error(config);
         }
         this.setState({ showResults: true });

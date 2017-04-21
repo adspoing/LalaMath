@@ -45,7 +45,7 @@ class DiyList extends React.Component {
             var config={};
             config.description=Data[this.props.diyIndex].fields.messagesuccess;
             config.message="Right";
-            config.duration=0;
+            config.duration=10;
             notification.success(config);
         }
         else
@@ -53,7 +53,7 @@ class DiyList extends React.Component {
             var config={};
             config.description=Data[this.props.diyIndex].fields.messagefailure;
             config.message="Wrong";
-            config.duration=0;
+            config.duration=10;
             notification.error(config);
         }
         this.setState({ showResults: true });
