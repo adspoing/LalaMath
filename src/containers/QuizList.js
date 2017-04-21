@@ -1,11 +1,11 @@
 import React from 'react';
 import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
-import Data from '../problem.js';
+import Data from '../quiz.js';
 import AllData from '../data.js'
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import { Button,Radio } from 'antd';
-import {changeindexbyid,prevproblem,nextproblem} from '../actions/actions.js'
+import {changeindexbyid,prevquiz,nextquiz} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -15,17 +15,17 @@ const RadioGroup = Radio.Group;
 var selvalue;
 var twinProblem;
 var RecommendProblem;
-class ProblemList extends React.Component {
+class QuizList extends React.Component {
     constructor(props) {
         super(props);
-        this.displayName = 'ProblemList';
+        this.displayName = 'QuizList';
         MathJax.Hub.Config({
           showProcessingMessages: false,
           tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] },
           TeX: { extensions: ["color.js"] }
         });
         this.state = {
-             index: this.props.problemIndex,
+             // index: this.props.quizIndex,
              mathjax: MathJax,
              showResults: false,
              showAns: false,
@@ -36,14 +36,14 @@ class ProblemList extends React.Component {
     handleChange(value){
         // console.log(`selected ${value}`);
         // selvalue=value;
-        this.setState({ selvalue: value });
         // console.log(selvalue);
+        this.setState({ selvalue: value });
     }   
     submitQuestion = () =>{
         // this.props.clickSubmitQuestion();
-        if(Data[this.props.problemIndex].fields.answer==selvalue){
+        if(Data[this.props.quizIndex].fields.answer==this.stateselvalue){
             var config={};
-            config.description=Data[this.props.problemIndex].fields.messagesuccess;
+            config.description=Data[this.props.quizIndex].fields.messagesuccess;
             config.message="Right";
             config.duration=0;
             notification.success(config);
@@ -51,7 +51,7 @@ class ProblemList extends React.Component {
         else
         {
             var config={};
-            config.description=Data[this.props.problemIndex].fields.messagefailure;
+            config.description=Data[this.props.quizIndex].fields.messagefailure;
             config.message="Wrong";
             config.duration=0;
             notification.error(config);
@@ -59,11 +59,11 @@ class ProblemList extends React.Component {
         this.setState({ showResults: true });
     }
     nextQuestion = () =>{
-        this.props.actions.nextproblem();
+        this.props.actions.nextquiz();
         this.setState({ showResults: false,showAns: false, value: 0, selvalue: 0});
     }
     prevQuestion = () =>{
-        this.props.actions.prevproblem();
+        this.props.actions.prevquiz();
         this.setState({ showResults: false,showAns: false,value: 0, selvalue: 0});
     }
     componentDidMount = () =>{   
@@ -79,7 +79,7 @@ class ProblemList extends React.Component {
         console.log('radio checked', e.target.value);
         this.setState({
           value: e.target.value,
-          selvalue: e.target.value
+          selvalue: e.target.value,
         });
         // selvalue=e.target.value;
       }
@@ -113,9 +113,9 @@ class ProblemList extends React.Component {
 
     render() {
         // let Data=this.props.Data;
-        // console.log(Data)
+        console.log(Data)
         // console.log(AllData)
-        // console.log(this.props.problemIndex)
+        // console.log(this.props.quizIndex)
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
@@ -128,58 +128,58 @@ class ProblemList extends React.Component {
         var choiceE="";
         var choiceF="";
         var result="";
-        if(Data[this.props.problemIndex].fields.choicesa!=null){
-            choiceA+=Data[this.props.problemIndex].fields.choicesa;
+        if(Data[this.props.quizIndex].fields.choicesa!=null){
+            choiceA+=Data[this.props.quizIndex].fields.choicesa;
         }
         const radioStyle = {
           height: '30px',
           lineHeight: '30px',
         };
-        if(Data[this.props.problemIndex].fields.choicesb!=null){
-            choiceB+=Data[this.props.problemIndex].fields.choicesb;
-        }if(Data[this.props.problemIndex].fields.choicesc!=null){
-            choiceC+=Data[this.props.problemIndex].fields.choicesc;
-        }if(Data[this.props.problemIndex].fields.choicesd!=null){
-            choiceD+=Data[this.props.problemIndex].fields.choicesd;
-        }if(Data[this.props.problemIndex].fields.choicese!=null){
-            choiceE+=Data[this.props.problemIndex].fields.choicese;
-        }if(Data[this.props.problemIndex].fields.choicesf!=null){
-            choiceF+=Data[this.props.problemIndex].fields.choicesf;
+        if(Data[this.props.quizIndex].fields.choicesb!=null){
+            choiceB+=Data[this.props.quizIndex].fields.choicesb;
+        }if(Data[this.props.quizIndex].fields.choicesc!=null){
+            choiceC+=Data[this.props.quizIndex].fields.choicesc;
+        }if(Data[this.props.quizIndex].fields.choicesd!=null){
+            choiceD+=Data[this.props.quizIndex].fields.choicesd;
+        }if(Data[this.props.quizIndex].fields.choicese!=null){
+            choiceE+=Data[this.props.quizIndex].fields.choicese;
+        }if(Data[this.props.quizIndex].fields.choicesf!=null){
+            choiceF+=Data[this.props.quizIndex].fields.choicesf;
         }
         // let questype;
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
 
-        // if(Data[this.props.problemIndex].fields.category==1)
+        // if(Data[this.props.quizIndex].fields.category==1)
         //     questype="Example  ";
-        // if(Data[this.props.problemIndex].fields.category==2)
+        // if(Data[this.props.quizIndex].fields.category==2)
         //     questype="problem  ";
-        // if(Data[this.props.problemIndex].fields.category==3)
+        // if(Data[this.props.quizIndex].fields.category==3)
         //     questype="Problem  ";
-        // if(Data[this.props.problemIndex].fields.category==4)
+        // if(Data[this.props.quizIndex].fields.category==4)
         //     questype="DIY  ";
-        // if(Data[this.props.problemIndex].fields.category==5)
+        // if(Data[this.props.quizIndex].fields.category==5)
         //     questype="Quiz  ";
         var twinOption=[];
         // var defaultOption;
-        // defaultOption=Data[this.props.problemIndex].fields.twinproblems[0];
-        for(var i=0;i<Data[this.props.problemIndex].fields.twinproblems.length;i++){
-            var indexx=Data[this.props.problemIndex].fields.twinproblems[i];
+        // defaultOption=Data[this.props.quizIndex].fields.twinproblems[0];
+        for(var i=0;i<Data[this.props.quizIndex].fields.twinproblems.length;i++){
+            var indexx=Data[this.props.quizIndex].fields.twinproblems[i];
             var iddd=AllData[pkIndex[indexx]].fields.code;
-            twinOption.push(<Option key={iddd+""} value={Data[this.props.problemIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+            twinOption.push(<Option key={iddd+""} value={Data[this.props.quizIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
         }
         var recommendOption=[];
-        if(Data[this.props.problemIndex].fields.answer==this.state.selvalue){
-            for(var i=0;i<Data[this.props.problemIndex].fields.rightproblems.length;i++){
-            var indexx=Data[this.props.problemIndex].fields.rightproblems[i];
+        if(Data[this.props.quizIndex].fields.answer==this.state.selvalue){
+            for(var i=0;i<Data[this.props.quizIndex].fields.rightproblems.length;i++){
+            var indexx=Data[this.props.quizIndex].fields.rightproblems[i];
             var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.problemIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+            recommendOption.push(<Option key={iddd+""} value={Data[this.props.quizIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
             }
         }
         else{
-            for(var i=0;i<Data[this.props.problemIndex].fields.wrongproblems.length;i++){
-            var indexx=Data[this.props.problemIndex].fields.wrongproblems[i];
+            for(var i=0;i<Data[this.props.quizIndex].fields.wrongproblems.length;i++){
+            var indexx=Data[this.props.quizIndex].fields.wrongproblems[i];
             var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.problemIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+            recommendOption.push(<Option key={iddd+""} value={Data[this.props.quizIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
             }
         }
 
@@ -193,24 +193,23 @@ class ProblemList extends React.Component {
                         <Breadcrumb.Item href="">
                           <Link to="/Dashboard"><Icon type="home" />Home</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item href=""> <Link to="/Problem">
+                        <Breadcrumb.Item href=""> <Link to="/QuestionList">
                           <Icon type="book" />
                           <span>Problem List</span></Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            {questype[Data[this.props.problemIndex].fields.category]}
-                            {Data[this.props.problemIndex].fields.code}
+                            {questype[Data[this.props.quizIndex].fields.category]}
+                            {Data[this.props.quizIndex].fields.code}
                         </Breadcrumb.Item>
                         </Breadcrumb>
                           <div className="pannel">
-                                <Button><Link to="/problem">Quit</Link></Button>
+                                <Button><Link to="/DIY">Quit</Link></Button>
                                 <Button type="prev" className="prevQuestion" onClick = {this.prevQuestion}>Prev</Button>
                                 <Button type="next" className="nextQuestion" onClick = {this.nextQuestion}>Next</Button>
                           </div>
                       </div>
                       <div className="questionCanvas">
-                        <div id="output" className="questionstem">{
-                          Data[this.props.problemIndex].fields.problem.split("<br>").map(i => {
+                        <div id="output" className="questionstem">{Data[this.props.quizIndex].fields.problem.split("<br>").map(i => {
                            return <div>{i}</div>;
                           })}</div>
                         <div className="questionchoice">
@@ -271,7 +270,7 @@ class ProblemList extends React.Component {
                               </Select>:null}
                            { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
                            </div>
-                          { this.state.showAns?Data[this.props.problemIndex].fields.solutions.split("<br>").map(i => {
+                          { this.state.showAns?Data[this.props.quizIndex].fields.solutions.split("<br>").map(i => {
                            return <div>{i}</div>;
                           }): null }
                           </div>
@@ -289,7 +288,7 @@ function mapStateToProps (state){
     return { 
             Data:state.question.questionData,
             // questionData:state.question.questionData
-            problemIndex:state.question.problemIndex,
+            quizIndex:state.question.quizIndex,
             index:state.question.index
         }
 }
@@ -298,10 +297,10 @@ function mapDispatchToProps (dispatch){
     return{
         actions: bindActionCreators({
             changeindexbyid,
-            prevproblem,
-            nextproblem
+            prevquiz,
+            nextquiz
         },dispatch)
     };
 }
-export default connect(mapStateToProps, mapDispatchToProps)(ProblemList);
+export default connect(mapStateToProps, mapDispatchToProps)(QuizList);
 

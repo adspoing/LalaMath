@@ -29,20 +29,22 @@ class DiyList extends React.Component {
              mathjax: MathJax,
              showResults: false,
              showAns: false,
-             value: 0
+             value: 0,
+             selvalue: 0
         }
     }
     handleChange(value){
-        console.log(`selected ${value}`);
+        // console.log(`selected ${value}`);
         selvalue=value;
-        console.log(selvalue);
+        this.setState({ selvalue: value });
+        // console.log(selvalue);
     }   
     submitQuestion = () =>{
         // this.props.clickSubmitQuestion();
-        if(Data[this.props.diyIndex].fields.answer==selvalue){
+        if(Data[this.props.diyIndex].fields.answer==this.state.selvalue){
             var config={};
             config.description=Data[this.props.diyIndex].fields.messagesuccess;
-            config.message="success";
+            config.message="Right";
             config.duration=0;
             notification.success(config);
         }
@@ -50,7 +52,7 @@ class DiyList extends React.Component {
         {
             var config={};
             config.description=Data[this.props.diyIndex].fields.messagefailure;
-            config.message="error";
+            config.message="Wrong";
             config.duration=0;
             notification.error(config);
         }
@@ -58,11 +60,11 @@ class DiyList extends React.Component {
     }
     nextQuestion = () =>{
         this.props.actions.nextdiy();
-        this.setState({ showResults: false,showAns: false, value: 0});
+        this.setState({ showResults: false,showAns: false, value: 0, selvalue: 0});
     }
     prevQuestion = () =>{
         this.props.actions.prevdiy();
-        this.setState({ showResults: false,showAns: false,value: 0});
+        this.setState({ showResults: false,showAns: false,value: 0, selvalue: 0});
     }
     componentDidMount = () =>{   
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
@@ -77,8 +79,9 @@ class DiyList extends React.Component {
         console.log('radio checked', e.target.value);
         this.setState({
           value: e.target.value,
+          selvalue: e.target.value
         });
-        selvalue=e.target.value;
+        // selvalue=e.target.value;
       }
       showQuestion =(e)=>{
         console.log(e.target.value);
@@ -165,7 +168,7 @@ class DiyList extends React.Component {
             twinOption.push(<Option key={iddd+""} value={Data[this.props.diyIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
         }
         var recommendOption=[];
-        if(Data[this.props.diyIndex].fields.answer==selvalue){
+        if(Data[this.props.diyIndex].fields.answer==this.state.selvalue){
             for(var i=0;i<Data[this.props.diyIndex].fields.rightproblems.length;i++){
             var indexx=Data[this.props.diyIndex].fields.rightproblems[i];
             var iddd=AllData[pkIndex[indexx]].fields.code;
@@ -190,7 +193,7 @@ class DiyList extends React.Component {
                         <Breadcrumb.Item href="">
                           <Link to="/Dashboard"><Icon type="home" />Home</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item href=""> <Link to="/QuestionList">
+                        <Breadcrumb.Item href=""> <Link to="/DIY">
                           <Icon type="book" />
                           <span>Problem List</span></Link>
                         </Breadcrumb.Item>
@@ -200,7 +203,7 @@ class DiyList extends React.Component {
                         </Breadcrumb.Item>
                         </Breadcrumb>
                           <div className="pannel">
-                                <Button><Link to="/problem">Quit</Link></Button>
+                                <Button><Link to="/DIY">Quit</Link></Button>
                                 <Button type="prev" className="prevQuestion" onClick = {this.prevQuestion}>Prev</Button>
                                 <Button type="next" className="nextQuestion" onClick = {this.nextQuestion}>Next</Button>
                           </div>

@@ -29,20 +29,22 @@ class ExerciseList extends React.Component {
              mathjax: MathJax,
              showResults: false,
              showAns: false,
-             value: 0
+             value: 0,
+             selvalue: 0
         }
     }
     handleChange(value){
-        console.log(`selected ${value}`);
-        selvalue=value;
-        console.log(selvalue);
+        // console.log(`selected ${value}`);
+        // selvalue=value;
+        this.setState({ selvalue: value });
+        // console.log(selvalue);
     }   
     submitQuestion = () =>{
         // this.props.clickSubmitQuestion();
-        if(Data[this.props.exerciseIndex].fields.answer==selvalue){
+        if(Data[this.props.exerciseIndex].fields.answer==this.state.selvalue){
             var config={};
             config.description=Data[this.props.exerciseIndex].fields.messagesuccess;
-            config.message="success";
+            config.message="Right";
             config.duration=0;
             notification.success(config);
         }
@@ -50,7 +52,7 @@ class ExerciseList extends React.Component {
         {
             var config={};
             config.description=Data[this.props.exerciseIndex].fields.messagefailure;
-            config.message="error";
+            config.message="Wrong";
             config.duration=0;
             notification.error(config);
         }
@@ -58,11 +60,11 @@ class ExerciseList extends React.Component {
     }
     nextQuestion = () =>{
         this.props.actions.nextexercise();
-        this.setState({ showResults: false,showAns: false, value: 0});
+        this.setState({ showResults: false,showAns: false, value: 0, selvalue: 0});
     }
     prevQuestion = () =>{
         this.props.actions.prevexercise();
-        this.setState({ showResults: false,showAns: false,value: 0});
+        this.setState({ showResults: false,showAns: false,value: 0, selvalue: 0});
     }
     componentDidMount = () =>{   
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
@@ -77,8 +79,9 @@ class ExerciseList extends React.Component {
         console.log('radio checked', e.target.value);
         this.setState({
           value: e.target.value,
+          selvalue: e.target.value
         });
-        selvalue=e.target.value;
+        // selvalue=e.target.value;
       }
       showQuestion =(e)=>{
         console.log(e.target.value);
@@ -161,7 +164,7 @@ class ExerciseList extends React.Component {
             twinOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
         }
         var recommendOption=[];
-        if(Data[this.props.exerciseIndex].fields.answer==selvalue){
+        if(Data[this.props.exerciseIndex].fields.answer==this.state.selvalue){
             for(var i=0;i<Data[this.props.exerciseIndex].fields.rightproblems.length;i++){
             var indexx=Data[this.props.exerciseIndex].fields.rightproblems[i];
             var iddd=AllData[pkIndex[indexx]].fields.code;
@@ -186,7 +189,7 @@ class ExerciseList extends React.Component {
                         <Breadcrumb.Item href="">
                           <Link to="/Dashboard"><Icon type="home" />Home</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item href=""> <Link to="/QuestionList">
+                        <Breadcrumb.Item href=""> <Link to="/Exercise">
                           <Icon type="book" />
                           <span>Exercise List</span></Link>
                         </Breadcrumb.Item>
@@ -202,15 +205,29 @@ class ExerciseList extends React.Component {
                           </div>
                       </div>
                       <div className="questionCanvas">
-                        <div id="output" className="questionstem">{Data[this.props.exerciseIndex].fields.problem}</div>
+                        <div id="output" className="questionstem">{Data[this.props.exerciseIndex].fields.problem.split("<br>").map(i => {
+                           return <div>{i}</div>;
+                          })}</div>
                         <div className="questionchoice">
                          <RadioGroup onChange={this.onChange} value={this.state.value}>
-                            <div>{choiceA==""?"":<div><Radio style={radioStyle} value={"A"}>{choiceA}</Radio></div>}</div>
-                            <div>{choiceB==""?"":<div><Radio style={radioStyle} value={"B"}>{choiceB}</Radio></div>}</div>
-                            <div>{choiceC==""?"":<div><Radio style={radioStyle} value={"C"}>{choiceC}</Radio></div>}</div>
-                            <div>{choiceD==""?"":<div><Radio style={radioStyle} value={"D"}>{choiceD}</Radio></div>}</div>
-                            <div>{choiceE==""?"":<div><Radio style={radioStyle} value={"E"}>{choiceE}</Radio></div>}</div>
-                            <div>{choiceF==""?"":<div><Radio style={radioStyle} value={"F"}>{choiceF}</Radio></div>}</div>
+                            <div>{choiceA==""?"":<div><Radio style={radioStyle} value={"A"}>{choiceA.split("<br>").map(i => {
+                           return <div>{i}</div>;
+                          })}</Radio></div>}</div>
+                            <div>{choiceB==""?"":<div><Radio style={radioStyle} value={"B"}>{choiceB.split("<br>").map(i => {
+                           return <div>{i}</div>;
+                          })}</Radio></div>}</div>
+                            <div>{choiceC==""?"":<div><Radio style={radioStyle} value={"C"}>{choiceC.split("<br>").map(i => {
+                           return <div>{i}</div>;
+                          })}</Radio></div>}</div>
+                            <div>{choiceD==""?"":<div><Radio style={radioStyle} value={"D"}>{choiceD.split("<br>").map(i => {
+                           return <div>{i}</div>;
+                          })}</Radio></div>}</div>
+                            <div>{choiceE==""?"":<div><Radio style={radioStyle} value={"E"}>{choiceE.split("<br>").map(i => {
+                           return <div>{i}</div>;
+                          })}</Radio></div>}</div>
+                            <div>{choiceF==""?"":<div><Radio style={radioStyle} value={"F"}>{choiceF.split("<br>").map(i => {
+                           return <div>{i}</div>;
+                          })}</Radio></div>}</div>
                           </RadioGroup>
                         </div>
                         <div className="questionanswer">
@@ -249,7 +266,9 @@ class ExerciseList extends React.Component {
                               </Select>:null}
                            { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
                            </div>
-                          { this.state.showAns?Data[this.props.exerciseIndex].fields.solutions: null }
+                          { this.state.showAns?Data[this.props.exerciseIndex].fields.solutions.split("<br>").map(i => {
+                           return <div>{i}</div>;
+                          }): null }
                           </div>
                         </div>
                       </div>

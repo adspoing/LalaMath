@@ -3,7 +3,8 @@ import axios from 'axios';
 
 import {SUBMIT_QUESTION, NEXT_QUESTION, PREV_QUESTION, PLAY_MODULE, RANDOM_PLAY,CHANGE_INDEX,CHANGE_INDEX_BYID,SIDE_OPEN_CHANGE,SIDE_CLICK,PREV_EXAMPLE,NEXT_EXAMPLE,CHANGE_EXAMPLE,PREV_EXERCISE,NEXT_EXERCISE,CHANGE_EXERCISE
 ,PREV_PROBLEM,NEXT_PROBLEM,CHANGE_PROBLEM,
-PREV_DIY,NEXT_DIY,CHANGE_DIY
+PREV_DIY,NEXT_DIY,CHANGE_DIY,
+PREV_QUIZ,NEXT_QUIZ,CHANGE_QUIZ
 } from './constants';
 
 export const submitquestion = createAction(SUBMIT_QUESTION);
@@ -27,6 +28,9 @@ export const changeproblem = createAction(CHANGE_PROBLEM);
 export const prevdiy = createAction(PREV_DIY);
 export const nextdiy = createAction(NEXT_DIY);
 export const changediy = createAction(CHANGE_DIY);
+export const prevquiz = createAction(PREV_QUIZ);
+export const nextquiz = createAction(NEXT_QUIZ);
+export const changequiz = createAction(CHANGE_QUIZ);
 
 export const fetchthing = function() {
 	return dispatch => {

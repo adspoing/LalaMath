@@ -167,7 +167,7 @@ class Question extends React.Component {
                         <Breadcrumb.Item href="">
                           <Link to="/Dashboard"><Icon type="home" />Home</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item href=""> <Link to="/QuestionList">
+                        <Breadcrumb.Item href=""> <Link to="/Example">
                           <Icon type="book" />
                           <span>Qustion List</span></Link>
                         </Breadcrumb.Item>
@@ -183,7 +183,9 @@ class Question extends React.Component {
                           </div>
                       </div>
                       <div className="questionCanvas">
-                        <div id="output" className="questionstem">{Data[this.props.exampleIndex].fields.problem}</div>
+                        <div id="output" className="questionstem">{Data[this.props.exampleIndex].fields.problem.split("<br>").map(i => {
+                           return <div>{i}</div>;
+                          })}</div>
                         <div className="questionanswer">
                           <div className="questionresult">
                           <div>Twin problems: </div>
@@ -215,7 +217,9 @@ class Question extends React.Component {
                             </Select>
                            <Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>
                            </div>
-                          { Data[this.props.exampleIndex].fields.solutions }
+                          { Data[this.props.exampleIndex].fields.solutions.split("<br>").map(i => {
+                           return <div>{i}</div>;
+                          }) }
                           </div>
                         </div>
                       </div>

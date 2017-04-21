@@ -19,3 +19,6 @@ export const CHANGE_PROBLEM = 'changeproblem';
 export const PREV_DIY = 'prevdiy';
 export const NEXT_DIY = 'nextdiy';
 export const CHANGE_DIY = 'changediy';
+export const PREV_QUIZ = 'prevquiz';
+export const NEXT_QUIZ = 'nextquiz';
+export const CHANGE_QUIZ = 'changequiz';
