@@ -21,7 +21,8 @@ class ViewQuestion extends React.Component {
         this.displayName = 'ViewQuestion';
         MathJax.Hub.Config({
           showProcessingMessages: false,
-          tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] }
+          tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] },
+          TeX: { extensions: ["color.js"] }
         });
     }
     _clickSubmitQuestion = () =>{

@@ -8,22 +8,20 @@ import { Link } from 'react-router' // 引入Link处理导航跳转
 import {fetchthing} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {changeexercise} from '../actions/actions.js'
+import {changediy} from '../actions/actions.js'
 
-// var AMUIReact = require('amazeui-react');
-// var Footer = AMUIReact.Footer;
-
-class Exercise extends React.Component {
+class DIY extends React.Component {
 	constructor(props) {
         super(props);
-        this.displayName = 'Exercise';
+        this.displayName = 'DIY';
     }
     componentDidMount = () =>{   
         // console.log("oye");
         // this.props.actions.fetchthing();
     }
-    showexercise =(value)=>{
-          this.props.actions.changeexercise(value);
+    showdiy =(value)=>{
+          console.log(value);
+          this.props.actions.changediy(value);
       }
      render() {
         return (
@@ -35,33 +33,33 @@ class Exercise extends React.Component {
                     <Breadcrumb.Item href="">
                       <Link to="/Dashboard"><Icon type="home" />Home</Link>
                     </Breadcrumb.Item>
-                    <Breadcrumb.Item href=""> <Link to="/Exercise">
+                    <Breadcrumb.Item href=""> <Link to="/DIY">
                       <Icon type="file-text" />
-                      <span>Exercise</span></Link>
+                      <span>DIY</span></Link>
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className="belowbread"> 
                 <div className="dashboardName" style={{ background: '#ECECEC', padding: '30px' }}>
                                 <Row>
-                                  <Col span="8" onClick = {this.showexercise.bind(this,"1&2")}>
-                                    <Card  title="Chapter 1&2" bordered={false}>chapter 1&2 Exercise</Card>
+                                  <Col span="8" onClick = {this.showdiy.bind(this,"1&2")}>
+                                    <Card  title="Chapter 1&2" bordered={false}>chapter 1&2 diy</Card>
                                   </Col>
-                                  <Col span="8" onClick = {this.showexercise.bind(this,"3")}>
-                                    <Link to="/ExerciseList"><Card title="Chapter 3" bordered={false}>chapter 3 Exercise</Card></Link>
+                                  <Col span="8" onClick = {this.showdiy.bind(this,"3")}>
+                                    <Link to="/DiyList"><Card title="Chapter 3" bordered={false}>chapter 3 diy</Card></Link>
                                   </Col>
-                                  <Col span="8" onClick = {this.showexercise.bind(this,"4")}  >
-                                    <Link to="/ExerciseList"><Card title="Chapter 4" bordered={false}>chapter4 Exercise</Card></Link>
+                                  <Col span="8" onClick = {this.showdiy.bind(this,"4")}  >
+                                    <Link to="/DiyList"><Card title="Chapter 4" bordered={false}>chapter4 diy</Card></Link>
                                   </Col>
                                 </Row>
                                  <Row>
-                                  <Col span="8" onClick = {this.showexercise.bind(this,"5")} >
-                                    <Card title="Chapter 5" bordered={false}>chapter5 Exercise</Card>
+                                  <Col span="8" onClick = {this.showdiy.bind(this,"5")} >
+                                    <Card title="Chapter 5" bordered={false}>chapter5 diy</Card>
                                   </Col>
-                                  <Col span="8" onClick = {this.showexercise.bind(this,"6")} >
-                                    <Card title="Chapter 6" bordered={false}>chapter6 Exercise</Card>
+                                  <Col span="8" onClick = {this.showdiy.bind(this,"6")} >
+                                    <Card title="Chapter 6" bordered={false}>chapter6 diy</Card>
                                   </Col>
-                                  <Col span="8" onClick = {this.showexercise.bind(this,"7")} >
-                                    <Card title="Chapter 7" bordered={false}>chapter7 Exercise</Card>
+                                  <Col span="8" onClick = {this.showdiy.bind(this,"7")} >
+                                    <Card title="Chapter 7" bordered={false}>chapter7 diy</Card>
                                   </Col>
                                 </Row>
                     </div>              
@@ -81,10 +79,9 @@ function mapStateToProps (state){
 function mapDispatchToProps (dispatch){
     return{
         actions: bindActionCreators({
-          changeexercise
+          changediy
         },dispatch)
     };
 }
-export default connect(mapStateToProps, mapDispatchToProps)(Exercise);
+export default connect(mapStateToProps, mapDispatchToProps)(DIY);
 
-// export default Exercise;

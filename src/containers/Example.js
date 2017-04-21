@@ -8,7 +8,6 @@ import { Link } from 'react-router' // 引入Link处理导航跳转
 import {fetchthing} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import '../css/Syllabus.less';
 import {changeexample} from '../actions/actions.js'
 
 // var AMUIReact = require('amazeui-react');

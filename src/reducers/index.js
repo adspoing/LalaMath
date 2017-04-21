@@ -11,6 +11,7 @@ import { routerReducer } from 'react-router-redux' // 将routerReducer一起合�
 import {handleActions} from 'redux-actions';
 import {SUBMIT_QUESTION, PREV_QUESTION, NEXT_QUESTION, CHANGE_INDEX, RANDOM_PLAY,CHANGE_INDEX_BYID,SIDE_OPEN_CHANGE,SIDE_CLICK,PREV_EXAMPLE,NEXT_EXAMPLE,CHANGE_EXAMPLE,NEXT_EXERCISE,PREV_EXERCISE,CHANGE_EXERCISE
 ,NEXT_PROBLEM,PREV_PROBLEM,CHANGE_PROBLEM
+,NEXT_DIY,PREV_DIY,CHANGE_DIY
 } from '../actions/constants.js';
 
 // import Data from '../data.js'
@@ -26,6 +27,7 @@ let question =  handleActions({
 			exampleIndex:state.exampleIndex,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex: state.problemIndex,
+			diyIndex:state.diyIndex,
 		}
 	},
 	[PREV_QUESTION]: (state,action) => {
@@ -37,6 +39,7 @@ let question =  handleActions({
 			exampleIndex:state.exampleIndex,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex: state.problemIndex,
+			diyIndex:state.diyIndex,
 		}
 	},
 	[NEXT_QUESTION]: (state,action) => {
@@ -48,6 +51,7 @@ let question =  handleActions({
 			exampleIndex:state.exampleIndex,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex: state.problemIndex,
+			diyIndex:state.diyIndex,
 		}
 	},
 	[CHANGE_INDEX]: (state,action) => {
@@ -66,6 +70,7 @@ let question =  handleActions({
 			current:state.current,
 			exampleIndex:state.exampleIndex,
 			exerciseIndex:state.exerciseIndex,
+			diyIndex:state.diyIndex,
 			problemIndex: state.problemIndex,
 		}
 	},
@@ -78,6 +83,7 @@ let question =  handleActions({
 			exampleIndex:state.exampleIndex,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex: state.problemIndex,
+			diyIndex:state.diyIndex,
 		}
 	},
 	[CHANGE_EXAMPLE]: (state,action) => {
@@ -96,6 +102,7 @@ let question =  handleActions({
 			exampleIndex:indexx,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex: state.problemIndex,
+			diyIndex:state.diyIndex,
 		}
 	},
 	[CHANGE_EXERCISE]: (state,action) => {
@@ -113,6 +120,7 @@ let question =  handleActions({
 			exampleIndex:state.exampleIndex,
 			exerciseIndex:indexx,
 			problemIndex: state.problemIndex,
+			diyIndex:state.diyIndex,
 		}
 	},
 	[CHANGE_PROBLEM]: (state,action) => {
@@ -133,6 +141,7 @@ let question =  handleActions({
 			exampleIndex:state.exampleIndex,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex: indexx,
+			diyIndex:state.diyIndex,
 		}
 	},
 	['FETCH_THING']:(state,action) => {
@@ -145,6 +154,7 @@ let question =  handleActions({
 			exampleIndex:state.exampleIndex,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex: state.problemIndex,
+			diyIndex:state.diyIndex,
 		}
 	},
 	[SIDE_OPEN_CHANGE]: (state,action) => {
@@ -155,6 +165,7 @@ let question =  handleActions({
 			exampleIndex:state.exampleIndex,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex: state.problemIndex,
+			diyIndex:state.diyIndex,
 		}
 	},
 	[SIDE_CLICK]: (state,action) => {
@@ -165,6 +176,7 @@ let question =  handleActions({
 			exampleIndex:state.exampleIndex,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex: state.problemIndex,
+			diyIndex:state.diyIndex,
 		}
 	},
 	[PREV_EXAMPLE]: (state,action) => {
@@ -175,6 +187,7 @@ let question =  handleActions({
 			index: state.index,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex: state.problemIndex,
+			diyIndex:state.diyIndex,
 		}
 	},
 	[NEXT_EXAMPLE]: (state,action) => {
@@ -186,6 +199,7 @@ let question =  handleActions({
 			index: state.index,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex: state.problemIndex,
+			diyIndex:state.diyIndex,
 		}
 	},
 	[PREV_EXERCISE]: (state,action) => {
@@ -195,7 +209,8 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			problemIndex: state.problemIndex,
-			exerciseIndex:state.exerciseIndex == 0 ? 0 : state.exerciseIndex-1
+			exerciseIndex:state.exerciseIndex == 0 ? 0 : state.exerciseIndex-1,
+			diyIndex:state.diyIndex,
 		}
 	},
 	[NEXT_EXERCISE]: (state,action) => {
@@ -205,7 +220,8 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			problemIndex: state.problemIndex,
-			exerciseIndex:state.exerciseIndex == 32 ? 32:state.exerciseIndex+1
+			exerciseIndex:state.exerciseIndex == 32 ? 32:state.exerciseIndex+1,
+			diyIndex:state.diyIndex,
 		}
 	},
 	[PREV_PROBLEM]: (state,action) => {
@@ -215,7 +231,8 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			exerciseIndex:state.exerciseIndex,
-			problemIndex:state.problemIndex == 0 ? 0:state.problemIndex-1
+			problemIndex:state.problemIndex == 0 ? 0:state.problemIndex-1,
+			diyIndex:state.diyIndex
 		}
 	},
 	[NEXT_PROBLEM]: (state,action) => {
@@ -226,22 +243,41 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			exerciseIndex:state.exerciseIndex,
-			problemIndex:state.problemIndex == 61 ? 61:state.problemIndex+1
+			problemIndex:state.problemIndex == 61 ? 61:state.problemIndex+1,
+			diyIndex:state.diyIndex
+		}
+	},
+	[PREV_DIY]: (state,action) => {
+		return {
+			exampleIndex: state.exampleIndex,
+			questionData: state.questionData,
+			current:state.current,
+			index: state.index,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex:state.problemIndex,
+			diyIndex:state.diyIndex == 0 ? 0:state.diyIndex-1
+		}
+	},
+	[NEXT_DIY]: (state,action) => {
+		return {
+			exampleIndex: state.exampleIndex,
+			questionData: state.questionData,
+			current:state.current,
+			index: state.index,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex:state.problemIndex,
+			diyIndex:state.diyIndex == 52 ? 52:state.diyIndex+1
 		}
 	}
 },{
 	index:1,
-	exampleIndex:1,
-	exerciseIndex:1,
-	problemIndex:1,
+	exampleIndex:0,
+	exerciseIndex:0,
+	problemIndex:0,
+	diyIndex:0,
 	questionData:[],
 	current:'0',
 	openKeys:[]
-	// axios.get("http://lala.ust.hk:8000/get/questions/all")
- //                 .then(function(response) {
- //                 	console.log(response.data)
- //                return response.data;
- //    })
 })
 
 export default combineReducers({

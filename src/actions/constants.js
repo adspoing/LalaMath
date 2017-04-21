@@ -16,3 +16,6 @@ export const CHANGE_EXERCISE = 'changeexercise';
 export const PREV_PROBLEM = 'prevproblem';
 export const NEXT_PROBLEM = 'nextproblem';
 export const CHANGE_PROBLEM = 'changeproblem';
+export const PREV_DIY = 'prevdiy';
+export const NEXT_DIY = 'nextdiy';
+export const CHANGE_DIY = 'changediy';

@@ -1,11 +1,11 @@
 import React from 'react';
 import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
-import Data from '../problem.js';
+import Data from '../diy.js';
 import AllData from '../data.js'
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import { Button,Radio } from 'antd';
-import {changeindexbyid,prevproblem,nextproblem} from '../actions/actions.js'
+import {changeindexbyid,prevdiy,nextdiy} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -15,17 +15,17 @@ const RadioGroup = Radio.Group;
 var selvalue;
 var twinProblem;
 var RecommendProblem;
-class ProblemList extends React.Component {
+class DiyList extends React.Component {
     constructor(props) {
         super(props);
-        this.displayName = 'ProblemList';
+        this.displayName = 'DiyList';
         MathJax.Hub.Config({
           showProcessingMessages: false,
           tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] },
           TeX: { extensions: ["color.js"] }
         });
         this.state = {
-             index: this.props.problemIndex,
+             index: this.props.diyIndex,
              mathjax: MathJax,
              showResults: false,
              showAns: false,
@@ -39,9 +39,9 @@ class ProblemList extends React.Component {
     }   
     submitQuestion = () =>{
         // this.props.clickSubmitQuestion();
-        if(Data[this.props.problemIndex].fields.answer==selvalue){
+        if(Data[this.props.diyIndex].fields.answer==selvalue){
             var config={};
-            config.description=Data[this.props.problemIndex].fields.messagesuccess;
+            config.description=Data[this.props.diyIndex].fields.messagesuccess;
             config.message="success";
             config.duration=0;
             notification.success(config);
@@ -49,7 +49,7 @@ class ProblemList extends React.Component {
         else
         {
             var config={};
-            config.description=Data[this.props.problemIndex].fields.messagefailure;
+            config.description=Data[this.props.diyIndex].fields.messagefailure;
             config.message="error";
             config.duration=0;
             notification.error(config);
@@ -57,11 +57,11 @@ class ProblemList extends React.Component {
         this.setState({ showResults: true });
     }
     nextQuestion = () =>{
-        this.props.actions.nextproblem();
+        this.props.actions.nextdiy();
         this.setState({ showResults: false,showAns: false, value: 0});
     }
     prevQuestion = () =>{
-        this.props.actions.prevproblem();
+        this.props.actions.prevdiy();
         this.setState({ showResults: false,showAns: false,value: 0});
     }
     componentDidMount = () =>{   
@@ -110,9 +110,9 @@ class ProblemList extends React.Component {
 
     render() {
         // let Data=this.props.Data;
-        // console.log(Data)
+        console.log(Data)
         // console.log(AllData)
-        // console.log(this.props.problemIndex)
+        // console.log(this.props.diyIndex)
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
@@ -125,58 +125,58 @@ class ProblemList extends React.Component {
         var choiceE="";
         var choiceF="";
         var result="";
-        if(Data[this.props.problemIndex].fields.choicesa!=null){
-            choiceA+=Data[this.props.problemIndex].fields.choicesa;
+        if(Data[this.props.diyIndex].fields.choicesa!=null){
+            choiceA+=Data[this.props.diyIndex].fields.choicesa;
         }
         const radioStyle = {
           height: '30px',
           lineHeight: '30px',
         };
-        if(Data[this.props.problemIndex].fields.choicesb!=null){
-            choiceB+=Data[this.props.problemIndex].fields.choicesb;
-        }if(Data[this.props.problemIndex].fields.choicesc!=null){
-            choiceC+=Data[this.props.problemIndex].fields.choicesc;
-        }if(Data[this.props.problemIndex].fields.choicesd!=null){
-            choiceD+=Data[this.props.problemIndex].fields.choicesd;
-        }if(Data[this.props.problemIndex].fields.choicese!=null){
-            choiceE+=Data[this.props.problemIndex].fields.choicese;
-        }if(Data[this.props.problemIndex].fields.choicesf!=null){
-            choiceF+=Data[this.props.problemIndex].fields.choicesf;
+        if(Data[this.props.diyIndex].fields.choicesb!=null){
+            choiceB+=Data[this.props.diyIndex].fields.choicesb;
+        }if(Data[this.props.diyIndex].fields.choicesc!=null){
+            choiceC+=Data[this.props.diyIndex].fields.choicesc;
+        }if(Data[this.props.diyIndex].fields.choicesd!=null){
+            choiceD+=Data[this.props.diyIndex].fields.choicesd;
+        }if(Data[this.props.diyIndex].fields.choicese!=null){
+            choiceE+=Data[this.props.diyIndex].fields.choicese;
+        }if(Data[this.props.diyIndex].fields.choicesf!=null){
+            choiceF+=Data[this.props.diyIndex].fields.choicesf;
         }
         // let questype;
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
 
-        // if(Data[this.props.problemIndex].fields.category==1)
+        // if(Data[this.props.diyIndex].fields.category==1)
         //     questype="Example  ";
-        // if(Data[this.props.problemIndex].fields.category==2)
+        // if(Data[this.props.diyIndex].fields.category==2)
         //     questype="problem  ";
-        // if(Data[this.props.problemIndex].fields.category==3)
+        // if(Data[this.props.diyIndex].fields.category==3)
         //     questype="Problem  ";
-        // if(Data[this.props.problemIndex].fields.category==4)
+        // if(Data[this.props.diyIndex].fields.category==4)
         //     questype="DIY  ";
-        // if(Data[this.props.problemIndex].fields.category==5)
+        // if(Data[this.props.diyIndex].fields.category==5)
         //     questype="Quiz  ";
         var twinOption=[];
         // var defaultOption;
-        // defaultOption=Data[this.props.problemIndex].fields.twinproblems[0];
-        for(var i=0;i<Data[this.props.problemIndex].fields.twinproblems.length;i++){
-            var indexx=Data[this.props.problemIndex].fields.twinproblems[i];
+        // defaultOption=Data[this.props.diyIndex].fields.twinproblems[0];
+        for(var i=0;i<Data[this.props.diyIndex].fields.twinproblems.length;i++){
+            var indexx=Data[this.props.diyIndex].fields.twinproblems[i];
             var iddd=AllData[pkIndex[indexx]].fields.code;
-            twinOption.push(<Option key={iddd+""} value={Data[this.props.problemIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+            twinOption.push(<Option key={iddd+""} value={Data[this.props.diyIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
         }
         var recommendOption=[];
-        if(Data[this.props.problemIndex].fields.answer==selvalue){
-            for(var i=0;i<Data[this.props.problemIndex].fields.rightproblems.length;i++){
-            var indexx=Data[this.props.problemIndex].fields.rightproblems[i];
+        if(Data[this.props.diyIndex].fields.answer==selvalue){
+            for(var i=0;i<Data[this.props.diyIndex].fields.rightproblems.length;i++){
+            var indexx=Data[this.props.diyIndex].fields.rightproblems[i];
             var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.problemIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+            recommendOption.push(<Option key={iddd+""} value={Data[this.props.diyIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
             }
         }
         else{
-            for(var i=0;i<Data[this.props.problemIndex].fields.wrongproblems.length;i++){
-            var indexx=Data[this.props.problemIndex].fields.wrongproblems[i];
+            for(var i=0;i<Data[this.props.diyIndex].fields.wrongproblems.length;i++){
+            var indexx=Data[this.props.diyIndex].fields.wrongproblems[i];
             var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.problemIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+            recommendOption.push(<Option key={iddd+""} value={Data[this.props.diyIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
             }
         }
 
@@ -195,8 +195,8 @@ class ProblemList extends React.Component {
                           <span>Problem List</span></Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            {questype[Data[this.props.problemIndex].fields.category]}
-                            {Data[this.props.problemIndex].fields.code}
+                            {questype[Data[this.props.diyIndex].fields.category]}
+                            {Data[this.props.diyIndex].fields.code}
                         </Breadcrumb.Item>
                         </Breadcrumb>
                           <div className="pannel">
@@ -206,7 +206,7 @@ class ProblemList extends React.Component {
                           </div>
                       </div>
                       <div className="questionCanvas">
-                        <div id="output" className="questionstem">{Data[this.props.problemIndex].fields.problem}</div>
+                        <div id="output" className="questionstem">{Data[this.props.diyIndex].fields.problem}</div>
                         <div className="questionchoice">
                          <RadioGroup onChange={this.onChange} value={this.state.value}>
                             <div>{choiceA==""?"":<div><Radio style={radioStyle} value={"A"}>{choiceA}</Radio></div>}</div>
@@ -253,7 +253,7 @@ class ProblemList extends React.Component {
                               </Select>:null}
                            { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
                            </div>
-                          { this.state.showAns?Data[this.props.problemIndex].fields.solutions: null }
+                          { this.state.showAns?Data[this.props.diyIndex].fields.solutions: null }
                           </div>
                         </div>
                       </div>
@@ -269,7 +269,7 @@ function mapStateToProps (state){
     return { 
             Data:state.question.questionData,
             // questionData:state.question.questionData
-            problemIndex:state.question.problemIndex,
+            diyIndex:state.question.diyIndex,
             index:state.question.index
         }
 }
@@ -278,10 +278,10 @@ function mapDispatchToProps (dispatch){
     return{
         actions: bindActionCreators({
             changeindexbyid,
-            prevproblem,
-            nextproblem
+            prevdiy,
+            nextdiy
         },dispatch)
     };
 }
-export default connect(mapStateToProps, mapDispatchToProps)(ProblemList);
+export default connect(mapStateToProps, mapDispatchToProps)(DiyList);
 
