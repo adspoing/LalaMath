@@ -21,5 +21,9 @@ export Problem from './Problem'
 export ProblemList from './ProblemList'
 export Diy from './DIY'
 export DiyList from './DiyList'
+<<<<<<< HEAD
 export Quiz from './Quiz'
 export QuizList from './QuizList'
+=======
+export Video from './Video'
+>>>>>>> 304884b1710b968e31af3784c5036cbe4848e390

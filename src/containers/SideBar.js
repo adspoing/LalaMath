@@ -72,7 +72,7 @@ class SideBar extends React.Component {
                     <Menu.Item key="16"><Link to="/QuizList"><Icon type="appstore" />Quiz</Link></Menu.Item>                   
                     <Menu.Item key="9"><Link to="/QuestionList"><Icon type="search" />Search</Link></Menu.Item>
                     <Menu.Item key="18"><Icon type="star" />Hotest</Menu.Item>                   
-                    <Menu.Item key="10"><Icon type="video-camera" />Videos</Menu.Item>                   
+                    <Menu.Item key="10"><Link to="/Video"><Icon type="video-camera" />Videos</Link></Menu.Item>                   
                     <Menu.Item key="11"><Icon type="smile-o" />Suggestions</Menu.Item>
                     <SubMenu key="sub2" title={<span><Icon type="setting" /><span>Settings</span></span>}>
                       <Menu.Item key="12">Option 9</Menu.Item>

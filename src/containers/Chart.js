@@ -54,7 +54,7 @@ class Chart extends React.Component {
                         }
                     },
                 }
-                node.name = NodeRawdata[i].names.replace(/\\n|\/n/g,"\n").replace(/\\pi/g,"π").replace(/\\beta/g,"β").replace(/\\gamma/g,"γ").replace(/\\delta/g,"Δ").replace(/\\phi/g,"φ");
+                node.name = NodeRawdata[i].names.replace(/\\n|\/n/g,"\n").replace(/\\pi/g,"π").replace(/\\beta/g,"β").replace(/\\gamma/g,"γ").replace(/\\delta/g,"δ").replace(/\\phi/g,"φ");
                 node.detail = NodeRawdata[i].detail.replace(/\\n|\/n/g,"\n");
                 node.title = NodeRawdata[i].title;
                 node.x = NodeRawdata[i].x;
