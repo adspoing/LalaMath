@@ -46,10 +46,10 @@ class Example extends React.Component {
                                     <Card  title="Chapter 1&2" bordered={false}>chapter 1&2 Example</Card>
                                   </Col>
                                   <Col span="8" onClick = {this.showexample.bind(this,"3")}>
-                                    <Link to="/ExampleList"><Card title="Chapter 3" bordered={false}>chapter 3 Example</Card></Link>
+                                    <Link to="/ExampleForm"><Card title="Chapter 3" bordered={false}>chapter 3 Example</Card></Link>
                                   </Col>
                                   <Col span="8" onClick = {this.showexample.bind(this,"4")}  >
-                                    <Link to="/ExampleList"><Card title="Chapter 4" bordered={false}>chapter4 Example</Card></Link>
+                                    <Link to="/ExampleForm"><Card title="Chapter 4" bordered={false}>chapter4 Example</Card></Link>
                                   </Col>
                                 </Row>
                                  <Row>

@@ -58,11 +58,11 @@ class SideBar extends React.Component {
                     onOpenChange={this.onOpenChange}
                     onClick={this.handleClick}
                     >
-                    <Menu.Item key="17"><Link to="/Dashboard"><Icon type="home" />Dashboard</Link></Menu.Item>                   
+                    <Menu.Item key="17"><Link to="/Dashboard"><Icon type="home" />Introduction</Link></Menu.Item>                   
                     <Menu.Item key="1"><Icon type="user" />My corner</Menu.Item>
                     <Menu.Item key="2"><Link to="/Syllabus"><Icon type="file-text" />Syllabus</Link></Menu.Item>
                     <Menu.Item key="3"><Link to="/LectureNotes"><Icon type="file-ppt" />Lecture notes</Link></Menu.Item>
-                    <Menu.Item key="4"><Link to="/Chart"><Icon type="picture" />Knowledge Graph</Link></Menu.Item>
+                    <Menu.Item key="4"><Link to="/Chart"><Icon type="picture" />Knowledge graph</Link></Menu.Item>
                     <Menu.Item key="5"><Link to="/Example"><Icon type="database" />Show room</Link></Menu.Item>
                     <SubMenu key="sub1" title={<span><Icon type="book" /><span>Play ground</span></span>}>
                       <Menu.Item key="6"><Link to="/Exercise">Exercise</Link></Menu.Item>

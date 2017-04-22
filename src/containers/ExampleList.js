@@ -4,7 +4,7 @@ import Data from '../example.js';
 import AllData from '../data.js'
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
-import { Button,Radio } from 'antd';
+import { Button,Radio,Popconfirm,message,Rate} from 'antd';
 import {prevexample,nextexample,changeindexbyid} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -38,32 +38,6 @@ class Question extends React.Component {
         selvalue=value;
         console.log(selvalue);
     }   
-    // _clickSubmitQuestion = () =>{
-    //     this.props.actions.submitquestion();
-    // }
-    // _clickNextQuestion = () =>{
-    // }
-    // _clickPrevQuestion = () =>{
-    // }
-    // submitQuestion = () =>{
-    //     this.props.clickSubmitQuestion();
-    //     if(Data[this.props.exampleIndex].fields.answer==selvalue){
-    //         var config={};
-    //         config.description=Data[this.props.exampleIndex].fields.messagesuccess;
-    //         config.message="success";
-    //         config.duration=0;
-    //         notification.success(config);
-    //     }
-    //     else
-    //     {
-    //         var config={};
-    //         config.description=Data[this.props.exampleIndex].fields.messagefailure;
-    //         config.message="error";
-    //         config.duration=0;
-    //         notification.error(config);
-    //     }
-    //     this.setState({ showResults: true });
-    // }
     nextQuestion = () =>{
         // this.props.clickNextQuestion();
         this.props.actions.nextexample();
@@ -169,7 +143,11 @@ class Question extends React.Component {
                         </Breadcrumb.Item>
                         <Breadcrumb.Item href=""> <Link to="/Example">
                           <Icon type="book" />
-                          <span>Qustion List</span></Link>
+                          <span>Example</span></Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item href=""> <Link to="/ExampleForm">
+                          <Icon type="file-text" />
+                          <span>ExampleForm</span></Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             {questype[Data[this.props.exampleIndex].fields.category]}
@@ -177,7 +155,7 @@ class Question extends React.Component {
                         </Breadcrumb.Item>
                         </Breadcrumb>
                           <div className="pannel">
-                                <Button><Link to="/Example">Quit</Link></Button>
+                                <Button><Link to="/ExampleForm">Quit</Link></Button>
                                 <Button type="prev" className="prevQuestion" onClick = {this.prevQuestion}>Prev</Button>
                                 <Button type="next" className="nextQuestion" onClick = {this.nextQuestion}>Next</Button>
                           </div>
@@ -185,42 +163,54 @@ class Question extends React.Component {
                       <div className="questionCanvas">
                         <div id="output" className="questionstem">{Data[this.props.exampleIndex].fields.problem.split("<br>").map(i => {
                            return <div>{i}</div>;
-                          })}</div>
+                          })}
+                         {Data[this.props.exampleIndex].fields.problempicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture1}/>}
+                         {Data[this.props.exampleIndex].fields.problempicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture2}/>}
+                         {Data[this.props.exampleIndex].fields.problempicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture3}/>}
+                         {Data[this.props.exampleIndex].fields.problempicture4==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture4}/>}
+                         {Data[this.props.exampleIndex].fields.problempicture5==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture5}/>}
+                         {Data[this.props.exampleIndex].fields.problempicture6==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture6}/>}
+                        </div>
                         <div className="questionanswer">
                           <div className="questionresult">
-                          <div>Twin problems: </div>
-                          <div>
-                             <Select
-                                style={{ width: 120 }}
-                                // defaultValue={twinOption[0]}
-                                placeholder="Select a twin problem"
-                                optionFilterProp="children"
-                                onChange={this.twinProblemChange}
-                                filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                              >
-                                 
-                                 {twinOption}
-                              </Select>
-                           <Button onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button>
-                           </div>
-                            <div>Recommend problems: </div>
-                           <div>
-                             <Select
-                                style={{ width: 120 }}
-                                placeholder="Select a Recommend problem"
-                                optionFilterProp="children"
-                                onChange={this.RecommendProblemChange}
-                                filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                              >
-                                 
-                                 {recommendOption}
-                            </Select>
-                           <Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>
-                           </div>
                           { Data[this.props.exampleIndex].fields.solutions.split("<br>").map(i => {
                            return <div>{i}</div>;
                           }) }
+                         {Data[this.props.exampleIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture1}/>}
+                         {Data[this.props.exampleIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture2}/>}
+                         {Data[this.props.exampleIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture3}/>}
+                          <div>{
+                                 <Select
+                                    style={{ width: 200 }}
+                                    // defaultValue={twinOption[0]}
+                                    placeholder="Select a twin problem"
+                                    optionFilterProp="children"
+                                    onChange={this.twinProblemChange}
+                                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                  >
+                                     
+                                     {twinOption}
+                                  </Select>}
+                               { <Button onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button> }
+                              
+                               { 
+                                 <Select
+                                    style={{ width: 200 }}
+                                    // defaultValue={twinOption[0]}
+                                    placeholder="Select a Recommend problem"
+                                    optionFilterProp="children"
+                                    onChange={this.RecommendProblemChange}
+                                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                  >
+                                     
+                                     {recommendOption}
+                                  </Select>}
+                               { <Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button> }
+                               </div>
                           </div>
+                          <div className="problemcomment"> { "Giving an comment on this problem"}</div>
+                           { <Rate />}
+                           { <Button onClick = {this.submitcomment}>submit</Button>}
                         </div>
                       </div>
                   </div>

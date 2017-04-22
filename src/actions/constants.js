@@ -22,3 +22,4 @@ export const CHANGE_DIY = 'changediy';
 export const PREV_QUIZ = 'prevquiz';
 export const NEXT_QUIZ = 'nextquiz';
 export const CHANGE_QUIZ = 'changequiz';
+export const CHANGE_EXAMPLE_INDEX = 'changeexampleindex'
