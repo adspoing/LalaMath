@@ -251,7 +251,7 @@ let question =  handleActions({
 	[NEXT_EXAMPLE]: (state,action) => {
 		console.log(state.index);
 		return {
-			exampleIndex: state.exampleIndex == 15 ? 15:state.exampleIndex+1,
+			exampleIndex: state.exampleIndex == 36 ? 36:state.exampleIndex+1,
 			questionData: state.questionData,
 			current:state.current,
 			index: state.index,

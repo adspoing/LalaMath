@@ -21,7 +21,9 @@ class Example extends React.Component {
     componentDidMount = () =>{   
     }
     showexample =(value)=>{
-          //console.log(value);
+          console.log(value);
+          if(value=="1&2")
+            value=1;
           this.props.actions.changeexample(value);
       }
      render() {
