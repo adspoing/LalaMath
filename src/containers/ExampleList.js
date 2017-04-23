@@ -92,6 +92,7 @@ class Question extends React.Component {
       }
 
     render() {
+        console.log(Data);
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
