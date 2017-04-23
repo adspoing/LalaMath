@@ -2,15 +2,16 @@ import ReactEcharts from 'echarts-for-react';  // or var ReactEcharts = require(
 import React from 'react';
 import Header from './Header.js';
 import SideBar from './SideBar.js';
+import AllData from '../data.js';
 import { Button,Breadcrumb,Icon,Select} from 'antd';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import echarts from 'echarts';
-import {fetchnode,fetchlink,fetchusernode} from '../actions/actions.js'
+import {changeindexbyid} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import axios from 'axios';
 import '../css/Chart.less';
-
+const Option = Select.Option;
 
 
 class Chart extends React.Component {
@@ -22,7 +23,10 @@ class Chart extends React.Component {
           tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] }
         });
          this.state = {
-             mathjax: MathJax
+             mathjax: MathJax,
+             example: [],
+             exercise: [],
+             chapter:"0",
         }
     }
     process = (NodeRawdata,userdata,LinkRawdata,chapter) =>{
@@ -54,9 +58,11 @@ class Chart extends React.Component {
                         }
                     },
                 }
-                node.name = NodeRawdata[i].names.replace(/\\n|\/n/g,"\n").replace(/\\pi/g,"π").replace(/\\beta/g,"β").replace(/\\gamma/g,"γ").replace(/\\delta/g,"δ").replace(/\\phi/g,"φ");
+                node.name = NodeRawdata[i].names.replace(/\\n|\/n/g,"\n").replace(/\\pi/g,"π").replace(/\\beta/g,"β").replace(/\\gamma/g,"γ").replace(/\\delta/g,"δ").replace(/\\phi/g,"φ").replace(/\\xi/g,"ξ");
                 node.detail = NodeRawdata[i].detail.replace(/\\n|\/n/g,"\n");
                 node.title = NodeRawdata[i].title;
+                node.example = NodeRawdata[i].example;
+                node.exercise = NodeRawdata[i].exercise;
                 node.x = NodeRawdata[i].x;
                 node.y = NodeRawdata[i].y;
                 switch(NodeRawdata[i].typ) {
@@ -164,11 +170,13 @@ class Chart extends React.Component {
             };
             return option;
     }
-    getOptionByChapter = (chapter)=>{
+    showQuestion = (index) =>{
+        this.props.actions.changeindexbyid(index);
+      }
+
+    getOptionByChapter = (chapter)=>{  
+        //let chapter = this.state.chapter;
         //console.log(chapter);
-        //this.props.actions.fetchnode(chapter);
-        //this.props.actions.fetchlink(chapter);
-        //this.props.actions.fetchusernode(chapter);
         let myChart = echarts.init(this.refs.graphics)
         let option = [];
         let that = this;
@@ -184,11 +192,32 @@ class Chart extends React.Component {
                     })
             })
         myChart.on('click', function (params) {
+                var pkIndex=[];
+                for(var i=0;i<AllData.length;i++){
+                        pkIndex[AllData[i].pk]=i;
+                }
                 //console.log(document.getElementById("detail").value);
-                let detail = "<b>Neuron Name:</br></b>" + params.data.title + "<b></br>Neuron Detail:</br></b>" + params.data.detail;
+                let detail = "<b>Neuron Name:</br></b>" + params.data.title;
+                let examplediv = [];
+                let exercisediv = [];
+                if(typeof params.data.detail != 'undefiend'){
+                    detail = detail + "<b></br>Neuron Detail:</br></b>" + params.data.detail;
+                }
                 document.getElementById('detail').innerHTML = detail;
-                console.log(that.state.mathjax)
                 that.state.mathjax.Hub.Queue(["Typeset",that.state.mathjax.Hub],"detail");
+                if(params.data.example.length != 0){   
+                    examplediv.push(<b>Examples:</b>)
+                    for (var i = 0; i < params.data.example.length; ++i){
+                        examplediv.push(<span onClick = {that.showQuestion.bind(this,pkIndex[params.data.example[i]])}><Link to="/ViewQuestion">{AllData[pkIndex[params.data.example[i]]].fields.code}   </Link></span>)
+                    }
+                }
+                if(params.data.exercise.length != 0){
+                    exercisediv.push(<b>Exercise:</b>)
+                    for (var i = 0; i < params.data.exercise.length; ++i){
+                        exercisediv.push(<Link to="/ViewQuestion">{AllData[pkIndex[params.data.exercise[i]]].fields.code} </Link>)
+                    }
+                }
+                that.setState({example:examplediv, exercise:exercisediv});
         });
 
         //this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"graphics");
@@ -209,12 +238,16 @@ class Chart extends React.Component {
     }
     handleChange = (value)=>{
     	//console.log(value)
-    	if(value==0)this.getOptionByChapter('1&2');
-    	if(value==1)this.getOptionByChapter(3);
-    	if(value==2)this.getOptionByChapter(4);
-    	if(value==3)this.getOptionByChapter(5);
-    	if(value==4)this.getOptionByChapter(6);
-    	if(value==5)this.getOptionByChapter(7);
+        let chapter = '';
+    	if(value==0)   {chapter= '1&2';}
+    	if(value==1)   {chapter=3;}
+    	if(value==2)   {chapter=4;}
+    	if(value==3)   {chapter=5;}
+    	if(value==4)   {chapter=6;}
+    	if(value==5)   {chapter=7;}
+        this.setState({chapter:value});
+        //console.log(this.state.chapter);
+        this.getOptionByChapter(chapter);
     }
     render() {
      	//console.log(MathJax)
@@ -234,11 +267,11 @@ class Chart extends React.Component {
                 </Breadcrumb>
                 <div className="belowbread"> 
                 	<Select
+                        //defaultValue = {this.state.chapter}
                         style={{ width: 200 }}
                         placeholder="Select a chapter"
-                        // onChange={handleChange}
                         optionFilterProp="children"
-                        onChange={this.handleChange}
+                        onSelect={this.handleChange}
                         filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                       >
                       <Option value="0"><Icon type="picture" />Chapter 1&2</Option>
@@ -250,7 +283,10 @@ class Chart extends React.Component {
                      </Select>
                     <div>
 	            	<div ref="graphics" id="graphics" className="chart" ></div>
-                    <div className="neuraldetail" id="detail">{this.detail}
+                    <div className="neuraldetail">
+                    <div id="detail">{this.detail}</div>
+                    <div id="questions">{this.state.example}</div>
+                    <div id="questions">{this.state.exercise}</div>
                     </div>
                     </div>
 	            </div>
@@ -270,9 +306,7 @@ function mapStateToProps (state){
 function mapDispatchToProps (dispatch){
     return{
         actions: bindActionCreators({
-            fetchnode,
-            fetchlink,
-            fetchusernode,
+            changeindexbyid,
         },dispatch)
     };
 }

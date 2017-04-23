@@ -13,7 +13,10 @@ import {SUBMIT_QUESTION, PREV_QUESTION, NEXT_QUESTION, CHANGE_INDEX, RANDOM_PLAY
 ,NEXT_PROBLEM,PREV_PROBLEM,CHANGE_PROBLEM
 ,NEXT_DIY,PREV_DIY,CHANGE_DIY,
 PREV_QUIZ,NEXT_QUIZ,CHANGE_QUIZ,
-CHANGE_EXAMPLE_INDEX
+CHANGE_EXAMPLE_INDEX,
+CHANGE_EXERCISE_INDEX,
+CHANGE_PROBLEM_INDEX,
+CHANGE_DIY_INDEX,
 } from '../actions/constants.js';
 
 // import Data from '../data.js'
@@ -25,6 +28,9 @@ let question =  handleActions({
 		return {
 			index:state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			questionData: state.questionData,
 			current:state.current,
 			exampleIndex:state.exampleIndex,
@@ -39,6 +45,9 @@ let question =  handleActions({
 		return {
 			index: state.index == 0 ? 0 : state.index-1,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			questionData: state.questionData,
 			current:state.current,
 			exampleIndex:state.exampleIndex,
@@ -53,6 +62,9 @@ let question =  handleActions({
 		return {
 			index: state.index+1,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			questionData: state.questionData,
 			current:state.current,
 			exampleIndex:state.exampleIndex,
@@ -75,6 +87,9 @@ let question =  handleActions({
 		return {
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			questionData: state.questionData,
 			current:state.current,
 			exampleIndex:state.exampleIndex,
@@ -89,6 +104,9 @@ let question =  handleActions({
 		return {
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			questionData: state.questionData,
 			current:state.current,
 			exampleIndex:state.exampleIndex,
@@ -99,17 +117,13 @@ let question =  handleActions({
 		}
 	},
 	[CHANGE_EXAMPLE]: (state,action) => {
-		console.log(action.payload);
-		var indexx;
-		if(action.payload=="3")
-			indexx=1;
-		else if(action.payload=="4")
-			indexx=12;
-		else
-			indexx=1;
+		//console.log(action.payload);
 		return {
 			index: state.index,
 			examplechapter:action.payload,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			questionData: state.questionData,
 			current:state.current,
 			exampleIndex:state.exampleIndex,
@@ -120,44 +134,50 @@ let question =  handleActions({
 		}
 	},
 	[CHANGE_EXERCISE]: (state,action) => {
-		var indexx;
-		if(action.payload=="3")
-			indexx=1;
-		else if(action.payload=="4")
-			indexx=22;
-		else
-			indexx=1;
+		
 		return {
 			index: state.index,
+			exercisechapter:action.payload,
 			examplechapter:state.examplechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			questionData: state.questionData,
 			current:state.current,
 			exampleIndex:state.exampleIndex,
-			exerciseIndex:indexx,
+			exerciseIndex:state.exerciseIndex,
 			problemIndex: state.problemIndex,
 			quizIndex:state.quizIndex,
 			diyIndex:state.diyIndex,
 		}
 	},
 	[CHANGE_PROBLEM]: (state,action) => {
-		console.log(action.payload);
-		var indexx;
-		if(action.payload=="3")
-			indexx=1;
-		else if(action.payload=="4")
-			indexx=32;
-		else if(action.payload=="7")
-			indexx=48;
-		else
-			indexx=1;
 		return {
 			index: state.index,
+			problemchapter:action.payload,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			diychapter:state.diychapter,
 			questionData: state.questionData,
 			current:state.current,
 			exampleIndex:state.exampleIndex,
 			exerciseIndex:state.exerciseIndex,
-			problemIndex: indexx,
+			problemIndex: state.problemIndex,
+			quizIndex:state.quizIndex,
+			diyIndex:state.diyIndex,
+		}
+	},
+	[CHANGE_DIY]: (state,action) => {
+		return {
+			index: state.index,
+			diychapter:action.payload,
+			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			questionData: state.questionData,
+			current:state.current,
+			exampleIndex:state.exampleIndex,
+			exerciseIndex:state.exerciseIndex,
+			problemIndex: state.problemIndex,
 			quizIndex:state.quizIndex,
 			diyIndex:state.diyIndex,
 		}
@@ -169,6 +189,9 @@ let question =  handleActions({
 			questionData:action.payload,
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			current:state.current,
 			exampleIndex:state.exampleIndex,
 			exerciseIndex:state.exerciseIndex,
@@ -181,6 +204,9 @@ let question =  handleActions({
 		return {
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			questionData: state.questionData,
 			current:state.current,
 			exampleIndex:state.exampleIndex,
@@ -195,6 +221,9 @@ let question =  handleActions({
 			current:action.payload,
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			questionData: state.questionData,
 			exampleIndex:state.exampleIndex,
 			exerciseIndex:state.exerciseIndex,
@@ -210,6 +239,9 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex: state.problemIndex,
 			quizIndex:state.quizIndex,
@@ -224,6 +256,9 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex: state.problemIndex,
 			quizIndex:state.quizIndex,
@@ -237,6 +272,9 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			problemIndex: state.problemIndex,
 			exerciseIndex:state.exerciseIndex == 0 ? 0 : state.exerciseIndex-1,
 			quizIndex:state.quizIndex,
@@ -250,6 +288,9 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			problemIndex: state.problemIndex,
 			exerciseIndex:state.exerciseIndex == 32 ? 32:state.exerciseIndex+1,
 			quizIndex:state.quizIndex,
@@ -263,6 +304,9 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex:state.problemIndex == 0 ? 0:state.problemIndex-1,
 			quizIndex:state.quizIndex,
@@ -277,6 +321,9 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex:state.problemIndex == 61 ? 61:state.problemIndex+1,
 			quizIndex:state.quizIndex,
@@ -290,6 +337,9 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex:state.problemIndex,
 			quizIndex:state.quizIndex,
@@ -303,6 +353,9 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex:state.problemIndex,
 			quizIndex:state.quizIndex,
@@ -316,6 +369,9 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex:state.problemIndex,
 			quizIndex:state.quizIndex == 0 ? 0:state.quizIndex-1,
@@ -329,10 +385,13 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex:state.problemIndex,
 			quizIndex:state.quizIndex == 9 ? 9:state.quizIndex+1,
-			diyIndex:state.diyIndex 
+			diyIndex:state.diyIndex,
 		}
 	},
 	[CHANGE_EXAMPLE_INDEX]:(state,action) => {
@@ -342,10 +401,61 @@ let question =  handleActions({
 			current:state.current,
 			index: state.index,
 			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
 			exerciseIndex:state.exerciseIndex,
 			problemIndex:state.problemIndex,
 			quizIndex:state.quizIndex,
 			diyIndex:state.diyIndex 
+		}
+	},
+	[CHANGE_EXERCISE_INDEX]:(state,action) => {
+		return {
+			exerciseIndex:action.payload,
+			exampleIndex: state.exampleIndex,
+			questionData: state.questionData,
+			current:state.current,
+			index: state.index,
+			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
+			problemIndex:state.problemIndex,
+			quizIndex:state.quizIndex,
+			diyIndex:state.diyIndex 
+		}
+	},
+	[CHANGE_PROBLEM_INDEX]:(state,action) => {
+		return {
+			problemIndex:action.payload,
+			exampleIndex: state.exampleIndex,
+			questionData: state.questionData,
+			current:state.current,
+			index: state.index,
+			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
+			exerciseIndex:state.problemIndex,
+			quizIndex:state.quizIndex,
+			diyIndex:state.diyIndex 
+		}
+	},
+	[CHANGE_DIY_INDEX]:(state,action) => {
+		return {
+			diyIndex:action.payload,
+			exampleIndex: state.exampleIndex,
+			questionData: state.questionData,
+			current:state.current,
+			index: state.index,
+			examplechapter:state.examplechapter,
+			exercisechapter:state.exercisechapter,
+			problemchapter:state.problemchapter,
+			diychapter:state.diychapter,
+			problemIndex:state.problemIndex,
+			quizIndex:state.quizIndex,
+			exerciseIndex:state.exerciseIndex 
 		}
 	}
 },{
@@ -358,6 +468,9 @@ let question =  handleActions({
 	questionData:[],
 	current:'0',
 	examplechapter:1,
+	exercisechapter:1,
+	problemchapter:1,
+	diychapter:1,
 })
 
 export default combineReducers({

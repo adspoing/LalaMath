@@ -1,7 +1,7 @@
 import React from 'react';
 import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
 import Data from '../example.js';
-import AllData from '../data.js'
+import AllData from '../data.js';
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import { Button,Radio,Popconfirm,message,Rate} from 'antd';

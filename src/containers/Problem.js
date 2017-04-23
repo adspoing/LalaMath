@@ -46,24 +46,24 @@ class Problem extends React.Component {
                 <div className="dashboardName" style={{ background: '#ECECEC', padding: '30px' }}>
                                 <Row>
                                   <Col span="8" onClick = {this.showproblem.bind(this,"1&2")}>
-                                    <Card  title="Chapter 1&2" bordered={false}>chapter 1&2 Exercise</Card>
+                                     <Link to="/ProblemForm"><Card  title="Chapter 1&2" bordered={false}>chapter 1&2 Exercise</Card></Link>
                                   </Col>
                                   <Col span="8" onClick = {this.showproblem.bind(this,"3")}>
-                                    <Link to="/ProblemList"><Card title="Chapter 3" bordered={false}>chapter 3 Exercise</Card></Link>
+                                    <Link to="/ProblemForm"><Card title="Chapter 3" bordered={false}>chapter 3 Exercise</Card></Link>
                                   </Col>
                                   <Col span="8" onClick = {this.showproblem.bind(this,"4")}  >
-                                    <Link to="/ProblemList"><Card title="Chapter 4" bordered={false}>chapter4 Exercise</Card></Link>
+                                    <Link to="/ProblemForm"><Card title="Chapter 4" bordered={false}>chapter4 Exercise</Card></Link>
                                   </Col>
                                 </Row>
                                  <Row>
                                   <Col span="8" onClick = {this.showproblem.bind(this,"5")} >
-                                    <Card title="Chapter 5" bordered={false}>chapter5 Exercise</Card>
+                                     <Link to="/ProblemForm"><Card title="Chapter 5" bordered={false}>chapter5 Exercise</Card></Link>
                                   </Col>
                                   <Col span="8" onClick = {this.showproblem.bind(this,"6")} >
-                                    <Card title="Chapter 6" bordered={false}>chapter6 Exercise</Card>
+                                     <Link to="/ProblemForm"><Card title="Chapter 6" bordered={false}>chapter6 Exercise</Card></Link>
                                   </Col>
                                   <Col span="8" onClick = {this.showproblem.bind(this,"7")} >
-                                    <Link to="/ProblemList"><Card title="Chapter 7" bordered={false}>chapter7 Exercise</Card></Link>
+                                    <Link to="/ProblemForm"><Card title="Chapter 7" bordered={false}>chapter7 Exercise</Card></Link>
                                   </Col>
                                 </Row>
                     </div>              

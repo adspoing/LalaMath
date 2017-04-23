@@ -5,7 +5,10 @@ import {SUBMIT_QUESTION, NEXT_QUESTION, PREV_QUESTION, PLAY_MODULE, RANDOM_PLAY,
 ,PREV_PROBLEM,NEXT_PROBLEM,CHANGE_PROBLEM,
 PREV_DIY,NEXT_DIY,CHANGE_DIY,
 PREV_QUIZ,NEXT_QUIZ,CHANGE_QUIZ,
-CHANGE_EXAMPLE_INDEX
+CHANGE_EXAMPLE_INDEX,
+CHANGE_EXCRCISE_INDEX,
+CHANGE_PROBLEM_INDEX,
+CHANGE_DIY_INDEX
 } from './constants';
 
 export const submitquestion = createAction(SUBMIT_QUESTION);
@@ -33,6 +36,9 @@ export const prevquiz = createAction(PREV_QUIZ);
 export const nextquiz = createAction(NEXT_QUIZ);
 export const changequiz = createAction(CHANGE_QUIZ);
 export const changeexampleindex = createAction(CHANGE_EXAMPLE_INDEX);
+export const changeexerciseindex = createAction(CHANGE_EXCRCISE_INDEX);
+export const changeproblemindex = createAction(CHANGE_PROBLEM_INDEX);
+export const changediyindex = createAction(CHANGE_DIY_INDEX);
 
 export const fetchthing = function() {
 	return dispatch => {

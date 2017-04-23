@@ -21,7 +21,7 @@ class Example extends React.Component {
     componentDidMount = () =>{   
     }
     showexample =(value)=>{
-          console.log(value);
+          //console.log(value);
           this.props.actions.changeexample(value);
       }
      render() {
@@ -43,7 +43,7 @@ class Example extends React.Component {
                 <div className="dashboardName" style={{ background: '#ECECEC', padding: '30px' }}>
                                 <Row>
                                   <Col span="8" onClick = {this.showexample.bind(this,"1&2")}>
-                                    <Card  title="Chapter 1&2" bordered={false}>chapter 1&2 Example</Card>
+                                    <Link to="/ExampleForm"><Card  title="Chapter 1&2" bordered={false}>chapter 1&2 Example</Card></Link>
                                   </Col>
                                   <Col span="8" onClick = {this.showexample.bind(this,"3")}>
                                     <Link to="/ExampleForm"><Card title="Chapter 3" bordered={false}>chapter 3 Example</Card></Link>
@@ -54,13 +54,13 @@ class Example extends React.Component {
                                 </Row>
                                  <Row>
                                   <Col span="8" onClick = {this.showexample.bind(this,"5")} >
-                                    <Card title="Chapter 5" bordered={false}>chapter5 Example</Card>
+                                    <Link to="/ExampleForm"><Card title="Chapter 5" bordered={false}>chapter5 Example</Card></Link>
                                   </Col>
                                   <Col span="8" onClick = {this.showexample.bind(this,"6")} >
-                                    <Card title="Chapter 6" bordered={false}>chapter6 Example</Card>
+                                    <Link to="/ExampleForm"><Card title="Chapter 6" bordered={false}>chapter6 Example</Card></Link>
                                   </Col>
                                   <Col span="8" onClick = {this.showexample.bind(this,"7")} >
-                                    <Card title="Chapter 7" bordered={false}>chapter7 Example</Card>
+                                    <Link to="/ExampleForm"><Card title="Chapter 7" bordered={false}>chapter7 Example</Card></Link>
                                   </Col>
                                 </Row>
                     </div>              
