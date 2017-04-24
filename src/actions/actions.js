@@ -8,7 +8,13 @@ PREV_QUIZ,NEXT_QUIZ,CHANGE_QUIZ,
 CHANGE_EXAMPLE_INDEX,
 CHANGE_EXERCISE_INDEX,
 CHANGE_PROBLEM_INDEX,
-CHANGE_DIY_INDEX
+CHANGE_DIY_INDEX,
+CHANGE_QUIZ_DATA,
+CHANGE_EXAMPLE_DATA,
+CHANGE_EXERCISE_DATA,
+CHANGE_PROBLEM_DATA,
+CHANGE_DIY_DATA,
+LOAD_DATA
 } from './constants';
 
 export const submitquestion = createAction(SUBMIT_QUESTION);
@@ -40,15 +46,22 @@ export const changeexerciseindex = createAction(CHANGE_EXERCISE_INDEX);
 export const changeproblemindex = createAction(CHANGE_PROBLEM_INDEX);
 export const changediyindex = createAction(CHANGE_DIY_INDEX);
 
-export const fetchthing = function() {
-	return dispatch => {
-		axios.get("http://lala.ust.hk:8000/get/questions/all")
-			.then(function(response) {
-				dispatch({
-					type: 'FETCH_THING',
-					payload: response.data
-				})
-			})
+export const changequizdata = createAction(CHANGE_QUIZ_DATA);
+export const changeexampledata = createAction(CHANGE_EXAMPLE_DATA);
+export const changeexercisedata = createAction(CHANGE_EXERCISE_DATA);
+export const changeproblemdata = createAction(CHANGE_PROBLEM_DATA);
+export const changediydata = createAction(CHANGE_DIY_DATA);
 
-	}
-}
+export const loaddata = createAction(LOAD_DATA);
+// export const fetchthing = function() {
+// 	return dispatch => {
+// 		axios.get("http://lala.ust.hk:8000/get/questions/all")
+// 			.then(function(response) {
+// 				dispatch({
+// 					type: 'FETCH_THING',
+// 					payload: response.data
+// 				})
+// 			})
+
+// 	}
+// }

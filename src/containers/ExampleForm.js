@@ -40,7 +40,7 @@ class ExampleForm extends React.Component {
             tm.key=count;
             tm.code=Data[i].fields.code;
             tm.difficulty=Data[i].fields.difficulty;
-            tm.acceptance="0%";
+            tm.view="0";
             count++;
             dataSource.push(tm);
          }
@@ -51,18 +51,18 @@ class ExampleForm extends React.Component {
           dataIndex: 'code',
           key: 'code',
           render: text => <Link to="/ExampleList">{text}</Link>,
-          sorter: (a, b) => a.code.split('.')[1]+a.code.split('.')[2] - b.code.split('.')[1]-b.code.split('.')[2],
+          sorter: (a, b) => a.code.split('.')[1]+a.code.split('.')[2] - (b.code.split('.')[1]+b.code.split('.')[2]),
         }, {
           title: 'Difficulty',
           dataIndex: 'difficulty',
           key: 'difficulty',
           sorter: (a, b) => a.difficulty - b.difficulty,
         }, {
-          title: 'Acceptance',
-          dataIndex: 'acceptance',
-          key: 'acceptance',
+          title: 'View',
+          dataIndex: 'view',
+          key: 'view',
         }];
-
+        console.log(this.props.allData);
         return (
         	<div>
                 <Header />
@@ -94,7 +94,8 @@ class ExampleForm extends React.Component {
 function mapStateToProps (state){
     return { 
         exampleIndex:state.question.exampleIndex,
-        examplechapter:state.question.examplechapter
+        examplechapter:state.question.examplechapter,
+        allData:state.question.allData
         }
 }
 

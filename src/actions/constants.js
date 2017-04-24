@@ -26,3 +26,15 @@ export const CHANGE_EXAMPLE_INDEX = 'changeexampleindex'
 export const CHANGE_EXERCISE_INDEX = 'changeexerciseindex'
 export const CHANGE_PROBLEM_INDEX = 'changeproblemindex'
 export const CHANGE_DIY_INDEX = 'changediyindex'
+export const CHANGE_QUIZ_DATA = 'changequizdata'
+export const CHANGE_EXAMPLE_DATA = 'changeexampleindexdata'
+export const CHANGE_EXERCISE_DATA = 'changeexerciseindexdata'
+export const CHANGE_PROBLEM__DATA = 'changeproblemindexdata'
+export const CHANGE_DIY_DATA = 'changediyindexdata'
+export const LOAD_DATA = 'loaddata'
+
+// export const changequizdata = createAction(CHANGE_QUIZ_DATA);
+// export const changeexampleindexdata = createAction(CHANGE_EXAMPLE_INDEX_DATA);
+// export const changeexerciseindexdata = createAction(CHANGE_EXERCISE_INDEX_DATA);
+// export const changeproblemindexdata = createAction(CHANGE_PROBLEM_INDEX_DATA);
+// export const changediyindexdata = createAction(CHANGE_DIY_INDEX_DATA);
