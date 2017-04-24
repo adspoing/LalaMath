@@ -22,9 +22,9 @@ class Mycorner extends React.Component {
         });
     }
     getCookie = (name) =>{
-        var cookie = "PHPSESSID=ST-246654-9tH2qwejxfebKHMXyX15-cas1; token=eebec1e2aadbe04a81f503784f0d844c; userid=chuac; id=14; sessionid=f0x2txscpbtqq5vbbh48rbdl9ki36z6v; csrftoken=OCOoUA5LqTkIydLCfQWuIECH7ZgGEoBihL410VUmZsVK5iZG8Qryy0MCCM3YVeA1";
+        //var cookie = "PHPSESSID=ST-246654-9tH2qwejxfebKHMXyX15-cas1; token=eebec1e2aadbe04a81f503784f0d844c; userid=chuac; id=14; sessionid=f0x2txscpbtqq5vbbh48rbdl9ki36z6v; csrftoken=OCOoUA5LqTkIydLCfQWuIECH7ZgGEoBihL410VUmZsVK5iZG8Qryy0MCCM3YVeA1";
         var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
-        if(arr=cookie.match(reg))
+        if(arr=document.cookie.match(reg))
      
             return unescape(arr[2]); 
         else 
@@ -32,6 +32,11 @@ class Mycorner extends React.Component {
     }
 
     process = (ability) =>{
+            //console.log(typeof(ability));
+            let value = [];
+            for (var i = 1; i < 5;i++){
+                value[i-1] = i
+            }
             var option = {
                 radar: {
                     // shape: 'circle',
@@ -48,8 +53,8 @@ class Mycorner extends React.Component {
                     // areaStyle: {normal: {}},
                     data : [
                         {
-                            value : [3, 4, 3, 3, 2, 3],
-                            name : '预算分配（Allocated Budget）'
+                            value : value,
+                            name : 'Abilities'
                         }
                     ]
                 }]
@@ -67,13 +72,13 @@ class Mycorner extends React.Component {
         let option = [];
         let that = this;
         var userid = this.getCookie("id");
-        console.log(userid);
-        //axios.get("http://lala.ust.hk:8000/get/api/users/"+ userid +"/neurons/"+chapter)
-        //    .then(function(ability) {
-        //            option = that.process(ability.data);
-        //            //console.log("After fetching data",option);
-        //           myChart.setOption(option);
-        //    })
+        axios.get("http://lala.ust.hk:8000/get/api/evaluate/"+ userid)
+            .then(function(ability) {
+                console.log(ability)
+                    option = that.process(ability.data);
+                    //console.log("After fetching data",option);
+                   myChart.setOption(option);
+            })
         option = that.process([]);
         myChart.setOption(option);
         //this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"graphics");
@@ -103,24 +108,25 @@ class Mycorner extends React.Component {
                     <Breadcrumb.Item href="">
                       <Link to="/Home"><Icon type="home" />Home</Link>
                     </Breadcrumb.Item>
-                    <Breadcrumb.Item href=""> <Link to="/Chart">
+                    <Breadcrumb.Item href=""> <Link to="/Mycorner">
                       <Icon type="picture" />
-                      <span>Knowledge Graph</span></Link>
+                      <span>Mycorner</span></Link>
                     </Breadcrumb.Item>
                 </Breadcrumb>
+                <h1>Hi, {this.getCookie("userid")}</h1>
                 <div className="completation"> 
                     <h1>Exercise</h1>
-                    <Progress percent={23} strokeWidth={15}/>
+                    <Progress percent={1} strokeWidth={15}/>
                     <h1>Problem</h1>
-                    <Progress percent={50} strokeWidth={15}/>
+                    <Progress percent={5} strokeWidth={15}/>
                     <h1>DIY</h1>
-                    <Progress percent={70} strokeWidth={15}/>
+                    <Progress percent={7} strokeWidth={15}/>
                     <h1>Example</h1>
-                    <Progress percent={20} strokeWidth={15}/>
+                    <Progress percent={2} strokeWidth={15}/>
                     <h1>Quiz</h1>
-                    <Progress percent={50} strokeWidth={15}/>
+                    <Progress percent={5} strokeWidth={15}/>
                 </div>
-	            <div ref="graphics" id="graphics" className="chart" ></div>
+	            <div ref="graphics" id="graphics" className="radar" ></div>
 	            </div>
 	        </div>
         )
@@ -128,7 +134,7 @@ class Mycorner extends React.Component {
 }
 function mapStateToProps (state){
     return { 
-            chapter:state.graph.chapter,
+            //chapter:state.graph.chapter,
             // userdata:state.chart.userData,
             // linkdata:state.chart.linkData,
         }
@@ -137,8 +143,6 @@ function mapStateToProps (state){
 function mapDispatchToProps (dispatch){
     return{
         actions: bindActionCreators({
-            changeindexbyid,
-            setchapter,
         },dispatch)
     };
 }
