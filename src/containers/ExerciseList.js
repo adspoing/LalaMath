@@ -4,8 +4,8 @@ import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
 // import AllData from '../data.js'
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
-import { Button,Radio,Popconfirm,message,Rate} from 'antd';
-import {changeindexbyid,prevexercise,nextexercise} from '../actions/actions.js'
+import { Button,Radio,Popconfirm,message,Rate,Spin} from 'antd';
+import {changeindexbyid,prevexercise,nextexercise,loaddata,changeexercisedata} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import axios from 'axios';
@@ -17,13 +17,7 @@ const RadioGroup = Radio.Group;
 var selvalue;
 var twinProblem;
 var RecommendProblem;
-var choiceA="";
-var choiceB="";
-var choiceC="";
-var choiceD="";
-var choiceE="";
-var choiceF="";
-var result="";
+
 var twinOption=[];
 var recommendOption=[];
 class ExerciseList extends React.Component {
@@ -41,13 +35,15 @@ class ExerciseList extends React.Component {
              showResults: false,
              showAns: false,
              value: 0,
-             selvalue: 0
+             selvalue: 0,
+             loading:true,
         }
     }
     handleChange(value){
         this.setState({ selvalue: value });
     }   
     submitQuestion = () =>{
+        let Data=this.props.exerciseData;
         if(Data[this.props.exerciseIndex].fields.answer==this.state.selvalue){
             var config={};
             config.description=Data[this.props.exerciseIndex].fields.messagesuccess;
@@ -147,7 +143,25 @@ class ExerciseList extends React.Component {
        submitcomment = () =>{
           message.success('Thanks for your comment');
       }
-
+      componentWillMount = () =>{
+          if(this.props.allData.length==0){
+            axios.get('http://lala.ust.hk:8000/get/questions/all')
+            .then(res => {
+              this.props.actions.loaddata(res.data);
+              this.setState({loading: false});
+            });
+          }else{
+              this.setState({loading: false});
+          }
+          if(this.props.exerciseData.length==0){
+              axios.get('http://lala.ust.hk:8000/get/questions/all?category=2')
+              .then(res => {
+                this.props.actions.changeexercisedata(res.data);
+              });
+          }else{
+              this.setState({loading: false});
+          }
+      }
 
     render() {
         let AllData=this.props.allData;
@@ -156,53 +170,54 @@ class ExerciseList extends React.Component {
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
         }
-        // var choiceA="";
-        // var choiceB="";
-        // var choiceC="";
-        // var choiceD="";
-        // var choiceE="";
-        // var choiceF="";
-        // var result="";
-        if(Data[this.props.exerciseIndex].fields.choicesa!=null){
-            choiceA+=Data[this.props.exerciseIndex].fields.choicesa;
-        }
+        var choiceA="";
+        var choiceB="";
+        var choiceC="";
+        var choiceD="";
+        var choiceE="";
+        var choiceF="";
+        var result="";
         const radioStyle = {
-          height: '30px',
-          lineHeight: '30px',
+            height: '30px',
+            lineHeight: '30px',
         };
-        if(Data[this.props.exerciseIndex].fields.choicesb!=null){
-            choiceB+=Data[this.props.exerciseIndex].fields.choicesb;
-        }if(Data[this.props.exerciseIndex].fields.choicesc!=null){
-            choiceC+=Data[this.props.exerciseIndex].fields.choicesc;
-        }if(Data[this.props.exerciseIndex].fields.choicesd!=null){
-            choiceD+=Data[this.props.exerciseIndex].fields.choicesd;
-        }if(Data[this.props.exerciseIndex].fields.choicese!=null){
-            choiceE+=Data[this.props.exerciseIndex].fields.choicese;
-        }if(Data[this.props.exerciseIndex].fields.choicesf!=null){
-            choiceF+=Data[this.props.exerciseIndex].fields.choicesf;
-        }
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
- 
-        for(var i=0;i<Data[this.props.exerciseIndex].fields.twinproblems.length;i++){
-            var indexx=Data[this.props.exerciseIndex].fields.twinproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            twinOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+        if(AllData.length!=0){
+              if(Data[this.props.exerciseIndex].fields.choicesa!=null){
+                  choiceA+=Data[this.props.exerciseIndex].fields.choicesa;
+              }
+              if(Data[this.props.exerciseIndex].fields.choicesb!=null){
+                  choiceB+=Data[this.props.exerciseIndex].fields.choicesb;
+              }if(Data[this.props.exerciseIndex].fields.choicesc!=null){
+                  choiceC+=Data[this.props.exerciseIndex].fields.choicesc;
+              }if(Data[this.props.exerciseIndex].fields.choicesd!=null){
+                  choiceD+=Data[this.props.exerciseIndex].fields.choicesd;
+              }if(Data[this.props.exerciseIndex].fields.choicese!=null){
+                  choiceE+=Data[this.props.exerciseIndex].fields.choicese;
+              }if(Data[this.props.exerciseIndex].fields.choicesf!=null){
+                  choiceF+=Data[this.props.exerciseIndex].fields.choicesf;
+              }
+       
+              for(var i=0;i<Data[this.props.exerciseIndex].fields.twinproblems.length;i++){
+                  var indexx=Data[this.props.exerciseIndex].fields.twinproblems[i];
+                  var iddd=AllData[pkIndex[indexx]].fields.code;
+                  twinOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+              }
+              if(Data[this.props.exerciseIndex].fields.answer==this.state.selvalue){
+                  for(var i=0;i<Data[this.props.exerciseIndex].fields.rightproblems.length;i++){
+                  var indexx=Data[this.props.exerciseIndex].fields.rightproblems[i];
+                  var iddd=AllData[pkIndex[indexx]].fields.code;
+                  recommendOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+                  }
+              }
+              else{
+                  for(var i=0;i<Data[this.props.exerciseIndex].fields.wrongproblems.length;i++){
+                  var indexx=Data[this.props.exerciseIndex].fields.wrongproblems[i];
+                  var iddd=AllData[pkIndex[indexx]].fields.code;
+                  recommendOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+                  }
+              }
         }
-        if(Data[this.props.exerciseIndex].fields.answer==this.state.selvalue){
-            for(var i=0;i<Data[this.props.exerciseIndex].fields.rightproblems.length;i++){
-            var indexx=Data[this.props.exerciseIndex].fields.rightproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-            }
-        }
-        else{
-            for(var i=0;i<Data[this.props.exerciseIndex].fields.wrongproblems.length;i++){
-            var indexx=Data[this.props.exerciseIndex].fields.wrongproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-            }
-        }
-
         return (
             <div>
                 <div className="exam-bg">
@@ -222,8 +237,8 @@ class ExerciseList extends React.Component {
                           <span>ExerciseForm</span></Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            {questype[Data[this.props.exerciseIndex].fields.category]}
-                            {Data[this.props.exerciseIndex].fields.code}
+                            {Data.length!=0?questype[Data[this.props.exerciseIndex].fields.category]:null}
+                            {Data.length!=0?Data[this.props.exerciseIndex].fields.code:null}
                         </Breadcrumb.Item>
                         </Breadcrumb>
                           <div className="pannel">
@@ -233,18 +248,20 @@ class ExerciseList extends React.Component {
                           </div>
                       </div>
                       <div className="questionCanvas">
+                        <Spin spinning={this.state.loading} tip="Loading questions...">
                         <div id="output" className="questionstem">
-                         {Data[this.props.exerciseIndex].fields.problem.split("<br>").map(i => {
+                         {Data.length!=0?Data[this.props.exerciseIndex].fields.problem.split("<br>").map(i => {
                            return <div>{i}</div>;
-                          })}
-                         {Data[this.props.exerciseIndex].fields.problempicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.problempicture1}/>}
-                         {Data[this.props.exerciseIndex].fields.problempicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.problempicture2}/>}
-                         {Data[this.props.exerciseIndex].fields.problempicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.problempicture3}/>}
-                         {Data[this.props.exerciseIndex].fields.problempicture4==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.problempicture4}/>}
-                         {Data[this.props.exerciseIndex].fields.problempicture5==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.problempicture5}/>}
-                         {Data[this.props.exerciseIndex].fields.problempicture6==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.problempicture6}/>}
+                          }):null}
+                         {Data.length!=0?Data[this.props.exerciseIndex].fields.problempicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.problempicture1}/>:null}
+                         {Data.length!=0?Data[this.props.exerciseIndex].fields.problempicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.problempicture2}/>:null}
+                         {Data.length!=0?Data[this.props.exerciseIndex].fields.problempicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.problempicture3}/>:null}
+                         {Data.length!=0?Data[this.props.exerciseIndex].fields.problempicture4==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.problempicture4}/>:null}
+                         {Data.length!=0?Data[this.props.exerciseIndex].fields.problempicture5==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.problempicture5}/>:null}
+                         {Data.length!=0?Data[this.props.exerciseIndex].fields.problempicture6==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.problempicture6}/>:null}
 
                          </div>
+                        </Spin>
                         <div className="questionchoice">
                          <RadioGroup onChange={this.onChange} value={this.state.value}>
                             <div>{choiceA==""?"":<div><Radio style={radioStyle} value={"A"}><div className="choicecontent">{choiceA.split("<br>").map(i => {
@@ -278,12 +295,12 @@ class ExerciseList extends React.Component {
                           </div>
                           <div className="questionbutton">{ this.state.showResults?<Button className="submitQuestion" onClick = {this.showAns}>Show Result</Button>: null }</div>
                           <div className="questionresult">
-                          { this.state.showAns?Data[this.props.exerciseIndex].fields.solutions.split("<br>").map(i => {
+                          { Data.length!=0?this.state.showAns?Data[this.props.exerciseIndex].fields.solutions.split("<br>").map(i => {
                            return <div>{i}</div>;
-                          }): null }
-                         {this.state.showAns?Data[this.props.exerciseIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.solutionspicture1}/>:null}
-                         {this.state.showAns?Data[this.props.exerciseIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.solutionspicture2}/>:null}
-                         {this.state.showAns?Data[this.props.exerciseIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.solutionspicture3}/>:null}
+                          }): null :null}
+                         {Data.length!=0?this.state.showAns?Data[this.props.exerciseIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.solutionspicture1}/>:null:null}
+                         {Data.length!=0?this.state.showAns?Data[this.props.exerciseIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.solutionspicture2}/>:null:null}
+                         {Data.length!=0?this.state.showAns?Data[this.props.exerciseIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exerciseIndex].fields.solutionspicture3}/>:null:null}
                           <div>{ this.state.showAns?
                                  <Select
                                     style={{ width: 200 }}
@@ -342,7 +359,9 @@ function mapDispatchToProps (dispatch){
         actions: bindActionCreators({
             changeindexbyid,
             prevexercise,
-            nextexercise
+            nextexercise,
+            loaddata,
+            changeexercisedata
         },dispatch)
     };
 }

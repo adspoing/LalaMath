@@ -64,7 +64,7 @@ class Exercise extends React.Component {
                       <span>Exercise</span></Link>
                     </Breadcrumb.Item>
                 </Breadcrumb>
-                <Spin spinning={this.state.loading}>
+                <Spin spinning={this.state.loading} tip="Loading questions...">
                 <div className="belowbread"> 
                 <div className="dashboardName" style={{ background: '#ECECEC', padding: '30px' }}>
                                 <Row>

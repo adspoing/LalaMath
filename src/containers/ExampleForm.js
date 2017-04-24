@@ -19,7 +19,7 @@ class ExampleForm extends React.Component {
         this.displayName = 'ExampleForm';
     }
     onrowclick=(record, index)=>{
-         console.log(record.code);
+         // console.log(record.code);
          var indexxx;
          for(var i=0;i<Data.length;i++){
             if(Data[i].fields.code==record.code){
@@ -44,7 +44,7 @@ class ExampleForm extends React.Component {
             count++;
             dataSource.push(tm);
          }
-         console.log(dataSource[0].code.split('.')[1]+dataSource[0].code.split('.')[2]);
+         // console.log(dataSource[0].code.split('.')[1]+dataSource[0].code.split('.')[2]);
 
         const columns = [{
           title: 'Code',
@@ -62,7 +62,7 @@ class ExampleForm extends React.Component {
           dataIndex: 'view',
           key: 'view',
         }];
-        console.log(this.props.allData);
+        // console.log(this.props.allData);
         return (
         	<div>
                 <Header />

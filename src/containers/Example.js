@@ -43,7 +43,7 @@ class Example extends React.Component {
             axios.get('http://lala.ust.hk:8000/get/questions/all?category=1')
             .then(res => {
               this.props.actions.changeexampledata(res.data);
-              // this.setState({loading: false});
+              // console.log(res.data);
             });
         }else{
             this.setState({loading: false});
@@ -65,7 +65,7 @@ class Example extends React.Component {
                       <span>Example</span></Link>
                     </Breadcrumb.Item>
                 </Breadcrumb>
-                <Spin spinning={this.state.loading}>
+                <Spin spinning={this.state.loading} tip="Loading questions...">
                 <div className="belowbread"> 
                 <div className="dashboardName" style={{ background: '#ECECEC', padding: '30px' }}>
                                 <Row>

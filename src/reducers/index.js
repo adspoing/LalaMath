@@ -294,9 +294,9 @@ let question =  handleActions({
 		}
 	},
 	[NEXT_EXAMPLE]: (state,action) => {
-		console.log(state.index);
+		// console.log(state.exampleData.length);
 		return {
-			exampleIndex: state.exampleIndex == 36 ? 36:state.exampleIndex+1,
+			exampleIndex: state.exampleIndex == state.exampleData.length-1 ? state.exampleData.length-1:state.exampleIndex+1,
 			questionData: state.questionData,
 			current:state.current,
 			exerciseData:state.exerciseData,

@@ -5,7 +5,7 @@ import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import { Button,Radio,Popconfirm,message,Rate,Spin} from 'antd';
-import {prevexample,nextexample,changeindexbyid} from '../actions/actions.js'
+import {prevexample,nextexample,changeindexbyid,changeexampledata,loaddata} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import axios from 'axios';
@@ -60,17 +60,24 @@ class Question extends React.Component {
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
     }
     componentWillMount = () =>{
-        // axios.get('http://lala.ust.hk:8000/get/questions/all')
-        // .then(res => {
-        //   axios.get('http://lala.ust.hk:8000/get/questions/all?category=1').
-        //   then(ress => {
-        //       console.log(res.data);
-        //       console.log(ress.data);
-        //       this.setState({ AllData:res.data,Data:ress.data ,loading: false});
-        //   })
-        // });
-
-    }
+          if(this.props.allData.length==0){
+            axios.get('http://lala.ust.hk:8000/get/questions/all')
+            .then(res => {
+              this.props.actions.loaddata(res.data);
+              this.setState({loading: false});
+            });
+          }else{
+              this.setState({loading: false});
+          }
+          if(this.props.exampleData.length==0){
+              axios.get('http://lala.ust.hk:8000/get/questions/all?category=1')
+              .then(res => {
+                this.props.actions.changeexampledata(res.data);
+              });
+          }else{
+              this.setState({loading: false});
+          }
+      }
       twinProblemChange = (value) =>{
         var pkIndex=[];
         let AllData = this.props.allData;
@@ -108,29 +115,31 @@ class Question extends React.Component {
         // console.log(AllData);
         // console.log(Data);
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
-        var pkIndex=[];
-        for(var i=0;i<AllData.length;i++){
-          pkIndex[AllData[i].pk]=i;
-        }
-        for(var i=0;i<Data[this.props.exampleIndex].fields.twinproblems.length;i++){
-            var indexx=Data[this.props.exampleIndex].fields.twinproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            twinOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-        }
-        if(Data[this.props.exampleIndex].fields.answer==selvalue){
-            for(var i=0;i<Data[this.props.exampleIndex].fields.rightproblems.length;i++){
-            var indexx=Data[this.props.exampleIndex].fields.rightproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.exampleIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+        if(AllData.length!=0){
+            var pkIndex=[];
+            for(var i=0;i<AllData.length;i++){
+              pkIndex[AllData[i].pk]=i;
             }
-        }
-        else{
-            for(var i=0;i<Data[this.props.exampleIndex].fields.wrongproblems.length;i++){
-            var indexx=Data[this.props.exampleIndex].fields.wrongproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+            for(var i=0;i<Data[this.props.exampleIndex].fields.twinproblems.length;i++){
+                var indexx=Data[this.props.exampleIndex].fields.twinproblems[i];
+                var iddd=AllData[pkIndex[indexx]].fields.code;
+                twinOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
             }
-        }
+            if(Data[this.props.exampleIndex].fields.answer==selvalue){
+                for(var i=0;i<Data[this.props.exampleIndex].fields.rightproblems.length;i++){
+                var indexx=Data[this.props.exampleIndex].fields.rightproblems[i];
+                var iddd=AllData[pkIndex[indexx]].fields.code;
+                recommendOption.push(<Option key={iddd+""} value={Data[this.props.exampleIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+                }
+            }
+            else{
+                for(var i=0;i<Data[this.props.exampleIndex].fields.wrongproblems.length;i++){
+                var indexx=Data[this.props.exampleIndex].fields.wrongproblems[i];
+                var iddd=AllData[pkIndex[indexx]].fields.code;
+                recommendOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+                }
+            }
+          }
          // console.log(Data);
         // console.log(Data[0]);
         // let AllData = this.state.AllData;
@@ -191,6 +200,7 @@ class Question extends React.Component {
                           </div>
                       </div>
                       <div className="questionCanvas">
+                        <Spin spinning={this.state.loading} tip="Loading questions...">
                         <div id="output" className="questionstem">{Data.length!=0?Data[this.props.exampleIndex].fields.problem.split("<br>").map(i => {
                            return <div>{i}</div>;
                           }):null}
@@ -242,6 +252,7 @@ class Question extends React.Component {
                            { <Rate />}
                            { <Button onClick = {this.submitcomment}>submit</Button>}
                         </div>
+                        </Spin>
                       </div>
                   </div>
                 </div>
@@ -265,7 +276,9 @@ function mapDispatchToProps (dispatch){
         actions: bindActionCreators({
           changeindexbyid,
             prevexample,
-            nextexample
+            nextexample,
+            changeexampledata,
+            loaddata
         },dispatch)
     };
 }
