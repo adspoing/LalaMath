@@ -58,28 +58,23 @@ class SideBar extends React.Component {
                     onOpenChange={this.onOpenChange}
                     onClick={this.handleClick}
                     >
-                    <Menu.Item key="17"><Link to="/Dashboard"><Icon type="home" />Introduction</Link></Menu.Item>                   
-                    <Menu.Item key="1"><Icon type="user" />My corner</Menu.Item>
-                    <Menu.Item key="2"><Link to="/Syllabus"><Icon type="file-text" />Syllabus</Link></Menu.Item>
-                    <Menu.Item key="3"><Link to="/LectureNotes"><Icon type="file-ppt" />Lecture notes</Link></Menu.Item>
-                    <Menu.Item key="4"><Link to="/Chart"><Icon type="picture" />Knowledge graph</Link></Menu.Item>
-                    <Menu.Item key="5"><Link to="/Example"><Icon type="database" />Show room</Link></Menu.Item>
+                    <Menu.Item key="1"><Link to="/Dashboard"><Icon type="home" />Introduction</Link></Menu.Item>                   
+                    <Menu.Item key="2"><Icon type="user" />My corner</Menu.Item>
+                    <Menu.Item key="3"><Link to="/Syllabus"><Icon type="file-text" />Syllabus</Link></Menu.Item>
+                    <Menu.Item key="4"><Link to="/LectureNotes"><Icon type="file-ppt" />Lecture notes</Link></Menu.Item>
+                    <Menu.Item key="5"><Link to="/Chart"><Icon type="picture" />Knowledge graph</Link></Menu.Item>
+                    <Menu.Item key="6"><Link to="/Example"><Icon type="database" />Show room</Link></Menu.Item>
                     <SubMenu key="sub1" title={<span><Icon type="book" /><span>Play ground</span></span>}>
-                      <Menu.Item key="6"><Link to="/Exercise">Exercise</Link></Menu.Item>
-                      <Menu.Item key="7"><Link to="/Problem">Problem</Link></Menu.Item>
-                      <Menu.Item key="8"><Link to="/Diy">DIY</Link></Menu.Item>
+                      <Menu.Item key="7"><Link to="/Exercise">Exercise</Link></Menu.Item>
+                      <Menu.Item key="8"><Link to="/Problem">Problem</Link></Menu.Item>
+                      <Menu.Item key="9"><Link to="/Diy">DIY</Link></Menu.Item>
                     </SubMenu>
-                    <Menu.Item key="16"><Link to="/QuizList"><Icon type="appstore" />Quiz</Link></Menu.Item>                   
-                    <Menu.Item key="9"><Link to="/QuestionList"><Icon type="search" />Search</Link></Menu.Item>
-                    <Menu.Item key="18"><Icon type="star" />Hotest</Menu.Item>                   
-                    <Menu.Item key="10"><Link to="/Video"><Icon type="video-camera" />Videos</Link></Menu.Item>                   
-                    <Menu.Item key="11"><Icon type="smile-o" />Suggestions</Menu.Item>
-                    <SubMenu key="sub2" title={<span><Icon type="setting" /><span>Settings</span></span>}>
-                      <Menu.Item key="12">Option 9</Menu.Item>
-                      <Menu.Item key="13">Option 10</Menu.Item>
-                      <Menu.Item key="14">Option 11</Menu.Item>
-                      <Menu.Item key="15">Option 12</Menu.Item>
-                    </SubMenu>
+                    <Menu.Item key="10"><Link to="/QuizList"><Icon type="appstore" />Quiz</Link></Menu.Item>                   
+                    <Menu.Item key="11"><Link to="/QuestionList"><Icon type="search" />Search</Link></Menu.Item>
+                    <Menu.Item key="12"><Icon type="star" />Hottest</Menu.Item>                   
+                    <Menu.Item key="13"><Link to="/Video"><Icon type="video-camera" />Videos</Link></Menu.Item>                   
+                    <Menu.Item key="14"><Icon type="smile-o" />Suggestions</Menu.Item>
+                    <Menu.Item key="15"><Icon type="setting" />Settings</Menu.Item>
                 </Menu>
             </div>
         )

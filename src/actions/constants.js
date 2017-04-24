@@ -23,6 +23,6 @@ export const PREV_QUIZ = 'prevquiz';
 export const NEXT_QUIZ = 'nextquiz';
 export const CHANGE_QUIZ = 'changequiz';
 export const CHANGE_EXAMPLE_INDEX = 'changeexampleindex'
-export const CHANGE_EXCRCISE_INDEX = 'changeexerciseindex'
+export const CHANGE_EXERCISE_INDEX = 'changeexerciseindex'
 export const CHANGE_PROBLEM_INDEX = 'changeproblemindex'
 export const CHANGE_DIY_INDEX = 'changediyindex'

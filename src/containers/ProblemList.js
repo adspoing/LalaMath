@@ -182,6 +182,10 @@ class ProblemList extends React.Component {
                           <Icon type="book" />
                           <span>Problem List</span></Link>
                         </Breadcrumb.Item>
+                        <Breadcrumb.Item href=""> <Link to="/ProblemForm">
+                          <Icon type="file-text" />
+                          <span>ProblemForm</span></Link>
+                        </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             {questype[Data[this.props.problemIndex].fields.category]}
                             {Data[this.props.problemIndex].fields.code}

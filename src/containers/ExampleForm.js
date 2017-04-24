@@ -20,8 +20,6 @@ class ExampleForm extends React.Component {
     }
     onrowclick=(record, index)=>{
          console.log(record.code);
-         // console.log(Data[index].fields.code);
-         // var count = 0;
          var indexxx;
          for(var i=0;i<Data.length;i++){
             if(Data[i].fields.code==record.code){
@@ -46,21 +44,25 @@ class ExampleForm extends React.Component {
             count++;
             dataSource.push(tm);
          }
+         console.log(dataSource[0].code.split('.')[1]+dataSource[0].code.split('.')[2]);
 
         const columns = [{
           title: 'Code',
           dataIndex: 'code',
           key: 'code',
           render: text => <Link to="/ExampleList">{text}</Link>,
+          sorter: (a, b) => a.code.split('.')[1]+a.code.split('.')[2] - b.code.split('.')[1]-b.code.split('.')[2],
         }, {
           title: 'Difficulty',
           dataIndex: 'difficulty',
           key: 'difficulty',
+          sorter: (a, b) => a.difficulty - b.difficulty,
         }, {
           title: 'Acceptance',
           dataIndex: 'acceptance',
           key: 'acceptance',
         }];
+
         return (
         	<div>
                 <Header />

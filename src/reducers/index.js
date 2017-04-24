@@ -411,8 +411,9 @@ let question =  handleActions({
 		}
 	},
 	[CHANGE_EXERCISE_INDEX]:(state,action) => {
+		console.log(action.payload);
 		return {
-			exerciseIndex:action.payload,
+			problemIndex: state.problemIndex,
 			exampleIndex: state.exampleIndex,
 			questionData: state.questionData,
 			current:state.current,
@@ -421,7 +422,7 @@ let question =  handleActions({
 			exercisechapter:state.exercisechapter,
 			problemchapter:state.problemchapter,
 			diychapter:state.diychapter,
-			problemIndex:state.problemIndex,
+			exerciseIndex:action.payload,
 			quizIndex:state.quizIndex,
 			diyIndex:state.diyIndex 
 		}
@@ -437,7 +438,7 @@ let question =  handleActions({
 			exercisechapter:state.exercisechapter,
 			problemchapter:state.problemchapter,
 			diychapter:state.diychapter,
-			exerciseIndex:state.problemIndex,
+			exerciseIndex:state.exerciseIndex,
 			quizIndex:state.quizIndex,
 			diyIndex:state.diyIndex 
 		}

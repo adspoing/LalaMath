@@ -34,13 +34,9 @@ class ExerciseList extends React.Component {
         }
     }
     handleChange(value){
-        // console.log(`selected ${value}`);
-        // selvalue=value;
         this.setState({ selvalue: value });
-        // console.log(selvalue);
     }   
     submitQuestion = () =>{
-        // this.props.clickSubmitQuestion();
         if(Data[this.props.exerciseIndex].fields.answer==this.state.selvalue){
             var config={};
             config.description=Data[this.props.exerciseIndex].fields.messagesuccess;
@@ -116,9 +112,7 @@ class ExerciseList extends React.Component {
 
 
     render() {
-        // let Data=this.props.Data;
-        console.log(Data)
-        // console.log(this.props.exerciseIndex)
+        console.log(this.props.exerciseIndex)
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
@@ -149,19 +143,8 @@ class ExerciseList extends React.Component {
             choiceF+=Data[this.props.exerciseIndex].fields.choicesf;
         }
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
-        // if(Data[this.props.exerciseIndex].fields.category==1)
-        //     questype="Example  ";
-        // if(Data[this.props.exerciseIndex].fields.category==2)
-        //     questype="Exercise  ";
-        // if(Data[this.props.exerciseIndex].fields.category==3)
-        //     questype="Problem  ";
-        // if(Data[this.props.exerciseIndex].fields.category==4)
-        //     questype="DIY  ";
-        // if(Data[this.props.exerciseIndex].fields.category==5)
-        //     questype="Quiz  ";
+ 
         var twinOption=[];
-        // var defaultOption;
-        // defaultOption=Data[this.props.exerciseIndex].fields.twinproblems[0];
         for(var i=0;i<Data[this.props.exerciseIndex].fields.twinproblems.length;i++){
             var indexx=Data[this.props.exerciseIndex].fields.twinproblems[i];
             var iddd=AllData[pkIndex[indexx]].fields.code;
@@ -197,13 +180,17 @@ class ExerciseList extends React.Component {
                           <Icon type="book" />
                           <span>Exercise List</span></Link>
                         </Breadcrumb.Item>
+                        <Breadcrumb.Item href=""> <Link to="/ExerciseForm">
+                          <Icon type="file-text" />
+                          <span>ExerciseForm</span></Link>
+                        </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             {questype[Data[this.props.exerciseIndex].fields.category]}
                             {Data[this.props.exerciseIndex].fields.code}
                         </Breadcrumb.Item>
                         </Breadcrumb>
                           <div className="pannel">
-                                <Button><Link to="/Exercise">Quit</Link></Button>
+                                <Button><Link to="/ExerciseForm">Quit</Link></Button>
                                 <Button type="prev" className="prevQuestion" onClick = {this.prevQuestion}>Prev</Button>
                                 <Button type="next" className="nextQuestion" onClick = {this.nextQuestion}>Next</Button>
                           </div>
