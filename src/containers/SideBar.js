@@ -59,7 +59,7 @@ class SideBar extends React.Component {
                     onClick={this.handleClick}
                     >
                     <Menu.Item key="1"><Link to="/Dashboard"><Icon type="home" />Introduction</Link></Menu.Item>                   
-                    <Menu.Item key="2"><Icon type="user" />My corner</Menu.Item>
+                    <Menu.Item key="2"><Link to="/Mycorner"><Icon type="user" />My corner</Link></Menu.Item>
                     <Menu.Item key="3"><Link to="/Syllabus"><Icon type="file-text" />Syllabus</Link></Menu.Item>
                     <Menu.Item key="4"><Link to="/LectureNotes"><Icon type="file-ppt" />Lecture notes</Link></Menu.Item>
                     <Menu.Item key="5"><Link to="/Chart"><Icon type="picture" />Knowledge graph</Link></Menu.Item>

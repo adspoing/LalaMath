@@ -5,13 +5,15 @@ import { Menu, Dropdown, Icon } from 'antd';
 import Header from './Header.js';
 import SideBar from './SideBar.js';
 import Question from './Question.js';
-import {changeindexbyid,search} from '../actions/actions.js'
+import {changeindexbyid,search,setchapter} from '../actions/actions.js'
 import { Tree, Input, Button,Select,Breadcrumb,TreeSelect,Table} from 'antd';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import Data from '../data.js';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import axios from 'axios';
+const Option = Select.Option;
+
 
 
 const SearchInput = Input.Search;
@@ -31,15 +33,18 @@ class Search extends React.Component {
       }
 
       onrowclick=(record, index)=>{
-         console.log(record.code.split(' ')[1]);
-         var indexxx;
-         for(var i=0;i<Data.length;i++){
-            if(Data[i].fields.code==record.code.split(' ')[1]){
-                indexxx=i;
-            }
-         }
-         console.log(indexxx);
-         this.props.actions.changeindexbyid(indexxx);
+         if (this.props.searchType == 'questions'){
+                  var indexxx;
+                   for(var i=0;i<Data.length;i++){
+                      if(Data[i].fields.code==record.code.split(' ')[1]){
+                          indexxx=i;
+                      }
+                   }
+                   console.log(indexxx);
+                   this.props.actions.changeindexbyid(indexxx);}
+         if (this.props.searchType == 'neurons'){
+                  var chapter = record.chapter;
+                  this.props.actions.setchapter(chapter);}
       }
       onSearch =(value)=>{
         let result = [];
@@ -107,7 +112,7 @@ class Search extends React.Component {
             title: 'Neuron Name',
             dataIndex: 'name',
             key: 'name',
-            render: text => <Link to="/ViewQuestion">{text}</Link>,
+            render: text => <Link to="/Chart">{text}</Link>,
           }, {
             title: 'Chapter',
             dataIndex: 'chapter',
@@ -153,6 +158,7 @@ function mapStateToProps (state){
     return { 
             searchType:state.searchstate.searchType,
             searchResult:state.searchstate.searchResult,
+            graphChater:state.graph.chapter,
         }
 }
 
@@ -161,6 +167,7 @@ function mapDispatchToProps (dispatch){
         actions: bindActionCreators({
             changeindexbyid,
             search,
+            setchapter,
         },dispatch)
     };
 }

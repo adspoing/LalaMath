@@ -47,6 +47,7 @@ export const changeexerciseindex = createAction(CHANGE_EXERCISE_INDEX);
 export const changeproblemindex = createAction(CHANGE_PROBLEM_INDEX);
 export const changediyindex = createAction(CHANGE_DIY_INDEX);
 export const search = createAction(SEARCH);
+export const setchapter = createAction('setchapter');
 
 export const changequizdata = createAction(CHANGE_QUIZ_DATA);
 export const changeexampledata = createAction(CHANGE_EXAMPLE_DATA);
