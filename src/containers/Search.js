@@ -98,10 +98,12 @@ class Search extends React.Component {
             dataIndex: 'code',
             key: 'code',
             render: text => <Link to="/ViewQuestion">{text}</Link>,
+            sorter: (a, b) => a.code.split('.')[1]+a.code.split('.')[2] - (b.code.split('.')[1]+b.code.split('.')[2]),
           }, {
             title: 'Difficulty',
             dataIndex: 'difficulty',
             key: 'difficulty',
+            sorter: (a, b) => a.difficulty - b.difficulty,
           }, {
             title: 'Acceptance',
             dataIndex: 'acceptance',
@@ -117,6 +119,7 @@ class Search extends React.Component {
             title: 'Chapter',
             dataIndex: 'chapter',
             key: 'chapter',
+            sorter: (a, b) => a.chapter - b.chapter,
           }];
         return (
             <div>
