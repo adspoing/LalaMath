@@ -8,6 +8,8 @@ import { Button,Radio,Popconfirm,message,Rate} from 'antd';
 import {changeindexbyid,prevexercise,nextexercise} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import axios from 'axios';
+import qs from 'qs';
 
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
@@ -52,7 +54,32 @@ class ExerciseList extends React.Component {
             config.duration=10;
             notification.error(config);
         }
+        var url="http://lala.ust.hk:8000/get/api/users/";
+        var userid = this.getCookie("id");
+        // var userid = 14;
+        url+=userid;
+        var questionid = Data[this.props.exerciseIndex].pk;
+        url+="/questions/";
+        url+=questionid;
+        console.log(this.state.selvalue);
+        console.log(url);
+        console.log(this.getCookie("userid"));
+        // axios.post('/foo', qs.stringify({ 'bar': 123 });
+
+        axios.post(url, 
+          qs.stringify({
+            'choice':this.state.selvalue,
+          })
+        )
         this.setState({ showResults: true });
+    }
+    getCookie = (name) =>{
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg))
+     
+            return unescape(arr[2]); 
+        else 
+            return null; 
     }
     nextQuestion = () =>{
         this.props.actions.nextexercise();

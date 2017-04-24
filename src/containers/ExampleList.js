@@ -253,8 +253,6 @@ class Question extends React.Component {
 
 function mapStateToProps (state){
     return { 
-            // Data:state.question.questionData,
-            // questionData:state.question.questionData
             exampleIndex:state.question.exampleIndex,
             index:state.question.index,
             allData:state.question.allData,
