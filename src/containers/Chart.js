@@ -29,6 +29,16 @@ class Chart extends React.Component {
              chapter:"0",
         }
     }
+    getCookie = (name) =>{
+        var cookie = "PHPSESSID=ST-246654-9tH2qwejxfebKHMXyX15-cas1; token=eebec1e2aadbe04a81f503784f0d844c; userid=chuac; id=14; sessionid=f0x2txscpbtqq5vbbh48rbdl9ki36z6v; csrftoken=OCOoUA5LqTkIydLCfQWuIECH7ZgGEoBihL410VUmZsVK5iZG8Qryy0MCCM3YVeA1";
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=cookie.match(reg))
+     
+            return unescape(arr[2]); 
+        else 
+            return null; 
+    }
+
     process = (NodeRawdata,userdata,LinkRawdata,chapter) =>{
         var NodeMap = new Array();
             var nodedata = new Array();
@@ -180,11 +190,13 @@ class Chart extends React.Component {
         let myChart = echarts.init(this.refs.graphics)
         let option = [];
         let that = this;
+        var userid = this.getCookie("id");
+        console.log(userid);
         axios.get("http://lala.ust.hk:8000/get/api/neurons/"+chapter)
             .then(function(nodedata) {
                 axios.get("http://lala.ust.hk:8000/get/api/connects/"+chapter)
                     .then(function(linkdata) {
-                    axios.get("http://lala.ust.hk:8000/get/api/users/4/neurons/"+chapter)
+                    axios.get("http://lala.ust.hk:8000/get/api/users/"+ userid +"/neurons/"+chapter)
                         .then(function(userdata) {
                             option = that.process(nodedata.data,userdata.data,linkdata.data,chapter);
                             myChart.setOption(option)
@@ -208,13 +220,13 @@ class Chart extends React.Component {
                 if(params.data.example.length != 0){   
                     examplediv.push(<b>Examples:</b>)
                     for (var i = 0; i < params.data.example.length; ++i){
-                        examplediv.push(<span onClick = {that.showQuestion.bind(this,pkIndex[params.data.example[i]])}><Link to="/ViewQuestion">{AllData[pkIndex[params.data.example[i]]].fields.code}   </Link></span>)
+                        examplediv.push(<span onClick = {that.showQuestion.bind(this,pkIndex[params.data.example[i]])}><Link to="/ViewQuestion">{AllData[pkIndex[params.data.example[i]]].fields.code}</Link>   </span>)
                     }
                 }
                 if(params.data.exercise.length != 0){
                     exercisediv.push(<b>Exercise:</b>)
                     for (var i = 0; i < params.data.exercise.length; ++i){
-                        exercisediv.push(<Link to="/ViewQuestion">{AllData[pkIndex[params.data.exercise[i]]].fields.code} </Link>)
+                        exercisediv.push(<span onClick = {that.showQuestion.bind(this,pkIndex[params.data.exercise[i]])}><Link to="/ViewQuestion">{AllData[pkIndex[params.data.exercise[i]]].fields.code}</Link>   </span>)
                     }
                 }
                 that.setState({example:examplediv, exercise:exercisediv});
@@ -285,8 +297,8 @@ class Chart extends React.Component {
 	            	<div ref="graphics" id="graphics" className="chart" ></div>
                     <div className="neuraldetail">
                     <div id="detail">{this.detail}</div>
-                    <div id="questions">{this.state.example}</div>
-                    <div id="questions">{this.state.exercise}</div>
+                    <div id="example">{this.state.example}</div>
+                    <div id="exercise">{this.state.exercise}</div>
                     </div>
                     </div>
 	            </div>

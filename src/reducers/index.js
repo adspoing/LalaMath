@@ -22,7 +22,8 @@ CHANGE_EXAMPLE_DATA,
 CHANGE_EXERCISE_DATA,
 CHANGE_PROBLEM_DATA,
 CHANGE_DIY_DATA,
-LOAD_DATA
+LOAD_DATA,
+SEARCH,
 } from '../actions/constants.js';
 
 // import Data from '../data.js'
@@ -88,7 +89,7 @@ let question =  handleActions({
 	},
 	[CHANGE_INDEX]: (state,action) => {
 		console.log(action.payload);
-		console.log(Data);
+		//console.log(Data);
 		// console.log(Data[i].fields.code);
 		for(var i=0;i<Data.length;i++){
 			if(Data[i].fields.code==action.payload){
@@ -568,7 +569,24 @@ let question =  handleActions({
 	diychapter:1,
 })
 
+let searchstate =  handleActions({
+
+	[SEARCH]: (state,action) => {
+		console.log("payload",action.payload);
+		return{
+			searchType:action.payload.type,
+			searchResult:action.payload.result,
+		}
+	}
+},
+	{
+		searchValue:'',
+		searchResult:[],
+	}
+)
+
 export default combineReducers({
     question,
+    searchstate,
     routing: routerReducer
 })
