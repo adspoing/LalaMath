@@ -57,34 +57,6 @@ class Question extends React.Component {
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
     }
     componentDidUpdate = () =>{
-        let AllData=this.props.allData;
-        let Data=this.props.exampleData;
-        console.log(AllData);
-        console.log(Data);
-        let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
-        var pkIndex=[];
-        for(var i=0;i<AllData.length;i++){
-          pkIndex[AllData[i].pk]=i;
-        }
-        for(var i=0;i<Data[this.props.exampleIndex].fields.twinproblems.length;i++){
-            var indexx=Data[this.props.exampleIndex].fields.twinproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            twinOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-        }
-        if(Data[this.props.exampleIndex].fields.answer==selvalue){
-            for(var i=0;i<Data[this.props.exampleIndex].fields.rightproblems.length;i++){
-            var indexx=Data[this.props.exampleIndex].fields.rightproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.exampleIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-            }
-        }
-        else{
-            for(var i=0;i<Data[this.props.exampleIndex].fields.wrongproblems.length;i++){
-            var indexx=Data[this.props.exampleIndex].fields.wrongproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-            }
-        }
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
     }
     componentWillMount = () =>{
@@ -125,12 +97,40 @@ class Question extends React.Component {
       }
 
     render() {
-        let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
+        // let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
         // let Data=this.props.exampleData;
         let AllData=this.props.allData;
         let Data=this.props.exampleData;
-        console.log(AllData);
-        console.log(Data);
+        // console.log(AllData);
+        // console.log(Data);
+         // let AllData=this.props.allData;
+        // let Data=this.props.exampleData;
+        // console.log(AllData);
+        // console.log(Data);
+        let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
+        var pkIndex=[];
+        for(var i=0;i<AllData.length;i++){
+          pkIndex[AllData[i].pk]=i;
+        }
+        for(var i=0;i<Data[this.props.exampleIndex].fields.twinproblems.length;i++){
+            var indexx=Data[this.props.exampleIndex].fields.twinproblems[i];
+            var iddd=AllData[pkIndex[indexx]].fields.code;
+            twinOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+        }
+        if(Data[this.props.exampleIndex].fields.answer==selvalue){
+            for(var i=0;i<Data[this.props.exampleIndex].fields.rightproblems.length;i++){
+            var indexx=Data[this.props.exampleIndex].fields.rightproblems[i];
+            var iddd=AllData[pkIndex[indexx]].fields.code;
+            recommendOption.push(<Option key={iddd+""} value={Data[this.props.exampleIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+            }
+        }
+        else{
+            for(var i=0;i<Data[this.props.exampleIndex].fields.wrongproblems.length;i++){
+            var indexx=Data[this.props.exampleIndex].fields.wrongproblems[i];
+            var iddd=AllData[pkIndex[indexx]].fields.code;
+            recommendOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+            }
+        }
          // console.log(Data);
         // console.log(Data[0]);
         // let AllData = this.state.AllData;
@@ -253,8 +253,6 @@ class Question extends React.Component {
 
 function mapStateToProps (state){
     return { 
-            // Data:state.question.questionData,
-            // questionData:state.question.questionData
             exampleIndex:state.question.exampleIndex,
             index:state.question.index,
             allData:state.question.allData,

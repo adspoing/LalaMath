@@ -27,30 +27,21 @@ class Search extends React.Component {
         searchValue: '',
         searchResult: [],
       }
-      //onChange = (e) => {
-      //  const value = e.target.value;
-
-      //  this.setState({
-      //    searchValue: value,
-      //  });
-      //}
+   
       onSelectChange = (value) => {
           this.setState({searchType:value})
       }
 
       onrowclick=(record, index)=>{
-         //onsole.log("record",record);
-         // console.log(Data[index].fields.code);
-         // var count = 0;
          if (this.props.searchType == 'questions'){
                   var indexxx;
-                  for(var i=0;i<Data.length;i++){
-                     if(Data[i].fields.code==record.code){
-                         indexxx=i;
-                     }
-                  }
-                  console.log(indexxx);
-                  this.props.actions.changeindexbyid(indexxx);}
+                   for(var i=0;i<Data.length;i++){
+                      if(Data[i].fields.code==record.code.split(' ')[1]){
+                          indexxx=i;
+                      }
+                   }
+                   console.log(indexxx);
+                   this.props.actions.changeindexbyid(indexxx);}
          if (this.props.searchType == 'neurons'){
                   var chapter = record.chapter;
                   this.props.actions.setchapter(chapter);}
@@ -58,8 +49,9 @@ class Search extends React.Component {
       onSearch =(value)=>{
         let result = [];
         let keyword = value;
-        console.log(keyword);
+        // console.log(keyword);
         let that = this;
+        let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
         if (this.state.searchType == "questions")
           axios.get("http://lala.ust.hk:8000/get/api/questions/search?keyword="+keyword)
             .then(function(question) {
@@ -68,7 +60,7 @@ class Search extends React.Component {
                   //console.log(Data);
                   let tm=new Object();
                   tm.key=i;
-                  tm.code=Data.fields.code;
+                  tm.code=questype[Data.fields.category]+Data.fields.code;
                   tm.difficulty=Data.fields.difficulty;
                   tm.acceptance="0%";
                   result.push(tm);
@@ -95,7 +87,7 @@ class Search extends React.Component {
             })        
       }
     render() {
-        console.log(this.props);
+        // console.log(this.props);
         //=this.state.searchResult
         let columns = [];
         if (this.props.searchType == "questions")
@@ -104,7 +96,7 @@ class Search extends React.Component {
             dataIndex: 'code',
             key: 'code',
             render: text => <Link to="/ViewQuestion">{text}</Link>,
-            sorter: (a, b) => a.code.split('.')[1]+a.code.split('.')[2] - (b.code.split('.')[1]+b.code.split('.')[2]),
+            // sorter: (a, b) => a.code.split(' ')[1].split('.')[1]+a.code.split(' ')[1].split('.')[2] - (b.code.split(' ')[1].split('.')[1]+b.code.split(' ')[1].split('.')[2]),
           }, {
             title: 'Difficulty',
             dataIndex: 'difficulty',
@@ -160,12 +152,9 @@ class Search extends React.Component {
         )
     }
 }
-// <Link to="/ViewQuestion">
-// export default QuestionList;
 
 
 function mapStateToProps (state){
-    //console.log(state.searchstate);
     return { 
             searchType:state.searchstate.searchType,
             searchResult:state.searchstate.searchResult,
