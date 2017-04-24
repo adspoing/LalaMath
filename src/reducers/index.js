@@ -572,7 +572,7 @@ let question =  handleActions({
 let searchstate =  handleActions({
 
 	[SEARCH]: (state,action) => {
-		console.log("payload",action.payload);
+		//console.log("payload",action.payload);
 		return{
 			searchType:action.payload.type,
 			searchResult:action.payload.result,
@@ -585,8 +585,22 @@ let searchstate =  handleActions({
 	}
 )
 
+let graph =  handleActions({
+
+	['setchapter']: (state,action) => {
+		console.log("payload",action.payload);
+		return{
+			chapter:action.payload,
+		}
+	}
+},
+	{
+		chapter:4,
+	}
+)
 export default combineReducers({
     question,
+    graph,
     searchstate,
     routing: routerReducer
 })

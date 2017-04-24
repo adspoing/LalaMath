@@ -6,7 +6,7 @@ import AllData from '../data.js';
 import { Button,Breadcrumb,Icon,Select} from 'antd';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import echarts from 'echarts';
-import {changeindexbyid} from '../actions/actions.js'
+import {changeindexbyid,setchapter} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import axios from 'axios';
@@ -199,7 +199,10 @@ class Chart extends React.Component {
                     axios.get("http://lala.ust.hk:8000/get/api/users/"+ userid +"/neurons/"+chapter)
                         .then(function(userdata) {
                             option = that.process(nodedata.data,userdata.data,linkdata.data,chapter);
-                            myChart.setOption(option)
+                            //console.log("After fetching data",option);
+                            that.setState({option:option});
+                            that.props.actions.setchapter(chapter);
+                            myChart.setOption(option);
                         })
                     })
             })
@@ -231,7 +234,7 @@ class Chart extends React.Component {
                 }
                 that.setState({example:examplediv, exercise:exercisediv});
         });
-
+        console.log("From reducer", this.props.option);
         //this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"graphics");
     }
 
@@ -241,11 +244,15 @@ class Chart extends React.Component {
         //我们要定义一个setPieOption函数将data传入option里面
         //let options = [];
         //设置options
-        //myChart.setOption(options)
+        //var myChart = echarts.init(this.refs.graphics)
+        //myChart.setOption(this.props.option)
+        this.getOptionByChapter(this.props.chapter);
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"graphics");
     }
 
     componentDidUpdate = () =>{
+        //var myChart = echarts.init(this.refs.graphics)
+        //myChart.setOption(this.props.option)    
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"graphics");
     }
     handleChange = (value)=>{
@@ -309,7 +316,7 @@ class Chart extends React.Component {
 }
 function mapStateToProps (state){
     return { 
-            // nodedata:state.chart.nodeData,
+            chapter:state.graph.chapter,
             // userdata:state.chart.userData,
             // linkdata:state.chart.linkData,
         }
@@ -319,6 +326,7 @@ function mapDispatchToProps (dispatch){
     return{
         actions: bindActionCreators({
             changeindexbyid,
+            setchapter,
         },dispatch)
     };
 }
