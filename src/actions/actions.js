@@ -8,7 +8,8 @@ PREV_QUIZ,NEXT_QUIZ,CHANGE_QUIZ,
 CHANGE_EXAMPLE_INDEX,
 CHANGE_EXERCISE_INDEX,
 CHANGE_PROBLEM_INDEX,
-CHANGE_DIY_INDEX
+CHANGE_DIY_INDEX,
+SEARCH
 } from './constants';
 
 export const submitquestion = createAction(SUBMIT_QUESTION);
@@ -39,6 +40,7 @@ export const changeexampleindex = createAction(CHANGE_EXAMPLE_INDEX);
 export const changeexerciseindex = createAction(CHANGE_EXERCISE_INDEX);
 export const changeproblemindex = createAction(CHANGE_PROBLEM_INDEX);
 export const changediyindex = createAction(CHANGE_DIY_INDEX);
+export const search = createAction(SEARCH);
 
 export const fetchthing = function() {
 	return dispatch => {

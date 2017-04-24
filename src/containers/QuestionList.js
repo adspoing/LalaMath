@@ -112,61 +112,6 @@ class QuestionList extends React.Component {
           this.props.actions.changeindex(queryValue);
       }
     render() {
-        //   console.log(Input);
-        //   const { searchValue, expandedKeys, autoExpandParent } = this.state;
-        //   const loop = data => data.map((item) => {
-        //   const index = item.key.search(searchValue);
-        //   const beforeStr = item.key.substr(0, index);
-        //   const afterStr = item.key.substr(index + searchValue.length);
-        //   const title = index > -1 ? (
-        //     <span>
-        //       {beforeStr}
-        //       <span style={{ color: '#f50' }}>{searchValue}</span>
-        //       {afterStr}
-        //     </span>
-        //   ) : <span>{item.key}</span>;
-        //   if (item.children) {
-        //     return (
-        //       <TreeNode key={item.key} title={title}>
-        //         {loop(item.children)}
-        //       </TreeNode>
-        //     );
-        //   }
-        //   return <TreeNode key={item.key} title={title} />;
-        // });
-        //   let quesList=[];
-        //   var quesdata=this.props.questionData;
-        //   for(var i=0;i<quesdata.length;i++){
-        //       quesList.push(<div>{quesdata[i].fields.code}</div>);
-        //   }
-        //   console.log(gData);
-        //   console.log(this.props.questionData);
-        //   let myData=new Array();
-        //   for(var i=0;i<=7;i++){
-        //     let tm=new Object();
-        //     tm.key=i+"";
-        //     tm.value=i+"";
-        //     tm.label=i+"";
-        //     tm.children=new Array();
-        //                 for(var j=0;j<=15;j++){
-        //                     let tm2=new Object();
-        //                     tm2.key=i+"."+j;
-        //                     tm2.value=i+"."+j;
-        //                     tm2.label=i+"."+j;
-        //                     tm2.children=new Array();
-        //                     for(var k=0;k<=15;k++){
-        //                         let tm3=new Object();
-        //                         tm3.key=i+"."+j+"."+k;
-        //                         tm3.value=i+"."+j+"."+k;
-        //                         tm3.label=i+"."+j+"."+k;
-        //                         tm3.children=new Array();
-        //                         tm2.children.push(tm3);
-        //                     }
-        //                     tm.children.push(tm2);
-        //                 }
-        //     myData.push(tm);
-        //   }
-        //   console.log(myData);
         return (
             <div>
                 <Header />

@@ -208,13 +208,13 @@ class Chart extends React.Component {
                 if(params.data.example.length != 0){   
                     examplediv.push(<b>Examples:</b>)
                     for (var i = 0; i < params.data.example.length; ++i){
-                        examplediv.push(<span onClick = {that.showQuestion.bind(this,pkIndex[params.data.example[i]])}><Link to="/ViewQuestion">{AllData[pkIndex[params.data.example[i]]].fields.code}   </Link></span>)
+                        examplediv.push(<span onClick = {that.showQuestion.bind(this,pkIndex[params.data.example[i]])}><Link to="/ViewQuestion">{AllData[pkIndex[params.data.example[i]]].fields.code}</Link>   </span>)
                     }
                 }
                 if(params.data.exercise.length != 0){
                     exercisediv.push(<b>Exercise:</b>)
                     for (var i = 0; i < params.data.exercise.length; ++i){
-                        exercisediv.push(<Link to="/ViewQuestion">{AllData[pkIndex[params.data.exercise[i]]].fields.code} </Link>)
+                        exercisediv.push(<span onClick = {that.showQuestion.bind(this,pkIndex[params.data.exercise[i]])}><Link to="/ViewQuestion">{AllData[pkIndex[params.data.exercise[i]]].fields.code}</Link>   </span>)
                     }
                 }
                 that.setState({example:examplediv, exercise:exercisediv});
@@ -285,8 +285,8 @@ class Chart extends React.Component {
 	            	<div ref="graphics" id="graphics" className="chart" ></div>
                     <div className="neuraldetail">
                     <div id="detail">{this.detail}</div>
-                    <div id="questions">{this.state.example}</div>
-                    <div id="questions">{this.state.exercise}</div>
+                    <div id="example">{this.state.example}</div>
+                    <div id="exercise">{this.state.exercise}</div>
                     </div>
                     </div>
 	            </div>
