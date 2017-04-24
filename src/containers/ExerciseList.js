@@ -1,7 +1,7 @@
 import React from 'react';
 import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
-import Data from '../exercise.js';
-import AllData from '../data.js'
+// import Data from '../exercise.js';
+// import AllData from '../data.js'
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import { Button,Radio,Popconfirm,message,Rate} from 'antd';
@@ -17,6 +17,15 @@ const RadioGroup = Radio.Group;
 var selvalue;
 var twinProblem;
 var RecommendProblem;
+var choiceA="";
+var choiceB="";
+var choiceC="";
+var choiceD="";
+var choiceE="";
+var choiceF="";
+var result="";
+var twinOption=[];
+var recommendOption=[];
 class ExerciseList extends React.Component {
     constructor(props) {
         super(props);
@@ -111,6 +120,7 @@ class ExerciseList extends React.Component {
       }
       twinProblemChange = (value) =>{
         var pkIndex=[];
+        let AllData=this.props.allData;
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
         }
@@ -119,6 +129,7 @@ class ExerciseList extends React.Component {
       }
       RecommendProblemChange = (value) =>{
         var pkIndex=[];
+        let AllData=this.props.allData;
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
         }
@@ -139,18 +150,19 @@ class ExerciseList extends React.Component {
 
 
     render() {
-        console.log(this.props.exerciseIndex)
+        let AllData=this.props.allData;
+        let Data=this.props.exerciseData;
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
         }
-        var choiceA="";
-        var choiceB="";
-        var choiceC="";
-        var choiceD="";
-        var choiceE="";
-        var choiceF="";
-        var result="";
+        // var choiceA="";
+        // var choiceB="";
+        // var choiceC="";
+        // var choiceD="";
+        // var choiceE="";
+        // var choiceF="";
+        // var result="";
         if(Data[this.props.exerciseIndex].fields.choicesa!=null){
             choiceA+=Data[this.props.exerciseIndex].fields.choicesa;
         }
@@ -171,13 +183,11 @@ class ExerciseList extends React.Component {
         }
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
  
-        var twinOption=[];
         for(var i=0;i<Data[this.props.exerciseIndex].fields.twinproblems.length;i++){
             var indexx=Data[this.props.exerciseIndex].fields.twinproblems[i];
             var iddd=AllData[pkIndex[indexx]].fields.code;
             twinOption.push(<Option key={iddd+""} value={Data[this.props.exerciseIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
         }
-        var recommendOption=[];
         if(Data[this.props.exerciseIndex].fields.answer==this.state.selvalue){
             for(var i=0;i<Data[this.props.exerciseIndex].fields.rightproblems.length;i++){
             var indexx=Data[this.props.exerciseIndex].fields.rightproblems[i];
@@ -205,7 +215,7 @@ class ExerciseList extends React.Component {
                         </Breadcrumb.Item>
                         <Breadcrumb.Item href=""> <Link to="/Exercise">
                           <Icon type="book" />
-                          <span>Exercise List</span></Link>
+                          <span>Exercise</span></Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item href=""> <Link to="/ExerciseForm">
                           <Icon type="file-text" />
@@ -318,10 +328,12 @@ class ExerciseList extends React.Component {
 
 function mapStateToProps (state){
     return { 
-            Data:state.question.questionData,
+            // Data:state.question.questionData,
             // questionData:state.question.questionData
             exerciseIndex:state.question.exerciseIndex,
-            index:state.question.index
+            index:state.question.index,
+            allData:state.question.allData,
+            exerciseData:state.question.exerciseData
         }
 }
 
