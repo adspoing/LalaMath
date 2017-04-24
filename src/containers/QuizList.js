@@ -34,9 +34,6 @@ class QuizList extends React.Component {
         }
     }
     handleChange(value){
-        // console.log(`selected ${value}`);
-        // selvalue=value;
-        // console.log(selvalue);
         this.setState({ selvalue: value });
     }   
     submitQuestion = () =>{
@@ -149,22 +146,8 @@ class QuizList extends React.Component {
         }if(Data[this.props.quizIndex].fields.choicesf!=null){
             choiceF+=Data[this.props.quizIndex].fields.choicesf;
         }
-        // let questype;
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
-
-        // if(Data[this.props.quizIndex].fields.category==1)
-        //     questype="Example  ";
-        // if(Data[this.props.quizIndex].fields.category==2)
-        //     questype="problem  ";
-        // if(Data[this.props.quizIndex].fields.category==3)
-        //     questype="Problem  ";
-        // if(Data[this.props.quizIndex].fields.category==4)
-        //     questype="DIY  ";
-        // if(Data[this.props.quizIndex].fields.category==5)
-        //     questype="Quiz  ";
         var twinOption=[];
-        // var defaultOption;
-        // defaultOption=Data[this.props.quizIndex].fields.twinproblems[0];
         for(var i=0;i<Data[this.props.quizIndex].fields.twinproblems.length;i++){
             var indexx=Data[this.props.quizIndex].fields.twinproblems[i];
             var iddd=AllData[pkIndex[indexx]].fields.code;
@@ -196,17 +179,13 @@ class QuizList extends React.Component {
                         <Breadcrumb.Item href="">
                           <Link to="/Dashboard"><Icon type="home" />Home</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item href=""> <Link to="/QuestionList">
-                          <Icon type="book" />
-                          <span>Problem List</span></Link>
-                        </Breadcrumb.Item>
                         <Breadcrumb.Item>
                             {questype[Data[this.props.quizIndex].fields.category]}
                             {Data[this.props.quizIndex].fields.code}
                         </Breadcrumb.Item>
                         </Breadcrumb>
                           <div className="pannel">
-                                <Button><Link to="/DIY">Quit</Link></Button>
+                                <Button><Link to="/Dashboard">Quit</Link></Button>
                                 <Button type="prev" className="prevQuestion" onClick = {this.prevQuestion}>Prev</Button>
                                 <Button type="next" className="nextQuestion" onClick = {this.nextQuestion}>Next</Button>
                           </div>

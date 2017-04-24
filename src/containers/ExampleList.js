@@ -59,8 +59,8 @@ class Question extends React.Component {
     componentDidUpdate = () =>{
         let AllData=this.props.allData;
         let Data=this.props.exampleData;
-        console.log(AllData);
-        console.log(Data);
+        // console.log(AllData);
+        // console.log(Data);
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
