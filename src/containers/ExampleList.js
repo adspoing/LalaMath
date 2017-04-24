@@ -1,13 +1,14 @@
 import React from 'react';
 import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
-import Data from '../example.js';
-import AllData from '../data.js';
+// import Data from '../example.js';
+// import AllData from '../data.js';
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
-import { Button,Radio,Popconfirm,message,Rate} from 'antd';
+import { Button,Radio,Popconfirm,message,Rate,Spin} from 'antd';
 import {prevexample,nextexample,changeindexbyid} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import axios from 'axios';
 
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
@@ -15,6 +16,8 @@ const RadioGroup = Radio.Group;
 var selvalue;
 var twinProblem;
 var RecommendProblem;
+var twinOption=[];
+var recommendOption=[];
 class Question extends React.Component {
     constructor(props) {
         super(props);
@@ -30,16 +33,18 @@ class Question extends React.Component {
              showResults: false,
              showAns: false,
              value: 0,
+             // AllData:[],
+             Data:[],
+             loading: true
              // pkIndex:[]
         }
     }
     handleChange(value){
-        console.log(`selected ${value}`);
+        // console.log(`selected ${value}`);
         selvalue=value;
-        console.log(selvalue);
+        // console.log(selvalue);
     }   
     nextQuestion = () =>{
-        // this.props.clickNextQuestion();
         this.props.actions.nextexample();
         this.setState({ showResults: false,showAns: false, value: 0});
     }
@@ -52,24 +57,51 @@ class Question extends React.Component {
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
     }
     componentDidUpdate = () =>{
+        let AllData=this.props.allData;
+        let Data=this.props.exampleData;
+        console.log(AllData);
+        console.log(Data);
+        let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
+        var pkIndex=[];
+        for(var i=0;i<AllData.length;i++){
+          pkIndex[AllData[i].pk]=i;
+        }
+        for(var i=0;i<Data[this.props.exampleIndex].fields.twinproblems.length;i++){
+            var indexx=Data[this.props.exampleIndex].fields.twinproblems[i];
+            var iddd=AllData[pkIndex[indexx]].fields.code;
+            twinOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+        }
+        if(Data[this.props.exampleIndex].fields.answer==selvalue){
+            for(var i=0;i<Data[this.props.exampleIndex].fields.rightproblems.length;i++){
+            var indexx=Data[this.props.exampleIndex].fields.rightproblems[i];
+            var iddd=AllData[pkIndex[indexx]].fields.code;
+            recommendOption.push(<Option key={iddd+""} value={Data[this.props.exampleIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+            }
+        }
+        else{
+            for(var i=0;i<Data[this.props.exampleIndex].fields.wrongproblems.length;i++){
+            var indexx=Data[this.props.exampleIndex].fields.wrongproblems[i];
+            var iddd=AllData[pkIndex[indexx]].fields.code;
+            recommendOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+            }
+        }
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
     }
-    // showAns = () =>{
-    //     this.setState({ showAns: true});
-    // }
-    // onChange = (e) => {
-    //     console.log('radio checked', e.target.value);
-    //     this.setState({
-    //       value: e.target.value,
-    //     });
-    //     selvalue=e.target.value;
-    //   }
-      showQuestion =(e)=>{
-        // console.log(e.target.value);
-      }
+    componentWillMount = () =>{
+        // axios.get('http://lala.ust.hk:8000/get/questions/all')
+        // .then(res => {
+        //   axios.get('http://lala.ust.hk:8000/get/questions/all?category=1').
+        //   then(ress => {
+        //       console.log(res.data);
+        //       console.log(ress.data);
+        //       this.setState({ AllData:res.data,Data:ress.data ,loading: false});
+        //   })
+        // });
+
+    }
       twinProblemChange = (value) =>{
-        // console.log(value);
         var pkIndex=[];
+        let AllData = this.props.allData;
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
         }
@@ -77,6 +109,7 @@ class Question extends React.Component {
       }
       RecommendProblemChange = (value) =>{
         var pkIndex=[];
+        let AllData = this.props.allData;
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
         }
@@ -92,45 +125,41 @@ class Question extends React.Component {
       }
 
     render() {
-        console.log(Data);
-        var pkIndex=[];
-        for(var i=0;i<AllData.length;i++){
-          pkIndex[AllData[i].pk]=i;
-        }
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
-        // if(Data[this.props.exampleIndex].fields.category==1)
-        //     questype="Example  ";
-        // if(Data[this.props.exampleIndex].fields.category==2)
-        //     questype="Exercise  ";
-        // if(Data[this.props.exampleIndex].fields.category==3)
-        //     questype="Problem  ";
-        // if(Data[this.props.exampleIndex].fields.category==4)
-        //     questype="DIY  ";
-        // if(Data[this.props.exampleIndex].fields.category==5)
-        //     questype="Quiz  ";
-        var twinOption=[];
-        // var defaultOption;
-        // defaultOption=Data[this.props.exampleIndex].fields.twinproblems[0];
-        for(var i=0;i<Data[this.props.exampleIndex].fields.twinproblems.length;i++){
-            var indexx=Data[this.props.exampleIndex].fields.twinproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            twinOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-        }
-        var recommendOption=[];
-        if(Data[this.props.exampleIndex].fields.answer==selvalue){
-            for(var i=0;i<Data[this.props.exampleIndex].fields.rightproblems.length;i++){
-            var indexx=Data[this.props.exampleIndex].fields.rightproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.exampleIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-            }
-        }
-        else{
-            for(var i=0;i<Data[this.props.exampleIndex].fields.wrongproblems.length;i++){
-            var indexx=Data[this.props.exampleIndex].fields.wrongproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-            }
-        }
+        // let Data=this.props.exampleData;
+        let AllData=this.props.allData;
+        let Data=this.props.exampleData;
+        console.log(AllData);
+        console.log(Data);
+         // console.log(Data);
+        // console.log(Data[0]);
+        // let AllData = this.state.AllData;
+        // var pkIndex=[];
+        // for(var i=0;i<AllData.length;i++){
+        //   pkIndex[AllData[i].pk]=i;
+        // }
+        // let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
+        // var twinOption=[];
+        // for(var i=0;i<Data[this.props.exampleIndex].fields.twinproblems.length;i++){
+        //     var indexx=Data[this.props.exampleIndex].fields.twinproblems[i];
+        //     var iddd=AllData[pkIndex[indexx]].fields.code;
+        //     twinOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+        // }
+        // var recommendOption=[];
+        // if(Data[this.props.exampleIndex].fields.answer==selvalue){
+        //     for(var i=0;i<Data[this.props.exampleIndex].fields.rightproblems.length;i++){
+        //     var indexx=Data[this.props.exampleIndex].fields.rightproblems[i];
+        //     var iddd=AllData[pkIndex[indexx]].fields.code;
+        //     recommendOption.push(<Option key={iddd+""} value={Data[this.props.exampleIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+        //     }
+        // }
+        // else{
+        //     for(var i=0;i<Data[this.props.exampleIndex].fields.wrongproblems.length;i++){
+        //     var indexx=Data[this.props.exampleIndex].fields.wrongproblems[i];
+        //     var iddd=AllData[pkIndex[indexx]].fields.code;
+        //     recommendOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+        //     }
+        // }
 
         return (
         	<div>
@@ -151,8 +180,8 @@ class Question extends React.Component {
                           <span>ExampleForm</span></Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            {questype[Data[this.props.exampleIndex].fields.category]}
-                            {Data[this.props.exampleIndex].fields.code}
+                            {Data.length!=0?questype[Data[this.props.exampleIndex].fields.category]:null}
+                            {Data.length!=0?Data[this.props.exampleIndex].fields.code:null}
                         </Breadcrumb.Item>
                         </Breadcrumb>
                           <div className="pannel">
@@ -162,24 +191,24 @@ class Question extends React.Component {
                           </div>
                       </div>
                       <div className="questionCanvas">
-                        <div id="output" className="questionstem">{Data[this.props.exampleIndex].fields.problem.split("<br>").map(i => {
+                        <div id="output" className="questionstem">{Data.length!=0?Data[this.props.exampleIndex].fields.problem.split("<br>").map(i => {
                            return <div>{i}</div>;
-                          })}
-                         {Data[this.props.exampleIndex].fields.problempicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture1}/>}
-                         {Data[this.props.exampleIndex].fields.problempicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture2}/>}
-                         {Data[this.props.exampleIndex].fields.problempicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture3}/>}
-                         {Data[this.props.exampleIndex].fields.problempicture4==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture4}/>}
-                         {Data[this.props.exampleIndex].fields.problempicture5==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture5}/>}
-                         {Data[this.props.exampleIndex].fields.problempicture6==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture6}/>}
+                          }):null}
+                         {Data.length!=0?Data[this.props.exampleIndex].fields.problempicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture1}/>:null}
+                         {Data.length!=0?Data[this.props.exampleIndex].fields.problempicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture2}/>:null}
+                         {Data.length!=0?Data[this.props.exampleIndex].fields.problempicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture3}/>:null}
+                         {Data.length!=0?Data[this.props.exampleIndex].fields.problempicture4==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture4}/>:null}
+                         {Data.length!=0?Data[this.props.exampleIndex].fields.problempicture5==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture5}/>:null}
+                         {Data.length!=0?Data[this.props.exampleIndex].fields.problempicture6==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture6}/>:null}
                         </div>
                         <div className="questionanswer">
                           <div className="questionresult">
-                          { Data[this.props.exampleIndex].fields.solutions.split("<br>").map(i => {
+                          {Data.length!=0? Data[this.props.exampleIndex].fields.solutions.split("<br>").map(i => {
                            return <div>{i}</div>;
-                          }) }
-                         {Data[this.props.exampleIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture1}/>}
-                         {Data[this.props.exampleIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture2}/>}
-                         {Data[this.props.exampleIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture3}/>}
+                          }) :null}
+                         {Data.length!=0?Data[this.props.exampleIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture1}/>:null}
+                         {Data.length!=0?Data[this.props.exampleIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture2}/>:null}
+                         {Data.length!=0?Data[this.props.exampleIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture3}/>:null}
                           <div>{
                                  <Select
                                     style={{ width: 200 }}
@@ -224,10 +253,12 @@ class Question extends React.Component {
 
 function mapStateToProps (state){
     return { 
-            Data:state.question.questionData,
+            // Data:state.question.questionData,
             // questionData:state.question.questionData
             exampleIndex:state.question.exampleIndex,
-            index:state.question.index
+            index:state.question.index,
+            allData:state.question.allData,
+            exampleData:state.question.exampleData
         }
 }
 
