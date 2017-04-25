@@ -1,7 +1,7 @@
 import React from 'react' // 引入react
 import { Route, IndexRoute } from 'react-router' // 引入react路由
 import { Home, App, Player, Question, QuestionList, Select, SideBar,Header,rightAns,Chart,Dashboard,ViewQuestion,Syllabus,Example,LectureNotes,ExampleList,Exercise,ExerciseList,Problem,ProblemList
-,Diy,DiyList,Quiz,QuizList,Video,ExampleForm,ExerciseForm,ProblemForm,DiyForm,Search,Hottest,Mycorner} from './containers' // 引入各容器组件
+,Diy,DiyList,Quiz,QuizList,Video,ExampleForm,ExerciseForm,ProblemForm,DiyForm,Search,Hottest,Mycorner,Suggestion} from './containers' // 引入各容器组件
 
 export default (
     <Route path="/" component={App}>
@@ -34,5 +34,6 @@ export default (
         <Route path="Search" component={Search}/>
         <Route path="Hottest" component={Hottest}/>
         <Route path="Mycorner" component={Mycorner}/>
+        <Route path="Suggestion" component={Suggestion}/>
     </Route>
 )
