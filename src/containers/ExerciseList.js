@@ -4,7 +4,7 @@ import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
 // import AllData from '../data.js'
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
-import { Button,Radio,Popconfirm,message,Rate,Spin} from 'antd';
+import { Button,Radio,Popconfirm,message,Rate,Spin,Input} from 'antd';
 import {changeindexbyid,prevexercise,nextexercise,loaddata,changeexercisedata} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -37,6 +37,10 @@ class ExerciseList extends React.Component {
              value: 0,
              selvalue: 0,
              loading:true,
+             Likeability:3,
+             Difficulty:3,
+             Useful:3,
+             commentvalue:""
         }
     }
     handleChange(value){
@@ -78,6 +82,59 @@ class ExerciseList extends React.Component {
         )
         this.setState({ showResults: true });
     }
+    handleLikeability = (value) =>{
+        this.setState({ Likeability:value });
+    }
+    handleDifficulty = (value) =>{
+        this.setState({ Difficulty:value });
+    }
+    handleUseful = (value) =>{
+        this.setState({ Useful :value });
+    }
+    handleComment = (e) =>{
+       this.setState({ commentvalue :e.target.value });
+    }
+    submitcomment = () =>{
+          let urlLikeability="http://lala.ust.hk:8000/get/api/users/";
+          var userid = this.getCookie("id");
+          var username = this.getCookie("userid");
+          // userid=14;
+          // username="chuac";
+          urlLikeability+=userid;
+          urlLikeability+="/questions/";
+          let Data=this.props.exerciseData;
+          urlLikeability+=Data[this.props.exerciseIndex].pk;
+          urlLikeability+="/prefer?choice=";
+          urlLikeability+=this.state.Likeability;
+
+          let urlDifficulty="http://lala.ust.hk:8000/get/api/users/";
+          urlDifficulty+=userid;
+          urlDifficulty+="/questions/";
+          urlDifficulty+=Data[this.props.exerciseIndex].pk;
+          urlDifficulty+="/hardnesss?choice=";
+          urlDifficulty+=this.state.Difficulty;
+
+          let urlUseful="http://lala.ust.hk:8000/get/api/users/";
+          urlUseful+=userid;
+          urlUseful+="/questions/";
+          urlUseful+=Data[this.props.exerciseIndex].pk;
+          urlUseful+="/usefuls?choice=";
+          urlUseful+=this.state.Useful;
+          let urlcomment="http://lala.ust.hk:8000/get/api/suggestions/question/upload";
+
+          axios.get(urlLikeability);
+          axios.get(urlDifficulty);
+          axios.get(urlUseful)
+          axios.post(urlcomment, 
+          qs.stringify({
+            'userid':userid,
+            'username':username,
+            'comment':this.state.commentvalue,
+            'questionid':Data[this.props.exerciseIndex].pk
+          })
+          );
+          message.success('Thanks for your comment');
+      }
     getCookie = (name) =>{
         var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
         if(arr=document.cookie.match(reg))
@@ -88,11 +145,17 @@ class ExerciseList extends React.Component {
     }
     nextQuestion = () =>{
         this.props.actions.nextexercise();
-        this.setState({ showResults: false,showAns: false, value: 0, selvalue: 0});
+        this.setState({ showResults: false,showAns: false, value: 0, selvalue: 0,Likeability:3,
+             Difficulty:3,
+             Useful:3,
+             commentvalue:""});
     }
     prevQuestion = () =>{
         this.props.actions.prevexercise();
-        this.setState({ showResults: false,showAns: false,value: 0, selvalue: 0});
+        this.setState({ showResults: false,showAns: false,value: 0, selvalue: 0,Likeability:3,
+             Difficulty:3,
+             Useful:3,
+             commentvalue:""});
     }
     componentDidMount = () =>{   
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
@@ -140,9 +203,9 @@ class ExerciseList extends React.Component {
         this.props.actions.changeindexbyid(RecommendProblem);
         this.setState({ showResults: false,showAns: false, value: 0});
       }
-       submitcomment = () =>{
-          message.success('Thanks for your comment');
-      }
+      //  submitcomment = () =>{
+      //     message.success('Thanks for your comment');
+      // }
       componentWillMount = () =>{
           if(this.props.allData.length==0){
             axios.get('http://lala.ust.hk:8000/get/questions/all')
@@ -329,10 +392,16 @@ class ExerciseList extends React.Component {
                                   </Select>:null}
                                { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
                                </div>
+                            <div className="commentblock">
+                             <div className="problemcomment"> { "Your evaluation is highly appreciated:"}</div>
+                             <div>Likeability:<span className="problemrate">{ <Rate onChange={this.handleLikeability} value={this.state.Likeability} />}</span></div>
+                             <div>Difficulty:<span className="problemrate2">{ <Rate onChange={this.handleDifficulty} value={this.state.Difficulty} />}</span></div>
+                             <div>Useful:<span className="problemrate3">{ <Rate onChange={this.handleUseful} value={this.state.Useful} />}</span></div>
+                            <Input type="textarea" placeholder="Input your comment" autosize autosize={{ minRows: 2, maxRows: 6 }}
+                                  onChange={this.handleComment} value={this.state.commentvalue}/>
+                            { <Button onClick = {this.submitcomment}>submit</Button>}
+                            </div>
                           </div>
-                          <div className="problemcomment"> { this.state.showAns?"Giving an comment on this problem":null}</div>
-                           { this.state.showAns?<Rate />:null}
-                           { this.state.showAns?<Button onClick = {this.submitcomment}>submit</Button>:null}
                         </div>
                       </div>
                   </div>
@@ -342,6 +411,10 @@ class ExerciseList extends React.Component {
         )
     }
 }
+
+//   <div className="problemcomment"> { this.state.showAns?"Giving an comment on this problem":null}</div>
+  //                         { this.state.showAns?<Rate />:null}
+    //                       { this.state.showAns?<Button onClick = {this.submitcomment}>submit</Button>:null}
 
 function mapStateToProps (state){
     return { 

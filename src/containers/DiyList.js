@@ -1,13 +1,15 @@
 import React from 'react';
 import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
-import Data from '../diy.js';
-import AllData from '../data.js'
+// import Data from '../diy.js';
+// import AllData from '../data.js'
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
-import { Button,Radio,Popconfirm,message,Rate} from 'antd';
-import {changeindexbyid,prevdiy,nextdiy} from '../actions/actions.js'
+import { Button,Radio,Popconfirm,message,Rate,Spin,Input} from 'antd';
+import {changeindexbyid,prevdiy,nextdiy,changediydata,loaddata} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import axios from 'axios';
+import qs from 'qs';
 
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
@@ -30,7 +32,12 @@ class DiyList extends React.Component {
              showResults: false,
              showAns: false,
              value: 0,
-             selvalue: 0
+             selvalue: 0,
+            loading:true,
+             Likeability:3,
+             Difficulty:3,
+             Useful:3,
+             commentvalue:""
         }
     }
     handleChange(value){
@@ -40,6 +47,7 @@ class DiyList extends React.Component {
         // console.log(selvalue);
     }   
     submitQuestion = () =>{
+        let Data=this.props.diyData;
         // this.props.clickSubmitQuestion();
         if(Data[this.props.diyIndex].fields.answer==this.state.selvalue){
             var config={};
@@ -57,6 +65,85 @@ class DiyList extends React.Component {
             notification.error(config);
         }
         this.setState({ showResults: true });
+        var url="http://lala.ust.hk:8000/get/api/users/";
+        var userid = this.getCookie("id");
+        // var userid = 14;
+        url+=userid;
+        var questionid = Data[this.props.diyIndex].pk;
+        url+="/questions/";
+        url+=questionid;
+        console.log(this.state.selvalue);
+        console.log(url);
+        console.log(this.getCookie("userid"));
+        // axios.post('/foo', qs.stringify({ 'bar': 123 });
+
+        axios.post(url, 
+          qs.stringify({
+            'choice':this.state.selvalue,
+          })
+        )
+        this.setState({ showResults: true });
+    }
+     handleLikeability = (value) =>{
+        this.setState({ Likeability:value });
+    }
+    handleDifficulty = (value) =>{
+        this.setState({ Difficulty:value });
+    }
+    handleUseful = (value) =>{
+        this.setState({ Useful :value });
+    }
+    handleComment = (e) =>{
+       this.setState({ commentvalue :e.target.value });
+    }
+    submitcomment = () =>{
+          let urlLikeability="http://lala.ust.hk:8000/get/api/users/";
+          var userid = this.getCookie("id");
+          var username = this.getCookie("userid");
+          // userid=14;
+          // username="chuac";
+          urlLikeability+=userid;
+          urlLikeability+="/questions/";
+          let Data=this.props.diyData;
+          urlLikeability+=Data[this.props.diyIndex].pk;
+          urlLikeability+="/prefer?choice=";
+          urlLikeability+=this.state.Likeability;
+
+          let urlDifficulty="http://lala.ust.hk:8000/get/api/users/";
+          urlDifficulty+=userid;
+          urlDifficulty+="/questions/";
+          urlDifficulty+=Data[this.props.diyIndex].pk;
+          urlDifficulty+="/hardnesss?choice=";
+          urlDifficulty+=this.state.Difficulty;
+
+          let urlUseful="http://lala.ust.hk:8000/get/api/users/";
+          urlUseful+=userid;
+          urlUseful+="/questions/";
+          urlUseful+=Data[this.props.diyIndex].pk;
+          urlUseful+="/usefuls?choice=";
+          urlUseful+=this.state.Useful;
+          let urlcomment="http://lala.ust.hk:8000/get/api/suggestions/question/upload";
+
+          axios.get(urlLikeability);
+          axios.get(urlDifficulty);
+          axios.get(urlUseful)
+          axios.post(urlcomment, 
+          qs.stringify({
+            'userid':userid,
+            'username':username,
+            'comment':this.state.commentvalue,
+            'questionid':Data[this.props.diyIndex].pk
+          })
+          );
+          message.success('Thanks for your comment');
+    }
+    getCookie = (name) =>{
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg))
+     
+            return unescape(arr[2]); 
+        else 
+            return null; 
     }
     nextQuestion = () =>{
         this.props.actions.nextdiy();
@@ -81,12 +168,12 @@ class DiyList extends React.Component {
           value: e.target.value,
           selvalue: e.target.value
         });
-        // selvalue=e.target.value;
       }
       showQuestion =(e)=>{
         console.log(e.target.value);
       }
       twinProblemChange = (value) =>{
+        let AllData=this.props.allData;
          var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
@@ -95,6 +182,7 @@ class DiyList extends React.Component {
         // twinProblem=value;
       }
       RecommendProblemChange = (value) =>{
+        let AllData=this.props.allData;
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
@@ -110,14 +198,35 @@ class DiyList extends React.Component {
         this.props.actions.changeindexbyid(RecommendProblem);
         this.setState({ showResults: false,showAns: false, value: 0});
       }
-      submitcomment = () =>{
-          message.success('Thanks for your comment');
+      // submitcomment = () =>{
+      //     message.success('Thanks for your comment');
+      // }
+      componentWillMount = () =>{
+          if(this.props.allData.length==0){
+            axios.get('http://lala.ust.hk:8000/get/questions/all')
+            .then(res => {
+              this.props.actions.loaddata(res.data);
+              this.setState({loading: false});
+            });
+          }else{
+              this.setState({loading: false});
+          }
+          if(this.props.diyData.length==0){
+              axios.get('http://lala.ust.hk:8000/get/questions/all?category=4')
+              .then(res => {
+                this.props.actions.changediydata(res.data);
+              });
+          }else{
+              this.setState({loading: false});
+          }
       }
     render() {
         // let Data=this.props.Data;
         console.log(Data)
         // console.log(AllData)
         // console.log(this.props.diyIndex)
+        let AllData=this.props.allData;
+        let Data=this.props.diyData;
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
@@ -130,59 +239,48 @@ class DiyList extends React.Component {
         var choiceE="";
         var choiceF="";
         var result="";
-        if(Data[this.props.diyIndex].fields.choicesa!=null){
-            choiceA+=Data[this.props.diyIndex].fields.choicesa;
-        }
         const radioStyle = {
           height: '30px',
           lineHeight: '30px',
         };
-        if(Data[this.props.diyIndex].fields.choicesb!=null){
-            choiceB+=Data[this.props.diyIndex].fields.choicesb;
-        }if(Data[this.props.diyIndex].fields.choicesc!=null){
-            choiceC+=Data[this.props.diyIndex].fields.choicesc;
-        }if(Data[this.props.diyIndex].fields.choicesd!=null){
-            choiceD+=Data[this.props.diyIndex].fields.choicesd;
-        }if(Data[this.props.diyIndex].fields.choicese!=null){
-            choiceE+=Data[this.props.diyIndex].fields.choicese;
-        }if(Data[this.props.diyIndex].fields.choicesf!=null){
-            choiceF+=Data[this.props.diyIndex].fields.choicesf;
-        }
-        // let questype;
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
+        if(AllData.length!=0){
+                if(Data[this.props.diyIndex].fields.choicesa!=null){
+                    choiceA+=Data[this.props.diyIndex].fields.choicesa;
+                }
+                if(Data[this.props.diyIndex].fields.choicesb!=null){
+                    choiceB+=Data[this.props.diyIndex].fields.choicesb;
+                }if(Data[this.props.diyIndex].fields.choicesc!=null){
+                    choiceC+=Data[this.props.diyIndex].fields.choicesc;
+                }if(Data[this.props.diyIndex].fields.choicesd!=null){
+                    choiceD+=Data[this.props.diyIndex].fields.choicesd;
+                }if(Data[this.props.diyIndex].fields.choicese!=null){
+                    choiceE+=Data[this.props.diyIndex].fields.choicese;
+                }if(Data[this.props.diyIndex].fields.choicesf!=null){
+                    choiceF+=Data[this.props.diyIndex].fields.choicesf;
+                }
 
-        // if(Data[this.props.diyIndex].fields.category==1)
-        //     questype="Example  ";
-        // if(Data[this.props.diyIndex].fields.category==2)
-        //     questype="problem  ";
-        // if(Data[this.props.diyIndex].fields.category==3)
-        //     questype="Problem  ";
-        // if(Data[this.props.diyIndex].fields.category==4)
-        //     questype="DIY  ";
-        // if(Data[this.props.diyIndex].fields.category==5)
-        //     questype="Quiz  ";
-        var twinOption=[];
-        // var defaultOption;
-        // defaultOption=Data[this.props.diyIndex].fields.twinproblems[0];
-        for(var i=0;i<Data[this.props.diyIndex].fields.twinproblems.length;i++){
-            var indexx=Data[this.props.diyIndex].fields.twinproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            twinOption.push(<Option key={iddd+""} value={Data[this.props.diyIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-        }
-        var recommendOption=[];
-        if(Data[this.props.diyIndex].fields.answer==this.state.selvalue){
-            for(var i=0;i<Data[this.props.diyIndex].fields.rightproblems.length;i++){
-            var indexx=Data[this.props.diyIndex].fields.rightproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.diyIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-            }
-        }
-        else{
-            for(var i=0;i<Data[this.props.diyIndex].fields.wrongproblems.length;i++){
-            var indexx=Data[this.props.diyIndex].fields.wrongproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.diyIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-            }
+                var twinOption=[];
+                for(var i=0;i<Data[this.props.diyIndex].fields.twinproblems.length;i++){
+                    var indexx=Data[this.props.diyIndex].fields.twinproblems[i];
+                    var iddd=AllData[pkIndex[indexx]].fields.code;
+                    twinOption.push(<Option key={iddd+""} value={Data[this.props.diyIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+                }
+                var recommendOption=[];
+                if(Data[this.props.diyIndex].fields.answer==this.state.selvalue){
+                    for(var i=0;i<Data[this.props.diyIndex].fields.rightproblems.length;i++){
+                    var indexx=Data[this.props.diyIndex].fields.rightproblems[i];
+                    var iddd=AllData[pkIndex[indexx]].fields.code;
+                    recommendOption.push(<Option key={iddd+""} value={Data[this.props.diyIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+                    }
+                }
+                else{
+                    for(var i=0;i<Data[this.props.diyIndex].fields.wrongproblems.length;i++){
+                    var indexx=Data[this.props.diyIndex].fields.wrongproblems[i];
+                    var iddd=AllData[pkIndex[indexx]].fields.code;
+                    recommendOption.push(<Option key={iddd+""} value={Data[this.props.diyIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+                    }
+                }
         }
 
         return (
@@ -197,30 +295,35 @@ class DiyList extends React.Component {
                         </Breadcrumb.Item>
                         <Breadcrumb.Item href=""> <Link to="/DIY">
                           <Icon type="book" />
-                          <span>Problem List</span></Link>
+                          <span>DIY List</span></Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item href=""> <Link to="/DIYForm">
+                          <Icon type="book" />
+                          <span>DIY Form</span></Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            {questype[Data[this.props.diyIndex].fields.category]}
-                            {Data[this.props.diyIndex].fields.code}
+                            {Data.length!=0?questype[Data[this.props.diyIndex].fields.category]:null}
+                            {Data.length!=0?Data[this.props.diyIndex].fields.code:null}
                         </Breadcrumb.Item>
                         </Breadcrumb>
                           <div className="pannel">
-                                <Button><Link to="/DIY">Quit</Link></Button>
+                                <Button><Link to="/DIYForm">Quit</Link></Button>
                                 <Button type="prev" className="prevQuestion" onClick = {this.prevQuestion}>Prev</Button>
                                 <Button type="next" className="nextQuestion" onClick = {this.nextQuestion}>Next</Button>
                           </div>
                       </div>
                       <div className="questionCanvas">
-                        <div id="output" className="questionstem">{Data[this.props.diyIndex].fields.problem.split("<br>").map(i => {
+                        <Spin spinning={this.state.loading} tip="Loading questions...">
+                        <div id="output" className="questionstem">{Data.length!=0?Data[this.props.diyIndex].fields.problem.split("<br>").map(i => {
                            return <div>{i}</div>;
-                          })
-                      }
-                         {Data[this.props.diyIndex].fields.problempicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.problempicture1}/>}
-                         {Data[this.props.diyIndex].fields.problempicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.problempicture2}/>}
-                         {Data[this.props.diyIndex].fields.problempicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.problempicture3}/>}
-                         {Data[this.props.diyIndex].fields.problempicture4==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.problempicture4}/>}
-                         {Data[this.props.diyIndex].fields.problempicture5==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.problempicture5}/>}
-                         {Data[this.props.diyIndex].fields.problempicture6==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.problempicture6}/>}
+                          }):null
+                          }
+                         {Data.length!=0?Data[this.props.diyIndex].fields.problempicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.problempicture1}/>:null}
+                         {Data.length!=0?Data[this.props.diyIndex].fields.problempicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.problempicture2}/>:null}
+                         {Data.length!=0?Data[this.props.diyIndex].fields.problempicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.problempicture3}/>:null}
+                         {Data.length!=0?Data[this.props.diyIndex].fields.problempicture4==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.problempicture4}/>:null}
+                         {Data.length!=0?Data[this.props.diyIndex].fields.problempicture5==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.problempicture5}/>:null}
+                         {Data.length!=0?Data[this.props.diyIndex].fields.problempicture6==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.problempicture6}/>:null}
                         </div>
                         <div className="questionchoice">
                           <RadioGroup onChange={this.onChange} value={this.state.value}>
@@ -256,12 +359,12 @@ class DiyList extends React.Component {
                           <div className="questionbutton">{ this.state.showResults?<Button className="submitQuestion" onClick = {this.showAns}>Show Result</Button>: null }</div>
                           <div className="questionresult">
                       
-                          { this.state.showAns?Data[this.props.diyIndex].fields.solutions.split("<br>").map(i => {
+                          { Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutions.split("<br>").map(i => {
                            return <div>{i}</div>;
-                          }): null}
-                         {this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture1}/>:null}
-                         {this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture2}/>:null}
-                         {this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture3}/>:null}
+                          }): null:null}
+                         {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture1}/>:null:null}
+                         {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture2}/>:null:null}
+                         {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture3}/>:null:null}
                           { this.state.showAns?
                                  <Select
                                     style={{ width: 200 }}
@@ -289,11 +392,19 @@ class DiyList extends React.Component {
                                      {recommendOption}
                                   </Select>:null}
                                { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
-                                <div className="problemcomment"> { this.state.showAns?"Giving an comment on this problem":null}</div>
-                                 { this.state.showAns?<Rate />:null}
-                                 { this.state.showAns?<Button onClick = {this.submitcomment}>submit</Button>:null}
+                        
                                </div>
+                            <div className="commentblock">
+                             <div className="problemcomment"> { "Your evaluation is highly appreciated:"}</div>
+                             <div>Likeability:<span className="problemrate">{ <Rate onChange={this.handleLikeability} value={this.state.Likeability} />}</span></div>
+                             <div>Difficulty:<span className="problemrate2">{ <Rate onChange={this.handleDifficulty} value={this.state.Difficulty} />}</span></div>
+                             <div>Useful:<span className="problemrate3">{ <Rate onChange={this.handleUseful} value={this.state.Useful} />}</span></div>
+                            <Input type="textarea" placeholder="Input your comment" autosize autosize={{ minRows: 2, maxRows: 6 }}
+                                  onChange={this.handleComment} value={this.state.commentvalue}/>
+                            { <Button onClick = {this.submitcomment}>submit</Button>}
+                            </div>
                           </div>
+                          </Spin>
                           </div>
                   </div>
                 </div>
@@ -302,13 +413,18 @@ class DiyList extends React.Component {
         )
     }
 }
+   //<div className="problemcomment"> { this.state.showAns?"Giving an comment on this problem":null}</div>
+     //                            { this.state.showAns?<Rate />:null}
+       //                          { this.state.showAns?<Button onClick = {this.submitcomment}>submit</Button>:null}
 
 function mapStateToProps (state){
     return { 
             Data:state.question.questionData,
             // questionData:state.question.questionData
             diyIndex:state.question.diyIndex,
-            index:state.question.index
+            index:state.question.index,
+            allData:state.question.allData,
+            diyData:state.question.diyData
         }
 }
 
@@ -317,7 +433,9 @@ function mapDispatchToProps (dispatch){
         actions: bindActionCreators({
             changeindexbyid,
             prevdiy,
-            nextdiy
+            nextdiy,
+            changediydata,
+            loaddata
         },dispatch)
     };
 }

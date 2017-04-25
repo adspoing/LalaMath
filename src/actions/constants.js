@@ -30,9 +30,10 @@ export const SEARCH = 'search'
 export const CHANGE_QUIZ_DATA = 'changequizdata'
 export const CHANGE_EXAMPLE_DATA = 'changeexampleindexdata'
 export const CHANGE_EXERCISE_DATA = 'changeexerciseindexdata'
-export const CHANGE_PROBLEM__DATA = 'changeproblemindexdata'
+export const CHANGE_PROBLEM_DATA = 'changeproblemindexdata'
 export const CHANGE_DIY_DATA = 'changediyindexdata'
 export const LOAD_DATA = 'loaddata'
+export const LOAD_COMPLETE = 'loadcomplete'
 
 // export const changequizdata = createAction(CHANGE_QUIZ_DATA);
 // export const changeexampleindexdata = createAction(CHANGE_EXAMPLE_INDEX_DATA);

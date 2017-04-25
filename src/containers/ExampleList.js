@@ -4,11 +4,12 @@ import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
 // import AllData from '../data.js';
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
-import { Button,Radio,Popconfirm,message,Rate,Spin} from 'antd';
+import { Button,Radio,Popconfirm,message,Rate,Spin,Input,Table} from 'antd';
 import {prevexample,nextexample,changeindexbyid,changeexampledata,loaddata} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import axios from 'axios';
+import qs from 'qs';
 
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
@@ -35,7 +36,11 @@ class Question extends React.Component {
              value: 0,
              // AllData:[],
              Data:[],
-             loading: true
+             loading: true,
+             Likeability:3,
+             Difficulty:3,
+             Useful:3,
+             commentvalue:""
              // pkIndex:[]
         }
     }
@@ -46,12 +51,18 @@ class Question extends React.Component {
     }   
     nextQuestion = () =>{
         this.props.actions.nextexample();
-        this.setState({ showResults: false,showAns: false, value: 0});
+        this.setState({ showResults: false,showAns: false, value: 0,Likeability:3,
+             Difficulty:3,
+             Useful:3,
+             commentvalue:""});
     }
     prevQuestion = () =>{
         this.props.actions.prevexample();
         // this.props.clickPrevQuestion();
-        this.setState({ showResults: false,showAns: false,value: 0});
+        this.setState({ showResults: false,showAns: false,value: 0,Likeability:3,
+             Difficulty:3,
+             Useful:3,
+             commentvalue:""});
     }
     componentDidMount = () =>{   
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
@@ -102,7 +113,73 @@ class Question extends React.Component {
         this.props.actions.changeindexbyid(RecommendProblem);
         this.setState({ showResults: false,showAns: false, value: 0});
       }
+        handleLikeability = (value) =>{
+            this.setState({ Likeability:value });
+        }
+        handleDifficulty = (value) =>{
+            this.setState({ Difficulty:value });
+        }
+        handleUseful = (value) =>{
+            this.setState({ Useful :value });
+        }
+        handleComment = (e) =>{
+           // console.log(e.target.value);
+           this.setState({ commentvalue :e.target.value });
+        }
+        submitcomment = () =>{
+          let urlLikeability="http://lala.ust.hk:8000/get/api/users/";
+          var userid = this.getCookie("id");
+          var username = this.getCookie("userid");
+          // userid=14;
+          // username="chuac";
+          urlLikeability+=userid;
+          urlLikeability+="/questions/";
+          let Data=this.props.exampleData;
+          urlLikeability+=Data[this.props.exampleIndex].pk;
+          urlLikeability+="/prefer?choice=";
+          urlLikeability+=this.state.Likeability;
 
+          let urlDifficulty="http://lala.ust.hk:8000/get/api/users/";
+          urlDifficulty+=userid;
+          urlDifficulty+="/questions/";
+          urlDifficulty+=Data[this.props.exampleIndex].pk;
+          urlDifficulty+="/hardnesss?choice=";
+          urlDifficulty+=this.state.Difficulty;
+
+          let urlUseful="http://lala.ust.hk:8000/get/api/users/";
+          urlUseful+=userid;
+          urlUseful+="/questions/";
+          urlUseful+=Data[this.props.exampleIndex].pk;
+          urlUseful+="/usefuls?choice=";
+          urlUseful+=this.state.Useful;
+          // console.log(urlLikeability);
+          // console.log(urlDifficulty);
+          // console.log(urlUseful);
+          let urlcomment="http://lala.ust.hk:8000/get/api/suggestions/question/upload";
+
+          // console.log(this.state.commentvalue);
+
+          axios.get(urlLikeability);
+          axios.get(urlDifficulty);
+          axios.get(urlUseful)
+          axios.post(urlcomment, 
+          qs.stringify({
+            'userid':userid,
+            'username':username,
+            'comment':this.state.commentvalue,
+            'questionid':Data[this.props.exampleIndex].pk
+          })
+          );
+          message.success('Thanks for your comment');
+      }
+       getCookie = (name) =>{
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg))
+     
+            return unescape(arr[2]); 
+        else 
+            return null; 
+       }
     render() {
         // let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
         // let Data=this.props.exampleData;
@@ -246,11 +323,17 @@ class Question extends React.Component {
                                      {recommendOption}
                                   </Select>}
                                { <Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button> }
-                               </div>
+                            </div>
+                          <div className="commentblock">
+                           <div className="problemcomment"> { "Your evaluation is highly appreciated:"}</div>
+                           <div>Likeability:<span className="problemrate">{ <Rate onChange={this.handleLikeability} value={this.state.Likeability} />}</span></div>
+                           <div>Difficulty:<span className="problemrate2">{ <Rate onChange={this.handleDifficulty} value={this.state.Difficulty} />}</span></div>
+                           <div>Useful:<span className="problemrate3">{ <Rate onChange={this.handleUseful} value={this.state.Useful} />}</span></div>
+                          <Input type="textarea" placeholder="Input your comment" autosize autosize={{ minRows: 2, maxRows: 6 }}
+                                onChange={this.handleComment} value={this.state.commentvalue}/>
+                          { <Button onClick = {this.submitcomment}>submit</Button>}
                           </div>
-                          <div className="problemcomment"> { "Giving an comment on this problem"}</div>
-                           { <Rate />}
-                           { <Button onClick = {this.submitcomment}>submit</Button>}
+                          </div>
                         </div>
                         </Spin>
                       </div>
@@ -262,6 +345,7 @@ class Question extends React.Component {
     }
 }
 
+                   
 function mapStateToProps (state){
     return { 
             exampleIndex:state.question.exampleIndex,

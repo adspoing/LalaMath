@@ -8,6 +8,8 @@ import { Button,Radio,Popconfirm,message,Rate} from 'antd';
 import {changeindexbyid,prevquiz,nextquiz} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import axios from 'axios';
+import qs from 'qs';
 
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
@@ -54,6 +56,32 @@ class QuizList extends React.Component {
             notification.error(config);
         }
         this.setState({ showResults: true });
+      var url="http://lala.ust.hk:8000/get/api/users/";
+        var userid = this.getCookie("id");
+        // var userid = 14;
+        url+=userid;
+        var questionid = Data[this.props.quizIndex].pk;
+        url+="/questions/";
+        url+=questionid;
+        console.log(this.state.selvalue);
+        console.log(url);
+        console.log(this.getCookie("userid"));
+        // axios.post('/foo', qs.stringify({ 'bar': 123 });
+
+        axios.post(url, 
+          qs.stringify({
+            'choice':this.state.selvalue,
+          })
+        )
+        this.setState({ showResults: true });
+    }
+    getCookie = (name) =>{
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg))
+     
+            return unescape(arr[2]); 
+        else 
+            return null; 
     }
     nextQuestion = () =>{
         this.props.actions.nextquiz();
@@ -270,9 +298,7 @@ class QuizList extends React.Component {
                                  { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
                                  </div>
                             </div>
-                            <div className="problemcomment"> { this.state.showAns?"Giving an comment on this problem":null}</div>
-                             { this.state.showAns?<Rate />:null}
-                             { this.state.showAns?<Button onClick = {this.submitcomment}>submit</Button>:null}
+                 
                         </div>
                       </div>
                   </div>
@@ -282,6 +308,9 @@ class QuizList extends React.Component {
         )
     }
 }
+           //<div className="problemcomment"> { this.state.showAns?"Giving an comment on this problem":null}</div>
+             //                { this.state.showAns?<Rate />:null}
+               //              { this.state.showAns?<Button onClick = {this.submitcomment}>submit</Button>:null}
 
 function mapStateToProps (state){
     return { 

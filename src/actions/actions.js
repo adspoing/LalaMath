@@ -16,6 +16,7 @@ CHANGE_PROBLEM_DATA,
 CHANGE_DIY_DATA,
 LOAD_DATA,
 SEARCH,
+LOAD_COMPLETE
 } from './constants';
 
 export const submitquestion = createAction(SUBMIT_QUESTION);
@@ -56,6 +57,9 @@ export const changeproblemdata = createAction(CHANGE_PROBLEM_DATA);
 export const changediydata = createAction(CHANGE_DIY_DATA);
 
 export const loaddata = createAction(LOAD_DATA);
+
+export const loadcomplete = createAction(LOAD_COMPLETE);
+
 // export const fetchthing = function() {
 // 	return dispatch => {
 // 		axios.get("http://lala.ust.hk:8000/get/questions/all")

@@ -3,13 +3,14 @@ import { Card, Col, Row} from 'antd';
 import Header from './Header.js';
 import SideBar from './SideBar.js';
 import MyFooter from './MyFooter.js';
-import { Button,Breadcrumb,Icon } from 'antd';
+import { Button,Breadcrumb,Icon,Spin } from 'antd';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import {fetchthing} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import '../css/Syllabus.less';
-import {changeproblem} from '../actions/actions.js'
+import {changeproblem,loaddata,changeproblemdata} from '../actions/actions.js'
+import axios from 'axios';
 
 // var AMUIReact = require('amazeui-react');
 // var Footer = AMUIReact.Footer;
@@ -18,6 +19,9 @@ class Problem extends React.Component {
 	constructor(props) {
         super(props);
         this.displayName = 'Problem';
+        this.state = {
+             loading: true
+        }
     }
     componentDidMount = () =>{   
         // console.log("oye");
@@ -27,6 +31,25 @@ class Problem extends React.Component {
           console.log(value)
           this.props.actions.changeproblem(value);
       }
+    componentWillMount = () =>{
+        if(this.props.allData.length==0){
+          axios.get('http://lala.ust.hk:8000/get/questions/all')
+          .then(res => {
+            this.props.actions.loaddata(res.data);
+            this.setState({loading: false});
+          });
+        }else{
+            this.setState({loading: false});
+        }
+        if(this.props.problemData.length==0){
+            axios.get('http://lala.ust.hk:8000/get/questions/all?category=3')
+            .then(res => {
+              this.props.actions.changeproblemdata(res.data);
+            });
+        }else{
+            this.setState({loading: false});
+        }
+    }
      render() {
         return (
         	<div>
@@ -42,6 +65,7 @@ class Problem extends React.Component {
                       <span>Problem</span></Link>
                     </Breadcrumb.Item>
                 </Breadcrumb>
+                <Spin spinning={this.state.loading} tip="Loading questions...">
                 <div className="belowbread"> 
                 <div className="dashboardName" style={{ background: '#ECECEC', padding: '30px' }}>
                                 <Row>
@@ -68,6 +92,7 @@ class Problem extends React.Component {
                                 </Row>
                     </div>              
                 </div>
+                </Spin>
                 </div>
             </div>
         )
@@ -76,14 +101,18 @@ class Problem extends React.Component {
 
 function mapStateToProps (state){
     return { 
-            Data:state.question.questionData,
+            // Data:state.question.questionData,
+            allData:state.question.allData,
+            problemData:state.question.problemData
         }
 }
 
 function mapDispatchToProps (dispatch){
     return{
         actions: bindActionCreators({
-          changeproblem
+          changeproblem,
+          loaddata,
+          changeproblemdata
         },dispatch)
     };
 }

@@ -43,7 +43,7 @@ var options = {
     },
     devServer: {
         port:               HOT_SERVER_PORT,
-        hot:                false,
+        hot:                true,
         historyApiFallback: true,
         compress:           true,
         open:               true, // for webpack-dev-server versions > 2.0

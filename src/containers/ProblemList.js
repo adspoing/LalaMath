@@ -1,16 +1,18 @@
 import React from 'react';
 import {Select, Breadcrumb, Menu, Dropdown, Icon, notification,Rate } from 'antd';
-import Data from '../problem.js';
-import AllData from '../data.js'
+// import Data from '../problem.js';
+// import AllData from '../data.js'
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
-import { Button,Radio,Popconfirm,message} from 'antd';
-import {changeindexbyid,prevproblem,nextproblem} from '../actions/actions.js'
+import { Button,Radio,Popconfirm,message,Input,Spin} from 'antd';
+import {changeindexbyid,prevproblem,nextproblem,changeproblemdata,loaddata} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import '../css/ProblemList.less';
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
+import axios from 'axios';
+import qs from 'qs';
 
 var selvalue;
 var twinProblem;
@@ -30,7 +32,12 @@ class ProblemList extends React.Component {
              showResults: false,
              showAns: false,
              value: 0,
-             selvalue: 0
+             selvalue: 0,
+             loading:true,
+             Likeability:3,
+             Difficulty:3,
+             Useful:3,
+             commentvalue:"",
         }
     }
     handleChange(value){
@@ -41,6 +48,7 @@ class ProblemList extends React.Component {
     }   
     submitQuestion = () =>{
         // this.props.clickSubmitQuestion();
+        let Data=this.props.problemData;
         if(Data[this.props.problemIndex].fields.answer==this.state.selvalue){
             var config={};
             config.description=Data[this.props.problemIndex].fields.messagesuccess;
@@ -57,6 +65,85 @@ class ProblemList extends React.Component {
             notification.error(config);
         }
         this.setState({ showResults: true });
+        var url="http://lala.ust.hk:8000/get/api/users/";
+        var userid = this.getCookie("id");
+        // var userid = 14;
+        url+=userid;
+        var questionid = Data[this.props.problemIndex].pk;
+        url+="/questions/";
+        url+=questionid;
+        console.log(this.state.selvalue);
+        console.log(url);
+        console.log(this.getCookie("userid"));
+        // axios.post('/foo', qs.stringify({ 'bar': 123 });
+
+        axios.post(url, 
+          qs.stringify({
+            'choice':this.state.selvalue,
+          })
+        )
+        this.setState({ showResults: true });
+    }
+    handleLikeability = (value) =>{
+        this.setState({ Likeability:value });
+    }
+    handleDifficulty = (value) =>{
+        this.setState({ Difficulty:value });
+    }
+    handleUseful = (value) =>{
+        this.setState({ Useful :value });
+    }
+    handleComment = (e) =>{
+       this.setState({ commentvalue :e.target.value });
+    }
+    submitcomment = () =>{
+          let urlLikeability="http://lala.ust.hk:8000/get/api/users/";
+          var userid = this.getCookie("id");
+          var username = this.getCookie("userid");
+          // userid=14;
+          // username="chuac";
+          urlLikeability+=userid;
+          urlLikeability+="/questions/";
+          let Data=this.props.problemData;
+          urlLikeability+=Data[this.props.problemIndex].pk;
+          urlLikeability+="/prefer?choice=";
+          urlLikeability+=this.state.Likeability;
+
+          let urlDifficulty="http://lala.ust.hk:8000/get/api/users/";
+          urlDifficulty+=userid;
+          urlDifficulty+="/questions/";
+          urlDifficulty+=Data[this.props.problemIndex].pk;
+          urlDifficulty+="/hardnesss?choice=";
+          urlDifficulty+=this.state.Difficulty;
+
+          let urlUseful="http://lala.ust.hk:8000/get/api/users/";
+          urlUseful+=userid;
+          urlUseful+="/questions/";
+          urlUseful+=Data[this.props.problemIndex].pk;
+          urlUseful+="/usefuls?choice=";
+          urlUseful+=this.state.Useful;
+          let urlcomment="http://lala.ust.hk:8000/get/api/suggestions/question/upload";
+
+          axios.get(urlLikeability);
+          axios.get(urlDifficulty);
+          axios.get(urlUseful)
+          axios.post(urlcomment, 
+          qs.stringify({
+            'userid':userid,
+            'username':username,
+            'comment':this.state.commentvalue,
+            'questionid':Data[this.props.problemIndex].pk
+          })
+          );
+          message.success('Thanks for your comment');
+      }
+    getCookie = (name) =>{
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg))
+     
+            return unescape(arr[2]); 
+        else 
+            return null; 
     }
     nextQuestion = () =>{
         this.props.actions.nextproblem();
@@ -76,7 +163,6 @@ class ProblemList extends React.Component {
         this.setState({ showAns: true});
     }
     onChange = (e) => {
-        // console.log('radio checked', e.target.value);
         this.setState({
           value: e.target.value,
           selvalue: e.target.value
@@ -87,6 +173,7 @@ class ProblemList extends React.Component {
         // console.log(e.target.value);
       }
       twinProblemChange = (value) =>{
+        let AllData=this.props.allData;
          var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
@@ -95,6 +182,7 @@ class ProblemList extends React.Component {
         // twinProblem=value;
       }
       RecommendProblemChange = (value) =>{
+        let AllData=this.props.allData;
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
@@ -110,11 +198,32 @@ class ProblemList extends React.Component {
         this.props.actions.changeindexbyid(RecommendProblem);
         this.setState({ showResults: false,showAns: false, value: 0});
       }
-      submitcomment = () =>{
-          message.success('Thanks for your comment');
-      }
+      // submitcomment = () =>{
+      //     message.success('Thanks for your comment');
+      // }
 
+      componentWillMount = () =>{
+          if(this.props.allData.length==0){
+            axios.get('http://lala.ust.hk:8000/get/questions/all')
+            .then(res => {
+              this.props.actions.loaddata(res.data);
+              this.setState({loading: false});
+            });
+          }else{
+              this.setState({loading: false});
+          }
+          if(this.props.problemData.length==0){
+              axios.get('http://lala.ust.hk:8000/get/questions/all?category=3')
+              .then(res => {
+                this.props.actions.changeproblemdata(res.data);
+              });
+          }else{
+              this.setState({loading: false});
+          }
+      }
     render() {
+        let AllData=this.props.allData;
+        let Data=this.props.problemData;
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
@@ -126,48 +235,50 @@ class ProblemList extends React.Component {
         var choiceE="";
         var choiceF="";
         var result="";
-        if(Data[this.props.problemIndex].fields.choicesa!=null){
-            choiceA+=Data[this.props.problemIndex].fields.choicesa;
-        }
         const radioStyle = {
           height: '30px',
           lineHeight: '30px',
         };
-        if(Data[this.props.problemIndex].fields.choicesb!=null){
-            choiceB+=Data[this.props.problemIndex].fields.choicesb;
-        }if(Data[this.props.problemIndex].fields.choicesc!=null){
-            choiceC+=Data[this.props.problemIndex].fields.choicesc;
-        }if(Data[this.props.problemIndex].fields.choicesd!=null){
-            choiceD+=Data[this.props.problemIndex].fields.choicesd;
-        }if(Data[this.props.problemIndex].fields.choicese!=null){
-            choiceE+=Data[this.props.problemIndex].fields.choicese;
-        }if(Data[this.props.problemIndex].fields.choicesf!=null){
-            choiceF+=Data[this.props.problemIndex].fields.choicesf;
-        }
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
+        if(AllData.length!=0){
+              if(Data[this.props.problemIndex].fields.choicesa!=null){
+                  choiceA+=Data[this.props.problemIndex].fields.choicesa;
+              }
+              
+              if(Data[this.props.problemIndex].fields.choicesb!=null){
+                  choiceB+=Data[this.props.problemIndex].fields.choicesb;
+              }if(Data[this.props.problemIndex].fields.choicesc!=null){
+                  choiceC+=Data[this.props.problemIndex].fields.choicesc;
+              }if(Data[this.props.problemIndex].fields.choicesd!=null){
+                  choiceD+=Data[this.props.problemIndex].fields.choicesd;
+              }if(Data[this.props.problemIndex].fields.choicese!=null){
+                  choiceE+=Data[this.props.problemIndex].fields.choicese;
+              }if(Data[this.props.problemIndex].fields.choicesf!=null){
+                  choiceF+=Data[this.props.problemIndex].fields.choicesf;
+              }
 
-        var twinOption=[];
-        for(var i=0;i<Data[this.props.problemIndex].fields.twinproblems.length;i++){
-            var indexx=Data[this.props.problemIndex].fields.twinproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            twinOption.push(<Option key={iddd+""} value={Data[this.props.problemIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+              var twinOption=[];
+              for(var i=0;i<Data[this.props.problemIndex].fields.twinproblems.length;i++){
+                  var indexx=Data[this.props.problemIndex].fields.twinproblems[i];
+                  var iddd=AllData[pkIndex[indexx]].fields.code;
+                  twinOption.push(<Option key={iddd+""} value={Data[this.props.problemIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+              }
+              var recommendOption=[];
+              if(Data[this.props.problemIndex].fields.answer==this.state.selvalue){
+                  for(var i=0;i<Data[this.props.problemIndex].fields.rightproblems.length;i++){
+                  var indexx=Data[this.props.problemIndex].fields.rightproblems[i];
+                  var iddd=AllData[pkIndex[indexx]].fields.code;
+                  recommendOption.push(<Option key={iddd+""} value={Data[this.props.problemIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+                  }
+              }
+              else{
+                  for(var i=0;i<Data[this.props.problemIndex].fields.wrongproblems.length;i++){
+                  var indexx=Data[this.props.problemIndex].fields.wrongproblems[i];
+                  var iddd=AllData[pkIndex[indexx]].fields.code;
+                  recommendOption.push(<Option key={iddd+""} value={Data[this.props.problemIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+                  }
+              }
         }
-        var recommendOption=[];
-        if(Data[this.props.problemIndex].fields.answer==this.state.selvalue){
-            for(var i=0;i<Data[this.props.problemIndex].fields.rightproblems.length;i++){
-            var indexx=Data[this.props.problemIndex].fields.rightproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.problemIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-            }
-        }
-        else{
-            for(var i=0;i<Data[this.props.problemIndex].fields.wrongproblems.length;i++){
-            var indexx=Data[this.props.problemIndex].fields.wrongproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.problemIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-            }
-        }
-
         return (
             <div>
                 <div className="exam-bg">
@@ -187,27 +298,28 @@ class ProblemList extends React.Component {
                           <span>ProblemForm</span></Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            {questype[Data[this.props.problemIndex].fields.category]}
-                            {Data[this.props.problemIndex].fields.code}
+                            {Data.length!=0?questype[Data[this.props.problemIndex].fields.category]:null}
+                            {Data.length!=0?Data[this.props.problemIndex].fields.code:null}
                         </Breadcrumb.Item>
                         </Breadcrumb>
                           <div className="pannel">
-                                <Button><Link to="/problem">Quit</Link></Button>
+                                <Button><Link to="/problemForm">Quit</Link></Button>
                                 <Button type="prev" className="prevQuestion" onClick = {this.prevQuestion}>Prev</Button>
                                 <Button type="next" className="nextQuestion" onClick = {this.nextQuestion}>Next</Button>
                           </div>
                       </div>
                       <div className="questionCanvas">
+                        <Spin spinning={this.state.loading} tip="Loading questions...">
                         <div id="output" className="questionstem">{
-                          Data[this.props.problemIndex].fields.problem.split("<br>").map(i => {
+                          Data.length!=0?Data[this.props.problemIndex].fields.problem.split("<br>").map(i => {
                            return <div>{i}</div>;
-                          })}
-                         {Data[this.props.problemIndex].fields.problempicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture1}/>}
-                         {Data[this.props.problemIndex].fields.problempicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture2}/>}
-                         {Data[this.props.problemIndex].fields.problempicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture3}/>}
-                         {Data[this.props.problemIndex].fields.problempicture4==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture4}/>}
-                         {Data[this.props.problemIndex].fields.problempicture5==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture5}/>}
-                         {Data[this.props.problemIndex].fields.problempicture6==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture6}/>}
+                          }):null}
+                         {Data.length!=0?Data[this.props.problemIndex].fields.problempicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture1}/>:null}
+                         {Data.length!=0?Data[this.props.problemIndex].fields.problempicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture2}/>:null}
+                         {Data.length!=0?Data[this.props.problemIndex].fields.problempicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture3}/>:null}
+                         {Data.length!=0?Data[this.props.problemIndex].fields.problempicture4==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture4}/>:null}
+                         {Data.length!=0?Data[this.props.problemIndex].fields.problempicture5==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture5}/>:null}
+                         {Data.length!=0?Data[this.props.problemIndex].fields.problempicture6==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture6}/>:null}
                         </div>
                         <div className="questionchoice">
                          <RadioGroup onChange={this.onChange} value={this.state.value}>
@@ -243,12 +355,12 @@ class ProblemList extends React.Component {
                           </div>
                           <div className="questionbutton">{ this.state.showResults?<Button className="submitQuestion" onClick = {this.showAns}>Show Result</Button>: null }</div>
                           <div className="questionresult">
-                          { this.state.showAns?Data[this.props.problemIndex].fields.solutions.split("<br>").map(i => {
+                          { Data.length!=0?this.state.showAns?Data[this.props.problemIndex].fields.solutions.split("<br>").map(i => {
                            return <div>{i}</div>;
-                          }): null }
-                         {this.state.showAns?Data[this.props.problemIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.solutionspicture1}/>:null}
-                         {this.state.showAns?Data[this.props.problemIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.solutionspicture2}/>:null}
-                         {this.state.showAns?Data[this.props.problemIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.solutionspicture3}/>:null}
+                          }): null :null}
+                         {Data.length!=0?this.state.showAns?Data[this.props.problemIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.solutionspicture1}/>:null:null}
+                         {Data.length!=0?this.state.showAns?Data[this.props.problemIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.solutionspicture2}/>:null:null}
+                         {Data.length!=0?this.state.showAns?Data[this.props.problemIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.solutionspicture3}/>:null:null}
                           <div>{ this.state.showAns?
                                  <Select
                                     style={{ width: 200 }}
@@ -277,11 +389,19 @@ class ProblemList extends React.Component {
                                   </Select>:null}
                                { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
                                </div>
+                            <div className="commentblock">
+                             <div className="problemcomment"> { "Your evaluation is highly appreciated:"}</div>
+                             <div>Likeability:<span className="problemrate">{ <Rate onChange={this.handleLikeability} value={this.state.Likeability} />}</span></div>
+                             <div>Difficulty:<span className="problemrate2">{ <Rate onChange={this.handleDifficulty} value={this.state.Difficulty} />}</span></div>
+                             <div>Useful:<span className="problemrate3">{ <Rate onChange={this.handleUseful} value={this.state.Useful} />}</span></div>
+                            <Input type="textarea" placeholder="Input your comment" autosize autosize={{ minRows: 2, maxRows: 6 }}
+                                  onChange={this.handleComment} value={this.state.commentvalue}/>
+                            { <Button onClick = {this.submitcomment}>submit</Button>}
+                            </div>
                           </div>
-                          <div className="problemcomment"> { this.state.showAns?"Giving an comment on this problem":null}</div>
-                           { this.state.showAns?<Rate />:null}
-                           { this.state.showAns?<Button onClick = {this.submitcomment}>submit</Button>:null}
+                  
                         </div>
+                        </Spin>
                       </div>
                   </div>
                 </div>
@@ -291,11 +411,16 @@ class ProblemList extends React.Component {
     }
 }
 
+        //<div className="problemcomment"> { this.state.showAns?"Giving an comment on this problem":null}</div>
+          //                 { this.state.showAns?<Rate />:null}
+            //               { this.state.showAns?<Button onClick = {this.submitcomment}>submit</Button>:null}
 function mapStateToProps (state){
     return { 
             Data:state.question.questionData,
             problemIndex:state.question.problemIndex,
-            index:state.question.index
+            index:state.question.index,
+            allData:state.question.allData,
+            problemData:state.question.problemData
         }
 }
 
@@ -304,7 +429,9 @@ function mapDispatchToProps (dispatch){
         actions: bindActionCreators({
             changeindexbyid,
             prevproblem,
-            nextproblem
+            nextproblem,
+            changeproblemdata,
+            loaddata
         },dispatch)
     };
 }
