@@ -20,6 +20,11 @@ class Mycorner extends React.Component {
           showProcessingMessages: false,
           tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] }
         });
+        this.state = {
+            done:{"exercise":0,"example":0,"problem":0,"diy":0,"quiz":0},
+            right:{"exercise":0,"example":0,"problem":0,"diy":0,"quiz":0},
+            all:{"exercise":1,"example":1,"problem":1,"diy":1,"quiz":1},
+        }
     }
     getCookie = (name) =>{
         //var cookie = "PHPSESSID=ST-246654-9tH2qwejxfebKHMXyX15-cas1; token=eebec1e2aadbe04a81f503784f0d844c; userid=chuac; id=14; sessionid=f0x2txscpbtqq5vbbh48rbdl9ki36z6v; csrftoken=OCOoUA5LqTkIydLCfQWuIECH7ZgGEoBihL410VUmZsVK5iZG8Qryy0MCCM3YVeA1";
@@ -32,10 +37,29 @@ class Mycorner extends React.Component {
     }
 
     process = (ability) =>{
-            //console.log(typeof(ability));
+            var done = new Object();
+            var right = new Object()
+            var all = new Object();
+            done.exercise = ability.doneexercise;
+            done.example = ability.doneexample;  
+            done.quiz = ability.donequiz; 
+            done.problem = ability.doneproblem; 
+            done.diy = ability.donediy;  
+            right.exercise = ability.rightexercise;
+            right.example = ability.rightexample;  
+            right.quiz = ability.rightquiz; 
+            right.problem = ability.rightproblem; 
+            right.diy = ability.rightdiy;  
+            all.exercise = ability.allexercise;
+            all.example = ability.allexample;  
+            all.quiz = ability.allquiz; 
+            all.problem = ability.allproblem; 
+            all.diy = ability.alldiy;  
+            this.setState({done:done,right:right,all:all});
+
             let value = [];
             for (var i = 1; i < 5;i++){
-                value[i-1] = i
+                value[i-1] = ability[i]+3
             }
             var option = {
                 radar: {
@@ -48,7 +72,6 @@ class Mycorner extends React.Component {
                     ]
                 },
                 series: [{
-                    name: '预算 vs 开销（Budget vs spending）',
                     type: 'radar',
                     // areaStyle: {normal: {}},
                     data : [
@@ -65,23 +88,26 @@ class Mycorner extends React.Component {
         this.props.actions.changeindexbyid(index);
       }
 
-    getOptionByUser = (userid)=>{  
+    getOptionByUser = ()=>{  
         //let chapter = this.state.chapter;
         //console.log(chapter);
         let myChart = echarts.init(this.refs.graphics)
         let option = [];
         let that = this;
         var userid = this.getCookie("id");
+        //var userid = 4;
         axios.get("http://lala.ust.hk:8000/get/api/evaluate/"+ userid)
             .then(function(ability) {
-                console.log(ability)
-                    option = that.process(ability.data);
-                    //console.log("After fetching data",option);
-                   myChart.setOption(option);
+                option = that.process(ability.data);
+                myChart.setOption(option);
             })
-        option = that.process([]);
-        myChart.setOption(option);
         //this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"graphics");
+    }
+    percent = (a,b)=>{
+        if (b == 0)
+            return 0;
+        else
+            return((100 * a / b).toFixed(0))
     }
 
     componentDidMount= ()=> {
@@ -90,15 +116,13 @@ class Mycorner extends React.Component {
         //我们要定义一个setPieOption函数将data传入option里面
         //let options = [];
         //设置options
-        this.getOptionByUser(2);
+        this.getOptionByUser();
     }
 
-    componentDidUpdate = () =>{
-        var myChart = echarts.init(this.refs.graphics)
-        myChart.setOption(this.props.option)    
-    }
     render() {
-     	//console.log(MathJax)
+     	console.log(this.state)
+        var username = this.getCookie("userid");
+        //var username = "jlicy";
         return (
         	<div>
         		<Header />
@@ -113,18 +137,23 @@ class Mycorner extends React.Component {
                       <span>Mycorner</span></Link>
                     </Breadcrumb.Item>
                 </Breadcrumb>
-                <h1>Hi, {this.getCookie("userid")}</h1>
+                <div className="welcome"><h1>Hi, {username}</h1></div>
                 <div className="completation"> 
-                    <h1>Exercise</h1>
-                    <Progress percent={1} strokeWidth={15}/>
-                    <h1>Problem</h1>
-                    <Progress percent={5} strokeWidth={15}/>
-                    <h1>DIY</h1>
-                    <Progress percent={7} strokeWidth={15}/>
                     <h1>Example</h1>
-                    <Progress percent={2} strokeWidth={15}/>
+                    <Progress percent={this.percent(this.state.done.example, this.state.all.example)} format={percent => `${this.state.done.example} / ${this.state.all.example}`} strokeWidth={15}/>
+                    <Progress percent={this.percent(this.state.right.example, this.state.done.example)} format={percent => `${percent} %`} strokeWidth={15}/>
+                    <h1>Problem</h1>
+                    <Progress percent={this.percent(this.state.done.problem, this.state.all.problem)} format={percent => `${this.state.done.problem} / ${this.state.all.problem}`} strokeWidth={15}/>
+                    <Progress percent={this.percent(this.state.right.problem, this.state.done.problem)} format={percent => `${percent} %`} strokeWidth={15}/>
+                    <h1>DIY</h1>
+                    <Progress percent={this.percent(this.state.done.diy, this.state.all.diy)} format={percent => `${this.state.done.diy} / ${this.state.all.diy}`} strokeWidth={15}/>
+                    <Progress percent={this.percent(this.state.right.diy, this.state.done.diy)} format={percent => `${percent} %`} strokeWidth={15}/>
+                    <h1>Exercise</h1>
+                    <Progress percent={this.percent(this.state.done.exercise, this.state.all.exercise)} format={percent => `${this.state.done.exercise} / ${this.state.all.exercise}`} strokeWidth={15}/>
+                    <Progress percent={this.percent(this.state.right.exercise, this.state.done.exercise)} format={percent => `${percent} %`} strokeWidth={15}/>
                     <h1>Quiz</h1>
-                    <Progress percent={5} strokeWidth={15}/>
+                    <Progress percent={this.percent(this.state.done.quiz, this.state.all.quiz)} format={percent => `${this.state.done.quiz} / ${this.state.all.quiz}`} strokeWidth={15}/>
+                    <Progress percent={this.percent(this.state.right.quiz, this.state.done.quiz)} format={percent => `${percent} %`} strokeWidth={15}/>
                 </div>
 	            <div ref="graphics" id="graphics" className="radar" ></div>
 	            </div>
