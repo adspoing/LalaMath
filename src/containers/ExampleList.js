@@ -72,22 +72,40 @@ class Question extends React.Component {
              Useful:3,
              commentvalue:""});
     }
-    componentDidMount = () =>{   
+    componentDidMount = () =>{  
+        // this._isMounted = true
+        // if (this._isMounted) 
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
+        // let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
+        //             let Data=this.props.exampleData;
+        //             if(this.props.exampleData.length!=0){
+        //                 uurl+=Data[this.props.exampleIndex].pk;
+        //                 axios.get(uurl)
+        //                 .then(res => {
+        //                   this.setState({commentoriginData:res.data});
+        //                   this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
+        //                 });
+        // } 
     }
     componentDidUpdate = () =>{
+      // this._isMounted = true
+      // let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
+      //               let Data=this.props.exampleData;
+      //               if(this.props.exampleData.length!=0){
+      //                   uurl+=Data[this.props.exampleIndex].pk;
+      //                   axios.get(uurl)
+      //                   .then(res => {
+      //                     if (this._isMounted) this.setState({commentoriginData:res.data});
+      //                     this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
+      //                   });
+      //   } 
+         // if (this._isMounted) 
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
     }
-    componentWillUpdate = () =>{
-       let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
-                    let Data=this.props.exampleData;
-                    if(this.props.exampleData.length!=0){
-                        uurl+=Data[this.props.exampleIndex].pk;
-                        axios.get(uurl)
-                        .then(res => {
-                          this.setState({commentoriginData:res.data});
-                        });
-                    }
+    // componentWillUpdate = () =>{
+    // }
+    componentWillUnmount () {
+      this._isMounted = false
     }
     componentWillMount = () =>{
           if(this.props.allData.length==0){
@@ -204,6 +222,18 @@ class Question extends React.Component {
             return unescape(arr[2]); 
         else 
             return null; 
+       }
+       querycomment = () =>{
+          let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
+                    let Data=this.props.exampleData;
+                    if(this.props.exampleData.length!=0){
+                        uurl+=Data[this.props.exampleIndex].pk;
+                        axios.get(uurl)
+                        .then(res => {
+                        this.setState({commentoriginData:res.data});
+                          // this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
+                        });
+        } 
        }
     render() {
         let AllData=this.props.allData;
@@ -341,6 +371,9 @@ class Question extends React.Component {
                           <Input type="textarea" placeholder="Input your comment" autosize autosize={{ minRows: 2, maxRows: 6 }}
                                 onChange={this.handleComment} value={this.state.commentvalue}/>
                           { <Button onClick = {this.submitcomment}>submit</Button>}
+                          </div>
+                          <div className="commentarea">Comment Area
+                                <Button onClick = {this.querycomment}>Show Comment</Button>
                           </div>
                           <Table columns={columns} dataSource={commentdata}/>
                           </div>

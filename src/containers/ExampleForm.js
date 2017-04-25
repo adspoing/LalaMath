@@ -36,12 +36,12 @@ class ExampleForm extends React.Component {
     componentWillMount = () =>{
             if(this.props.complete.length==0){
                   let url="http://lala.ust.hk:8000/get/api/students/donerecord?userid=";
-                  var userid = this.getCookie("id");
-                  // let userid=14;
+                  // var userid = this.getCookie("id");
+                  let userid=14;
                   url+=userid;
                   axios.get(url)
                   .then(res => {
-                      console.log(res.data);
+                      // console.log(res.data);
                       this.props.actions.loadcomplete(res.data);
                       this.setState({loading: false});
                   });
@@ -90,7 +90,7 @@ class ExampleForm extends React.Component {
                   dataSource.push(tm);
                }
          }
-         console.log(dataSource);
+         // console.log(dataSource);
          // console.log(dataSource[0].code.split('.')[1]+dataSource[0].code.split('.')[2]);
 
         const columns = [{
