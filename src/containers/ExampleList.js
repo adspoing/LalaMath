@@ -19,6 +19,7 @@ var twinProblem;
 var RecommendProblem;
 var twinOption=[];
 var recommendOption=[];
+// let commentoriginData=[];
 class Question extends React.Component {
     constructor(props) {
         super(props);
@@ -40,7 +41,8 @@ class Question extends React.Component {
              Likeability:3,
              Difficulty:3,
              Useful:3,
-             commentvalue:""
+             commentvalue:"",
+             commentoriginData:[]
              // pkIndex:[]
         }
     }
@@ -55,10 +57,16 @@ class Question extends React.Component {
              Difficulty:3,
              Useful:3,
              commentvalue:""});
+        // let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
+        //             let Data=this.props.exampleData;
+        //             uurl+=Data[this.props.exampleIndex].pk;
+        //             axios.get(uurl)
+        //             .then(res => {
+        //               this.setState({commentoriginData:res.data});
+        //  });
     }
     prevQuestion = () =>{
         this.props.actions.prevexample();
-        // this.props.clickPrevQuestion();
         this.setState({ showResults: false,showAns: false,value: 0,Likeability:3,
              Difficulty:3,
              Useful:3,
@@ -69,6 +77,17 @@ class Question extends React.Component {
     }
     componentDidUpdate = () =>{
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
+    }
+    componentWillUpdate = () =>{
+       let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
+                    let Data=this.props.exampleData;
+                    if(this.props.exampleData.length!=0){
+                        uurl+=Data[this.props.exampleIndex].pk;
+                        axios.get(uurl)
+                        .then(res => {
+                          this.setState({commentoriginData:res.data});
+                        });
+                    }
     }
     componentWillMount = () =>{
           if(this.props.allData.length==0){
@@ -84,6 +103,15 @@ class Question extends React.Component {
               axios.get('http://lala.ust.hk:8000/get/questions/all?category=1')
               .then(res => {
                 this.props.actions.changeexampledata(res.data);
+                if(this.state.commentoriginData.length==0){
+                    let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
+                    let Data=this.props.exampleData;
+                    uurl+=Data[this.props.exampleIndex].pk;
+                    axios.get(uurl)
+                    .then(res => {
+                      this.setState({commentoriginData:res.data});
+                    });
+                }
               });
           }else{
               this.setState({loading: false});
@@ -152,12 +180,9 @@ class Question extends React.Component {
           urlUseful+=Data[this.props.exampleIndex].pk;
           urlUseful+="/usefuls?choice=";
           urlUseful+=this.state.Useful;
-          // console.log(urlLikeability);
-          // console.log(urlDifficulty);
-          // console.log(urlUseful);
+       
           let urlcomment="http://lala.ust.hk:8000/get/api/suggestions/question/upload";
 
-          // console.log(this.state.commentvalue);
 
           axios.get(urlLikeability);
           axios.get(urlDifficulty);
@@ -181,16 +206,8 @@ class Question extends React.Component {
             return null; 
        }
     render() {
-        // let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
-        // let Data=this.props.exampleData;
         let AllData=this.props.allData;
-        let Data=this.props.exampleData;
-        // console.log(AllData);
-        // console.log(Data);
-         // let AllData=this.props.allData;
-        // let Data=this.props.exampleData;
-        // console.log(AllData);
-        // console.log(Data);
+        let Data=this.props.exampleData; 
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
         if(AllData.length!=0){
             var pkIndex=[];
@@ -217,36 +234,28 @@ class Question extends React.Component {
                 }
             }
           }
-         // console.log(Data);
-        // console.log(Data[0]);
-        // let AllData = this.state.AllData;
-        // var pkIndex=[];
-        // for(var i=0;i<AllData.length;i++){
-        //   pkIndex[AllData[i].pk]=i;
-        // }
-        // let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
-        // var twinOption=[];
-        // for(var i=0;i<Data[this.props.exampleIndex].fields.twinproblems.length;i++){
-        //     var indexx=Data[this.props.exampleIndex].fields.twinproblems[i];
-        //     var iddd=AllData[pkIndex[indexx]].fields.code;
-        //     twinOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-        // }
-        // var recommendOption=[];
-        // if(Data[this.props.exampleIndex].fields.answer==selvalue){
-        //     for(var i=0;i<Data[this.props.exampleIndex].fields.rightproblems.length;i++){
-        //     var indexx=Data[this.props.exampleIndex].fields.rightproblems[i];
-        //     var iddd=AllData[pkIndex[indexx]].fields.code;
-        //     recommendOption.push(<Option key={iddd+""} value={Data[this.props.exampleIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-        //     }
-        // }
-        // else{
-        //     for(var i=0;i<Data[this.props.exampleIndex].fields.wrongproblems.length;i++){
-        //     var indexx=Data[this.props.exampleIndex].fields.wrongproblems[i];
-        //     var iddd=AllData[pkIndex[indexx]].fields.code;
-        //     recommendOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-        //     }
-        // }
-
+        const columns = [{
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+          }, {
+            title: 'Comment',
+            dataIndex: 'comment',
+            key: 'comment',
+          }, {
+            title: 'Time',
+            dataIndex: 'time',
+            key: 'time',
+          }];
+        let commentdata = [];
+        for(var i=0;i<this.state.commentoriginData.length;i++){
+           var tm=new Object();
+           tm.name=this.state.commentoriginData[i].fields.username;
+           tm.comment=this.state.commentoriginData[i].fields.comment;
+           tm.time=this.state.commentoriginData[i].fields.time;
+           tm.key=i;
+           commentdata.push(tm);
+        }
         return (
         	<div>
             <div className="exam-bg">
@@ -333,6 +342,7 @@ class Question extends React.Component {
                                 onChange={this.handleComment} value={this.state.commentvalue}/>
                           { <Button onClick = {this.submitcomment}>submit</Button>}
                           </div>
+                          <Table columns={columns} dataSource={commentdata}/>
                           </div>
                         </div>
                         </Spin>
