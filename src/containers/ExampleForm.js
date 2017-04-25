@@ -92,7 +92,11 @@ class ExampleForm extends React.Component {
          }
          // console.log(dataSource);
          // console.log(dataSource[0].code.split('.')[1]+dataSource[0].code.split('.')[2]);
-
+          dataSource.sort(function(a, b) {
+            return (a.code.split('.')[1]==b.code.split('.')[1]?
+          parseInt(a.code.split('.')[2]) - parseInt(b.code.split('.')[2])
+          :parseInt(a.code.split('.')[1]) - parseInt(b.code.split('.')[1]))
+        });
         const columns = [{
           title: 'Code',
           dataIndex: 'code',

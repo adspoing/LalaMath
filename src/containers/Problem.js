@@ -28,7 +28,7 @@ class Problem extends React.Component {
         // this.props.actions.fetchthing();
     }
     showproblem =(value)=>{
-          console.log(value)
+          // console.log(value)
           this.props.actions.changeproblem(value);
       }
     componentWillMount = () =>{

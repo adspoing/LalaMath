@@ -95,7 +95,7 @@ let question =  handleActions({
 		}
 	},
 	[CHANGE_INDEX]: (state,action) => {
-		console.log(action.payload);
+		// console.log(action.payload);
 		//console.log(Data);
 		// console.log(Data[i].fields.code);
 		for(var i=0;i<Data.length;i++){
@@ -103,7 +103,7 @@ let question =  handleActions({
 				state.index=i;
 			}
 		}
-		console.log(state.index);
+		// console.log(state.index);
 		return {
 			exerciseData:state.exerciseData,
 			index: state.index,
@@ -238,8 +238,8 @@ let question =  handleActions({
 		}
 	},
 	['FETCH_THING']:(state,action) => {
-		console.log("fetc");
-		console.log(action.payload);
+		// console.log("fetc");
+		// console.log(action.payload);
 		return {
 			questionData:action.payload,
 			exerciseData:state.exerciseData,
@@ -550,7 +550,7 @@ let question =  handleActions({
 		// }
 	}),
 	[CHANGE_EXERCISE_INDEX]:(state,action) => {
-		console.log(action.payload);
+		// console.log(action.payload);
 		return {
 			problemIndex: state.problemIndex,
 			exampleIndex: state.exampleIndex,
@@ -683,7 +683,7 @@ let question =  handleActions({
 		}
 	},
 	[LOAD_COMPLETE]:(state,action) => {
-			console.log(action.payload);
+			// console.log(action.payload);
 		return {
 			complete:action.payload,
 			exerciseData:state.exerciseData,
@@ -706,7 +706,7 @@ let question =  handleActions({
 		}
 	},
 	[CHANGE_PROBLEM_DATA]:(state,action) => {
-		console.log(action.payload);
+		// console.log(action.payload);
 		return {
 			complete:state.complete,
 			exerciseData:state.exerciseData,

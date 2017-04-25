@@ -5,14 +5,15 @@ import { Menu, Dropdown, Icon } from 'antd';
 import Header from './Header.js';
 import SideBar from './SideBar.js';
 import Question from './Question.js';
-import {changeindexbyid} from '../actions/actions.js'
-import { Tree, Input, Button,Select,Breadcrumb,TreeSelect,Table} from 'antd';
+import {changeindexbyid,loaddata} from '../actions/actions.js'
+import { Tree, Input, Button,Select,Breadcrumb,TreeSelect,Table,Spin} from 'antd';
 import { Link } from 'react-router' // 引入Link处理导航跳转
-import Data from '../data.js';
+// import Data from '../data.js';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import axios from 'axios';
 
+let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
 
 class Hottest extends React.Component {
     constructor(props) {
@@ -22,22 +23,33 @@ class Hottest extends React.Component {
 
     state = {
       Hottest:[],
+      loading: true
     }
 
     onrowclick=(record, index)=>{
-         console.log(record.code);
-         // console.log(Data[index].fields.code);
-         // var count = 0;
          var indexxx;
+         // console.log(this.state.Hottest[index]);
+         let Data=this.props.allData;
+
          for(var i=0;i<Data.length;i++){
-            if(Data[i].fields.code==record.code){
+              if(Data[i].fields.code==record.code.split(' ')[1]&&
+                Data[i].fields.category==this.state.Hottest[index].category){
                 indexxx=i;
             }
          }
-         console.log(indexxx);
          this.props.actions.changeindexbyid(indexxx);
     }
-      
+    componentDidMount = () =>{
+        if(this.props.allData.length==0){
+          axios.get('http://lala.ust.hk:8000/get/questions/all')
+          .then(res => {
+            this.props.actions.loaddata(res.data);
+            this.setState({loading: false});
+          });
+        }else{
+              this.setState({loading: false});
+         }
+    }
     componentWillMount = () =>{
       let result = [];
       let that = this;
@@ -46,9 +58,10 @@ class Hottest extends React.Component {
                 for (var i = 0; i < question.data.length; i++){
                   let tm=new Object();
                   tm.key=i;
-                  tm.code=question.data[i].code;
+                  tm.code=questype[question.data[i].category]+question.data[i].code;
                   tm.difficulty=question.data[i].difficulty;
                   tm.acceptance=question.data[i].question_count;
+                  tm.category=question.data[i].category
                   result.push(tm);
                 }
                 that.setState({Hottest:result});
@@ -68,7 +81,7 @@ class Hottest extends React.Component {
             key: 'difficulty',
             sorter: (a, b) => a.difficulty - b.difficulty,
           }, {
-            title: 'User_Count ',
+            title: 'Submissions ',
             dataIndex: 'acceptance',
             key: 'acceptance',
           }];
@@ -88,7 +101,9 @@ class Hottest extends React.Component {
                         </Breadcrumb.Item>
                     </Breadcrumb>
                     <div className="hottestResult">
+                    <Spin spinning={this.state.loading} tip="Loading questions...">
                     <Table dataSource={this.state.Hottest} columns={columns} onRowClick={this.onrowclick.bind(this)} />
+                    </Spin>
                     </div>
                 </div>
             </div>
@@ -102,13 +117,14 @@ class Hottest extends React.Component {
 function mapStateToProps (state){
     //console.log(state.searchstate);
     return { 
+      allData:state.question.allData,
         }
 }
 
 function mapDispatchToProps (dispatch){
     return{
         actions: bindActionCreators({
-            changeindexbyid
+            changeindexbyid,loaddata
         },dispatch)
     };
 }

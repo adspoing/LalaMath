@@ -91,7 +91,11 @@ class DiyForm extends React.Component {
                 dataSource.push(tm);
              }
          }
-
+          dataSource.sort(function(a, b) {
+            return (a.code.split('.')[1]==b.code.split('.')[1]?
+          parseInt(a.code.split('.')[2]) - parseInt(b.code.split('.')[2])
+          :parseInt(a.code.split('.')[1]) - parseInt(b.code.split('.')[1]))
+        });
         const columns = [{
           title: 'Code',
           dataIndex: 'code',

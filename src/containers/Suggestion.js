@@ -20,18 +20,18 @@ class Suggestion extends React.Component {
     }
 
     componentWillUpdate = () =>{
-       let uurl="http://lala.ust.hk:8000/get/api/suggestions/system/all";
-        axios.get(uurl)
-            .then(res => {
-                this.setState({commentoriginData:res.data});
-            });
+       // let uurl="http://lala.ust.hk:8000/get/api/suggestions/system/all";
+       //  axios.get(uurl)
+       //      .then(res => {
+       //          this.setState({commentoriginData:res.data});
+       //      });
     }
     componentWillMount = () =>{
        let uurl="http://lala.ust.hk:8000/get/api/suggestions/system/all";
         axios.get(uurl)
             .then(res => {
                 this.setState({commentoriginData:res.data});
-            });
+        });
     }
 
     submitcomment = () =>{
@@ -49,6 +49,11 @@ class Suggestion extends React.Component {
           );
         //console.log(this.state.commentvalue);
         message.success('Thanks for your comment');
+        let uurl="http://lala.ust.hk:8000/get/api/suggestions/system/all";
+        axios.get(uurl)
+            .then(res => {
+                this.setState({commentoriginData:res.data});
+        });
       }
     handleComment = (e) =>{
            this.setState({ commentvalue :e.target.value });

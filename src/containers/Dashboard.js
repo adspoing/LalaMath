@@ -5,6 +5,11 @@ import SideBar from './SideBar.js';
 import MyFooter from './MyFooter.js';
 import { Button } from 'antd';
 import { Link } from 'react-router' // 引入Link处理导航跳转
+import {loaddata} from '../actions/actions.js'
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import axios from 'axios';
+
 import '../css/Dashboard.less';
 
 
@@ -13,7 +18,15 @@ class Dashboard extends React.Component {
         super(props);
         this.displayName = 'Dashboard';
     }
-
+    componentDidMount = () =>{
+          console.log("aa");
+          if(this.props.allData.length==0){
+            axios.get('http://lala.ust.hk:8000/get/questions/all')
+            .then(res => {
+              this.props.actions.loaddata(res.data);
+            });
+          }
+      }
      render() {
         return (
         	<div>
@@ -36,4 +49,18 @@ class Dashboard extends React.Component {
     }
 }
 
-export default Dashboard;
+// export default Dashboard;
+function mapStateToProps (state){
+    return { 
+      allData:state.question.allData,
+        }
+}
+
+function mapDispatchToProps (dispatch){
+    return{
+        actions: bindActionCreators({
+            loaddata
+        },dispatch)
+    };
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

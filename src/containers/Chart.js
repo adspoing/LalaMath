@@ -191,7 +191,6 @@ class Chart extends React.Component {
         let option = [];
         let that = this;
         var userid = this.getCookie("id");
-        console.log(userid);
         axios.get("http://lala.ust.hk:8000/get/api/neurons/"+chapter)
             .then(function(nodedata) {
                 //console.log(nodedata);

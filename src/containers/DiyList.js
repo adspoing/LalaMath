@@ -362,6 +362,14 @@ class DiyList extends React.Component {
                           { Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutions.split("<br>").map(i => {
                            return <div>{i}</div>;
                           }): null:null}
+                          <div> 
+                             { Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.alternativesolutions?
+                               <div style={{fontSize:16}}>Alternative Solutions</div>
+                              :null: null :null}
+                          </div>
+                          { Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.alternativesolutions.split("<br>").map(i => {
+                           return <div>{i}</div>;
+                          }): null :null}
                          {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture1}/>:null:null}
                          {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture2}/>:null:null}
                          {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture3}/>:null:null}

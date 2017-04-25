@@ -56,7 +56,8 @@ class Question extends React.Component {
         this.setState({ showResults: false,showAns: false, value: 0,Likeability:3,
              Difficulty:3,
              Useful:3,
-             commentvalue:""});
+             commentvalue:"",
+             commentoriginData:[]});
         // let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
         //             let Data=this.props.exampleData;
         //             uurl+=Data[this.props.exampleIndex].pk;
@@ -70,7 +71,8 @@ class Question extends React.Component {
         this.setState({ showResults: false,showAns: false,value: 0,Likeability:3,
              Difficulty:3,
              Useful:3,
-             commentvalue:""});
+             commentvalue:"",
+             commentoriginData:[]});
     }
     componentDidMount = () =>{  
         // this._isMounted = true
@@ -332,6 +334,14 @@ class Question extends React.Component {
                           {Data.length!=0? Data[this.props.exampleIndex].fields.solutions.split("<br>").map(i => {
                            return <div>{i}</div>;
                           }) :null}
+                          <div> 
+                             { Data.length!=0?this.state.showAns?Data[this.props.exampleIndex].fields.alternativesolutions?
+                               <div style={{fontSize:16}}>Alternative Solutions</div>
+                              :null: null :null}
+                          </div>
+                          { Data.length!=0?this.state.showAns?Data[this.props.exampleIndex].fields.alternativesolutions.split("<br>").map(i => {
+                           return <div>{i}</div>;
+                          }): null :null}
                          {Data.length!=0?Data[this.props.exampleIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture1}/>:null}
                          {Data.length!=0?Data[this.props.exampleIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture2}/>:null}
                          {Data.length!=0?Data[this.props.exampleIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture3}/>:null}

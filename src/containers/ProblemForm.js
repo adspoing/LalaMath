@@ -23,7 +23,7 @@ class ProblemForm extends React.Component {
         }
     }
     onrowclick=(record, index)=>{
-         console.log(record.code);
+         // console.log(record.code);
          // console.log(Data[index].fields.code);
          // var count = 0;
          let Data=this.props.problemData;
@@ -43,7 +43,7 @@ class ProblemForm extends React.Component {
                 url+=userid;
                 axios.get(url)
                 .then(res => {
-                    console.log(res.data);
+                    // console.log(res.data);
                     this.props.actions.loadcomplete(res.data);
                     this.setState({loading: false});
                 });
@@ -70,13 +70,13 @@ class ProblemForm extends React.Component {
          let dataSource = [];
          let count=0;
          let Data=this.props.problemData;
-         console.log(this.props.complete);
+         // console.log(this.props.complete);
          var pkIndex=[];
           let AllData = this.props.complete;
           for(var i=0;i<AllData.length;i++){
             pkIndex[AllData[i].questionid]=i;
           }
-          console.log(pkIndex);
+          // console.log(pkIndex);
 
          if(Data.length!=0&&this.props.complete.length!=0){
              for(var i=0;i<Data.length;i++){
@@ -88,13 +88,17 @@ class ProblemForm extends React.Component {
                 tm.code=Data[i].fields.code;
                 tm.difficulty=Data[i].fields.difficulty;
                 tm.correctcount="0/0";
-                console.log(Data[i].pk);
                 tm.submitted=this.props.complete[pkIndex[Data[i].pk]].isdone+"";
                 count++;
                 dataSource.push(tm);
              }
                       // console.log(dataSource[0].code.split('.')[1]+dataSource[0].code.split('.')[2])
          }
+        dataSource.sort(function(a, b) {
+            return (a.code.split('.')[1]==b.code.split('.')[1]?
+          parseInt(a.code.split('.')[2]) - parseInt(b.code.split('.')[2])
+          :parseInt(a.code.split('.')[1]) - parseInt(b.code.split('.')[1]))
+        });
         const columns = [{
           title: 'Code',
           dataIndex: 'code',
