@@ -369,9 +369,10 @@ class ProblemList extends React.Component {
                          {Data.length!=0?this.state.showAns?Data[this.props.problemIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.solutionspicture1}/>:null:null}
                          {Data.length!=0?this.state.showAns?Data[this.props.problemIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.solutionspicture2}/>:null:null}
                          {Data.length!=0?this.state.showAns?Data[this.props.problemIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.solutionspicture3}/>:null:null}
-                          <div>{ this.state.showAns?
+                          <div style={{marginTop: '20px'}}>{Data.length!=0?this.state.showAns?Data[this.props.problemIndex].fields.linkneuron==""?null:"Related Neurons: "+Data[this.props.problemIndex].fields.linkneuron:null:null}</div>
+                          <div style={{marginTop: '20px'}}>{ this.state.showAns?
                                  <Select
-                                    style={{ width: 200 }}
+                                    style={{ width: 200}}
                                     // defaultValue={twinOption[0]}
                                     placeholder="Select a twin problem"
                                     optionFilterProp="children"
@@ -381,11 +382,11 @@ class ProblemList extends React.Component {
                                      
                                      {twinOption}
                                   </Select>:null}
-                               { this.state.showAns?<Button onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
+                               { this.state.showAns?<Button style={{marginLeft: '5px'}} onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
                               
                                { this.state.showAns?
                                  <Select
-                                    style={{ width: 200 }}
+                                    style={{ width: 200,marginLeft: '10px'}}
                                     // defaultValue={twinOption[0]}
                                     placeholder="Select a Recommend problem"
                                     optionFilterProp="children"
@@ -395,9 +396,9 @@ class ProblemList extends React.Component {
                                      
                                      {recommendOption}
                                   </Select>:null}
-                               { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
+                               { this.state.showAns?<Button style={{marginLeft: '5px'}} onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
                                </div>
-                            <div className="commentblock">
+                            <div style={{marginTop: '20px'}} className="commentblock">
                              <div className="problemcomment"> { "Your evaluation is highly appreciated:"}</div>
                              <div>Likeability:<span className="problemrate">{ <Rate onChange={this.handleLikeability} value={this.state.Likeability} />}</span></div>
                              <div>Difficulty:<span className="problemrate2">{ <Rate onChange={this.handleDifficulty} value={this.state.Difficulty} />}</span></div>

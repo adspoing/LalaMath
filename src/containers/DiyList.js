@@ -348,76 +348,78 @@ class DiyList extends React.Component {
                           </RadioGroup>
                         </div>
                         <div className="questionanswer">
-                          <div className="questionbutton">
-                                {this.state.selvalue==0?
-                                  <Button className="submitQuestion" type="submit" disabled>Submit</Button>:
-                                    <Popconfirm placement="top" title={"Are you sure to submit?"} onConfirm={this.submitQuestion} okText="Yes" cancelText="No">
-                                      <Button className="submitQuestion" type="submit">Submit</Button>
-                                    </Popconfirm>
-                                }  
-                          </div>
-                          <div className="questionbutton">{ this.state.showResults?<Button className="submitQuestion" onClick = {this.showAns}>Show Result</Button>: null }</div>
-                          <div className="questionresult">
-                      
-                          { Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutions.split("<br>").map(i => {
-                           return <div>{i}</div>;
-                          }): null:null}
-                          <div> 
-                             { Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.alternativesolutions?
-                               <div style={{fontSize:16}}>Alternative Solutions</div>
-                              :null: null :null}
-                          </div>
-                          { Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.alternativesolutions.split("<br>").map(i => {
-                           return <div>{i}</div>;
-                          }): null :null}
-                         {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture1}/>:null:null}
-                         {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture2}/>:null:null}
-                         {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture3}/>:null:null}
-                          { this.state.showAns?
-                                 <Select
-                                    style={{ width: 200 }}
-                                    // defaultValue={twinOption[0]}
-                                    placeholder="Select a twin problem"
-                                    optionFilterProp="children"
-                                    onChange={this.twinProblemChange}
-                                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                  >
-                                     
-                                     {twinOption}
-                                  </Select>:null}
-                               { this.state.showAns?<Button onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
-                              
-                               { this.state.showAns?
-                                 <Select
-                                    style={{ width: 200 }}
-                                    // defaultValue={twinOption[0]}
-                                    placeholder="Select a Recommend problem"
-                                    optionFilterProp="children"
-                                    onChange={this.RecommendProblemChange}
-                                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                  >
-                                     
-                                     {recommendOption}
-                                  </Select>:null}
-                               { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
-                        
-                               </div>
-                            <div className="commentblock">
-                             <div className="problemcomment"> { "Your evaluation is highly appreciated:"}</div>
-                             <div>Likeability:<span className="problemrate">{ <Rate onChange={this.handleLikeability} value={this.state.Likeability} />}</span></div>
-                             <div>Difficulty:<span className="problemrate2">{ <Rate onChange={this.handleDifficulty} value={this.state.Difficulty} />}</span></div>
-                             <div>Useful:<span className="problemrate3">{ <Rate onChange={this.handleUseful} value={this.state.Useful} />}</span></div>
-                            <Input type="textarea" placeholder="Input your comment" autosize autosize={{ minRows: 2, maxRows: 6 }}
-                                  onChange={this.handleComment} value={this.state.commentvalue}/>
-                            { <Button onClick = {this.submitcomment}>submit</Button>}
+                            <div className="questionbutton">
+                                  {this.state.selvalue==0?
+                                    <Button className="submitQuestion" type="submit" disabled>Submit</Button>:
+                                      <Popconfirm placement="top" title={"Are you sure to submit?"} onConfirm={this.submitQuestion} okText="Yes" cancelText="No">
+                                        <Button className="submitQuestion" type="submit">Submit</Button>
+                                      </Popconfirm>
+                                  }  
                             </div>
+                            <div className="questionbutton">{ this.state.showResults?<Button className="submitQuestion" onClick = {this.showAns}>Show Result</Button>: null }</div>
+                            <div className="questionresult">
+                        
+                            { Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutions.split("<br>").map(i => {
+                             return <div>{i}</div>;
+                            }): null:null}
+                              <div> 
+                                 { Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.alternativesolutions?
+                                   <div style={{fontSize:16}}>Alternative Solutions</div>
+                                  :null: null :null}
+                              </div>
+                            { Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.alternativesolutions.split("<br>").map(i => {
+                             return <div>{i}</div>;
+                            }): null :null}
+                           {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture1}/>:null:null}
+                           {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture2}/>:null:null}
+                           {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture3}/>:null:null}
+                                <div style={{marginTop: '20px'}}>{Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.linkneuron==""?null:"Related Neurons: "+Data[this.props.diyIndex].fields.linkneuron:null:null}</div>
+                                <div style={{marginTop: '20px'}}> { this.state.showAns?
+                                   <Select
+                                      style={{ width: 200 }}
+                                      // defaultValue={twinOption[0]}
+                                      placeholder="Select a twin problem"
+                                      optionFilterProp="children"
+                                      onChange={this.twinProblemChange}
+                                      filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                       
+                                       {twinOption}
+                                    </Select>:null}
+                                 { this.state.showAns?<Button onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
+                                
+                                 { this.state.showAns?
+                                   <Select
+                                      style={{ width: 200 }}
+                                      // defaultValue={twinOption[0]}
+                                      placeholder="Select a Recommend problem"
+                                      optionFilterProp="children"
+                                      onChange={this.RecommendProblemChange}
+                                      filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                       
+                                       {recommendOption}
+                                    </Select>:null}
+                                 { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
+                          
+                                 </div>
+                              <div style={{marginTop: '20px'}} className="commentblock">
+                               <div className="problemcomment"> { "Your evaluation is highly appreciated:"}</div>
+                               <div>Likeability:<span className="problemrate">{ <Rate onChange={this.handleLikeability} value={this.state.Likeability} />}</span></div>
+                               <div>Difficulty:<span className="problemrate2">{ <Rate onChange={this.handleDifficulty} value={this.state.Difficulty} />}</span></div>
+                               <div>Useful:<span className="problemrate3">{ <Rate onChange={this.handleUseful} value={this.state.Useful} />}</span></div>
+                              <Input type="textarea" placeholder="Input your comment" autosize autosize={{ minRows: 2, maxRows: 6 }}
+                                    onChange={this.handleComment} value={this.state.commentvalue}/>
+                              { <Button onClick = {this.submitcomment}>submit</Button>}
+                              </div>
                           </div>
-                          </Spin>
-                          </div>
-                  </div>
+                        </div>
+                      </Spin>
+                    </div>
                 </div>
                 </div>
             </div>
+          </div>
         )
     }
 }

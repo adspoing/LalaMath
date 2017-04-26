@@ -586,7 +586,8 @@ class VQuestion extends React.Component {
                          {Data.length!=0?this.state.showAns?Data[this.props.questionIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.questionIndex].fields.solutionspicture1}/>:null:null}
                          {Data.length!=0?this.state.showAns?Data[this.props.questionIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.questionIndex].fields.solutionspicture2}/>:null:null}
                          {Data.length!=0?this.state.showAns?Data[this.props.questionIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.questionIndex].fields.solutionspicture3}/>:null:null}
-                          <div>{ this.state.showAns?
+                          <div style={{marginTop: '20px'}}> {Data.length!=0?this.state.showAns?Data[this.props.questionIndex].fields.linkneuron==""?null:"Related Neurons:"+ Data[this.props.questionIndex].fields.linkneuron:null:null}</div>
+                          <div style={{marginTop: '20px'}}>{ this.state.showAns?
                                  <Select
                                     style={{ width: 200 }}
                                     // defaultValue={twinOption[0]}
@@ -614,7 +615,7 @@ class VQuestion extends React.Component {
                                   </Select>:null}
                                { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
                                </div>
-                            <div className="commentblock">
+                            <div style={{marginTop: '20px'}} className="commentblock">
                              <div className="problemcomment"> { "Your evaluation is highly appreciated:"}</div>
                              <div>Likeability:<span className="problemrate">{ <Rate onChange={this.handleLikeability} value={this.state.Likeability} />}</span></div>
                              <div>Difficulty:<span className="problemrate2">{ <Rate onChange={this.handleDifficulty} value={this.state.Difficulty} />}</span></div>
