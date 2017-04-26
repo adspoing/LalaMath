@@ -64,6 +64,9 @@ class Hottest extends React.Component {
                   tm.category=question.data[i].category
                   result.push(tm);
                 }
+                result.sort(function(a, b) {
+                  return (b.acceptance - a.acceptance);
+                  });
                 that.setState({Hottest:result});
             })
     }
@@ -84,6 +87,7 @@ class Hottest extends React.Component {
             title: 'Submissions ',
             dataIndex: 'acceptance',
             key: 'acceptance',
+            sorter: (a, b) => a.acceptance - b.acceptance,
           }];
         return (
 
