@@ -37,7 +37,7 @@ class ExampleForm extends React.Component {
             if(this.props.complete.length==0){
                   let url="http://lala.ust.hk:8000/get/api/students/donerecord?userid=";
                   var userid = this.getCookie("id");
-                  // let userid=14;
+                  userid=14;
                   url+=userid;
                   axios.get(url)
                   .then(res => {

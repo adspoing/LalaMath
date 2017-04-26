@@ -300,7 +300,7 @@ class VQuestion extends React.Component {
         // console.log(selvalue);
     }   
     submitQuestion = () =>{
-        let Data=this.props.problemData;
+        let Data=this.props.allData;
         console.log(this.props.questionIndex);
         if(Data[this.props.questionIndex].fields.answer==this.state.selvalue){
             var config={};
@@ -357,7 +357,7 @@ class VQuestion extends React.Component {
           // username="chuac";
           urlLikeability+=userid;
           urlLikeability+="/questions/";
-          let Data=this.props.problemData;
+          let Data=this.props.allData;
           urlLikeability+=Data[this.props.questionIndex].pk;
           urlLikeability+="/prefer?choice=";
           urlLikeability+=this.state.Likeability;
