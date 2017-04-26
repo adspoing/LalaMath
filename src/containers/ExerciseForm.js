@@ -20,7 +20,8 @@ class ExerciseForm extends React.Component {
         this.displayName = 'ExerciseForm';
          this.state = {
              // complete: [],
-             loading: true
+             loading: true,
+             countarr: []
         }
     }
     onrowclick=(record, index)=>{
@@ -58,6 +59,13 @@ class ExerciseForm extends React.Component {
           }else if(this.props.complete.length!=0){
               this.setState({loading: false});
           }
+          if(this.state.countarr.length==0){
+                let url="http://lala.ust.hk:8000/get/api/questions/getcount";
+                axios.get(url)
+                .then(res => {
+                    this.setState({loading: false,countarr:res.data});
+                });
+          }
     }
     getCookie = (name) =>{
         var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
@@ -87,7 +95,7 @@ class ExerciseForm extends React.Component {
                 tm.key=count;
                 tm.code=Data[i].fields.code;
                 tm.difficulty=Data[i].fields.difficulty;
-                tm.correctcount="0/0";
+                tm.correctcount=this.state.countarr.length==0?"0/0":this.state.countarr[pkIndex[Data[i].pk]].rightcount+"/"+this.state.countarr[pkIndex[Data[i].pk]].donecount;
                 tm.submitted=this.props.complete[pkIndex[Data[i].pk]].isdone+"";
                 count++;
                 dataSource.push(tm);
@@ -112,7 +120,7 @@ class ExerciseForm extends React.Component {
           key: 'difficulty',
           sorter: (a, b) => a.difficulty - b.difficulty,
         }, {
-          title: 'Correct Count/Submmit Count',
+          title: 'Correct Count/Submit Count',
           dataIndex: 'correctcount',
           key: 'correctcount',
         },{

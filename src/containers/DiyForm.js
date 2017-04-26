@@ -19,7 +19,8 @@ class DiyForm extends React.Component {
         super(props);   
         this.displayName = 'DiyForm';
         this.state = {
-             loading: true
+             loading: true,
+             countarr: [],
         }
     }
     onrowclick=(record, index)=>{
@@ -39,11 +40,10 @@ class DiyForm extends React.Component {
           if(this.props.complete.length==0){
                 let url="http://lala.ust.hk:8000/get/api/students/donerecord?userid=";
                 var userid = this.getCookie("id");
-                // let userid=14;
+                // userid=14;
                 url+=userid;
                 axios.get(url)
                 .then(res => {
-                    console.log(res.data);
                     this.props.actions.loadcomplete(res.data);
                     this.setState({loading: false});
                 });
@@ -56,6 +56,13 @@ class DiyForm extends React.Component {
             });
           }else if(this.props.complete.length!=0){
               this.setState({loading: false});
+          }
+          if(this.state.countarr.length==0){
+                let url="http://lala.ust.hk:8000/get/api/questions/getcount";
+                axios.get(url)
+                .then(res => {
+                    this.setState({loading: false,countarr:res.data});
+                });
           }
      }
     getCookie = (name) =>{
@@ -85,7 +92,7 @@ class DiyForm extends React.Component {
                 tm.key=count;
                 tm.code=Data[i].fields.code;
                 tm.difficulty=Data[i].fields.difficulty;
-                tm.correctcount="0/0";
+                tm.correctcount=this.state.countarr.length==0?"0/0":this.state.countarr[pkIndex[Data[i].pk]].rightcount+"/"+this.state.countarr[pkIndex[Data[i].pk]].donecount;
                 tm.submitted=this.props.complete[pkIndex[Data[i].pk]].isdone+"";
                 count++;
                 dataSource.push(tm);
@@ -110,7 +117,7 @@ class DiyForm extends React.Component {
           key: 'difficulty',
           sorter: (a, b) => a.difficulty - b.difficulty,
         }, {
-          title: 'Correct Count/Submmit Count',
+          title: 'Correct Count/Submit Count',
           dataIndex: 'correctcount',
           key: 'correctcount',
         },{
