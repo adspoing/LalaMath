@@ -37,8 +37,8 @@ class Suggestion extends React.Component {
     submitcomment = () =>{
         var userid = this.getCookie("id");
         var username = this.getCookie("userid");
-        //var userid=14;
-        //var username="chuac";
+         userid=14;
+         username="chuac";
         let urlcomment="http://lala.ust.hk:8000/get/api/suggestions/system/upload";
         axios.post(urlcomment, 
           qs.stringify({
@@ -71,6 +71,7 @@ class Suggestion extends React.Component {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
+            width: 100,
           }, {
             title: 'Comment',
             dataIndex: 'comment',
@@ -79,16 +80,18 @@ class Suggestion extends React.Component {
             title: 'Time',
             dataIndex: 'time',
             key: 'time',
+            width: 150,
           }];
         let commentdata = [];
-        for(var i=0;i<this.state.commentoriginData.length;i++){
+        for(var i=this.state.commentoriginData.length-1;i>=0;i--){
            var tm=new Object();
            tm.name=this.state.commentoriginData[i].fields.username;
            tm.comment=this.state.commentoriginData[i].fields.comment;
-           tm.time=this.state.commentoriginData[i].fields.time;
+           tm.time=this.state.commentoriginData[i].fields.time.split('T')[0]+" "+this.state.commentoriginData[i].fields.time.split('T')[1];
            tm.key=i;
            commentdata.push(tm);
         }
+
         return (
         	<div>
                 <Header />

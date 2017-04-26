@@ -35,7 +35,6 @@ class Question extends React.Component {
              showResults: false,
              showAns: false,
              value: 0,
-             // AllData:[],
              Data:[],
              loading: true,
              Likeability:3,
@@ -45,13 +44,10 @@ class Question extends React.Component {
              commentoriginData:[],
              hastwin:false,
              hasrecommend:false,
-             // pkIndex:[]
         }
     }
     handleChange(value){
-        // console.log(`selected ${value}`);
         selvalue=value;
-        // console.log(selvalue);
     }   
     nextQuestion = () =>{
         this.props.actions.nextexample();
@@ -62,13 +58,6 @@ class Question extends React.Component {
              commentoriginData:[],
              hastwin:false,
              hasrecommend:false});
-        // let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
-        //             let Data=this.props.exampleData;
-        //             uurl+=Data[this.props.exampleIndex].pk;
-        //             axios.get(uurl)
-        //             .then(res => {
-        //               this.setState({commentoriginData:res.data});
-        //  });
     }
     prevQuestion = () =>{
         this.props.actions.prevexample();
@@ -81,37 +70,25 @@ class Question extends React.Component {
              hasrecommend:false});
     }
     componentDidMount = () =>{  
-        // this._isMounted = true
-        // if (this._isMounted) 
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
-        // let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
-        //             let Data=this.props.exampleData;
-        //             if(this.props.exampleData.length!=0){
-        //                 uurl+=Data[this.props.exampleIndex].pk;
-        //                 axios.get(uurl)
-        //                 .then(res => {
-        //                   this.setState({commentoriginData:res.data});
-        //                   this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
-        //                 });
-        // } 
     }
     componentDidUpdate = () =>{
-      // this._isMounted = true
-      // let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
-      //               let Data=this.props.exampleData;
-      //               if(this.props.exampleData.length!=0){
-      //                   uurl+=Data[this.props.exampleIndex].pk;
-      //                   axios.get(uurl)
-      //                   .then(res => {
-      //                     if (this._isMounted) this.setState({commentoriginData:res.data});
-      //                     this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
-      //                   });
-      //   } 
-         // if (this._isMounted) 
+        var url="http://lala.ust.hk:8000/get/api/users/";
+        let Data=this.props.exampleData; 
+        if(Data.length!=0){
+            var userid = this.getCookie("id");
+            url+=userid;
+            var questionid = Data[this.props.exampleIndex].pk;
+            url+="/questions/";
+            url+=questionid;
+            axios.post(url, 
+              qs.stringify({
+                'choice':"A",
+              })
+            )
+        }
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
     }
-    // componentWillUpdate = () =>{
-    // }
     componentWillUnmount () {
       this._isMounted = false
     }

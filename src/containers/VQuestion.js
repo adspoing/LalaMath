@@ -1,16 +1,4 @@
-// import React from 'react';
-// import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
-// import Data from '../data.js';
-// import mySelect from './Select.js';
-// import { Link } from 'react-router' // 引入Link处理导航跳转
-// import { Button,Radio } from 'antd';
-// import {changeindexbyid} from '../actions/actions.js'
-// import {connect} from 'react-redux';
-// import {bindActionCreators} from 'redux';
 import { browserHistory } from 'react-router'
-
-
-
 import React from 'react';
 import {Select, Breadcrumb, Menu, Dropdown, Icon, notification,Rate } from 'antd';
 // import Data from '../problem.js';
@@ -298,9 +286,13 @@ class VQuestion extends React.Component {
                       </div>
                       <div className="questionCanvas">
                         <div id="output" className="questionstem">
-                         {Data.length!=0?Data[this.props.questionIndex].fields.problem.split("<br>").map(i => {
+                         {Data.length!=0?Data[this.props.questionIndex].fields.category!=1?Data[this.props.questionIndex].fields.problem.split("<br>").map(i => {
                            return <div>{i}</div>;
-                          }):null}
+                          }):
+                         (Data[this.props.questionIndex].fields.problem+"<br>"+Data[this.props.questionIndex].fields.solutions).split("<br>").map(i => {
+                           return <div>{i}</div>;
+                          })
+                         :null}
                          {Data.length!=0?Data[this.props.questionIndex].fields.problempicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.questionIndex].fields.problempicture1}/>:null}
                          {Data.length!=0?Data[this.props.questionIndex].fields.problempicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.questionIndex].fields.problempicture2}/>:null}
                          {Data.length!=0?Data[this.props.questionIndex].fields.problempicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.questionIndex].fields.problempicture3}/>:null}
@@ -309,6 +301,7 @@ class VQuestion extends React.Component {
                          {Data.length!=0?Data[this.props.questionIndex].fields.problempicture6==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.questionIndex].fields.problempicture6}/>:null}
 
                          </div>
+                         {Data[this.props.questionIndex].fields.category!=1?
                         <div className="questionchoice">
                          <RadioGroup onChange={this.onChange} value={this.state.value}>
                             <div>{choiceA==""?"":<div><Radio style={radioStyle} value={"A"}><div className="choicecontent">{choiceA.split("<br>").map(i => {
@@ -330,8 +323,9 @@ class VQuestion extends React.Component {
                            return <div>{i}</div>;
                           })}</div></Radio></div>}</div>
                           </RadioGroup>
-                        </div>
+                        </div>:null}
                         <div className="questionanswer">
+                          {Data[this.props.questionIndex].fields.category!=1?
                           <div className="questionbutton">
                                 {this.state.selvalue==0?
                                   <Button className="submitQuestion" type="submit" disabled>Submit</Button>:
@@ -339,7 +333,7 @@ class VQuestion extends React.Component {
                                       <Button className="submitQuestion" type="submit">Submit</Button>
                                     </Popconfirm>
                                 }                       
-                          </div>
+                          </div>:null}
                           <div className="questionbutton">{ this.state.showResults?<Button className="submitQuestion" onClick = {this.showAns}>Show Result</Button>: null }</div>
                           <div className="questionresult">
                           { Data.length!=0?this.state.showAns?Data[this.props.questionIndex].fields.solutions.split("<br>").map(i => {

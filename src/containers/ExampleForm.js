@@ -20,7 +20,8 @@ class ExampleForm extends React.Component {
         this.displayName = 'ExampleForm';
         this.state = {
              complete: [],
-             loading: true
+             loading: true,
+             countarr: [],
         }
     }
     onrowclick=(record, index)=>{
@@ -55,6 +56,13 @@ class ExampleForm extends React.Component {
             }else if(this.props.complete.length!=0){
                 this.setState({loading: false});
             }
+            if(this.state.countarr.length==0){
+                let url="http://lala.ust.hk:8000/get/api/questions/getcount";
+                axios.get(url)
+                .then(res => {
+                    this.setState({loading: false,countarr:res.data});
+                });
+          }
     }
     getCookie = (name) =>{
         var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
@@ -84,7 +92,8 @@ class ExampleForm extends React.Component {
                   tm.key=count;
                   tm.code=Data[i].fields.code;
                   tm.difficulty=Data[i].fields.difficulty;
-                  tm.viewcount=0;
+                  tm.viewcount=this.state.countarr.length==0?0:this.state.countarr[pkIndex[Data[i].pk]].donecount;
+                  // tm.correctcount=this.state.countarr.length==0?"0/0":this.state.countarr[pkIndex[Data[i].pk]].rightcount+"/"+this.state.countarr[pkIndex[Data[i].pk]].donecount;
                   tm.view=this.props.complete[pkIndex[Data[i].pk]].isdone+"";
                   count++;
                   dataSource.push(tm);
