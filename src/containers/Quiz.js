@@ -33,7 +33,7 @@ class Quiz extends React.Component {
                     <Breadcrumb.Item href="">
                       <Link to="/Dashboard"><Icon type="home" />Home</Link>
                     </Breadcrumb.Item>
-                    <Breadcrumb.Item href=""> <Link to="/DIY">
+                    <Breadcrumb.Item href=""> <Link to="/Quiz">
                       <Icon type="file-text" />
                       <span>Quiz</span></Link>
                     </Breadcrumb.Item>

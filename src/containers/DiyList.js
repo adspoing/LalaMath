@@ -5,7 +5,7 @@ import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import { Button,Radio,Popconfirm,message,Rate,Spin,Input} from 'antd';
-import {changeindexbyid,prevdiy,nextdiy,changediydata,loaddata} from '../actions/actions.js'
+import {changeindexbyid,prevdiy,nextdiy,changediydata,loaddata,setchapter} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import axios from 'axios';
@@ -37,7 +37,9 @@ class DiyList extends React.Component {
              Likeability:3,
              Difficulty:3,
              Useful:3,
-             commentvalue:""
+             commentvalue:"",
+             hastwin:false,
+             hasrecommend:false,
         }
     }
     handleChange(value){
@@ -147,11 +149,15 @@ class DiyList extends React.Component {
     }
     nextQuestion = () =>{
         this.props.actions.nextdiy();
-        this.setState({ showResults: false,showAns: false, value: 0, selvalue: 0});
+        this.setState({ showResults: false,showAns: false, value: 0, selvalue: 0,
+             hastwin:false,
+             hasrecommend:false});
     }
     prevQuestion = () =>{
         this.props.actions.prevdiy();
-        this.setState({ showResults: false,showAns: false,value: 0, selvalue: 0});
+        this.setState({ showResults: false,showAns: false,value: 0, selvalue: 0,
+             hastwin:false,
+             hasrecommend:false});
     }
     componentDidMount = () =>{   
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
@@ -179,6 +185,7 @@ class DiyList extends React.Component {
           pkIndex[AllData[i].pk]=i;
         }
         twinProblem=pkIndex[value];
+        this.setState({hastwin:true});
         // twinProblem=value;
       }
       RecommendProblemChange = (value) =>{
@@ -188,6 +195,7 @@ class DiyList extends React.Component {
           pkIndex[AllData[i].pk]=i;
         }
         RecommendProblem=pkIndex[value];
+        this.setState({hasrecommend:true});
         // RecommendProblem=value;
       }
       showTwinProblem = () =>{
@@ -281,6 +289,13 @@ class DiyList extends React.Component {
                     recommendOption.push(<Option key={iddd+""} value={Data[this.props.diyIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
                     }
                 }
+            var neurondiv = [];
+            neurondiv.push(<span> Related Neurons: </span>)
+            var neuronsinformation = Data[this.props.diyIndex].fields.linkneuron;
+            for (var i = 0; i < neuronsinformation.length;++i){
+                var chapter = neuronsinformation[i].chapter;
+                neurondiv.push(<span onClick = {()=>this.props.actions.setchapter(chapter)}><Link to="/Chart">{neuronsinformation[i].title}</Link>;  </span>)                   
+            } 
         }
 
         return (
@@ -373,7 +388,7 @@ class DiyList extends React.Component {
                            {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture1}/>:null:null}
                            {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture2}/>:null:null}
                            {Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.diyIndex].fields.solutionspicture3}/>:null:null}
-                                <div style={{marginTop: '20px'}}>{Data.length!=0?this.state.showAns?Data[this.props.diyIndex].fields.linkneuron==""?null:"Related Neurons: "+Data[this.props.diyIndex].fields.linkneuron:null:null}</div>
+                                <div style={{marginTop: '20px'}}>{Data.length!=0?this.state.showAns?neuronsinformation.length==0?null:neurondiv:null:null}</div>
                                 <div style={{marginTop: '20px'}}> { this.state.showAns?
                                    <Select
                                       style={{ width: 200 }}
@@ -390,7 +405,7 @@ class DiyList extends React.Component {
                                 
                                  { this.state.showAns?
                                    <Select
-                                      style={{ width: 200 }}
+                                      style={{ width: 200 ,marginLeft: '10px'}}
                                       // defaultValue={twinOption[0]}
                                       placeholder="Select a Recommend problem"
                                       optionFilterProp="children"
@@ -400,8 +415,7 @@ class DiyList extends React.Component {
                                        
                                        {recommendOption}
                                     </Select>:null}
-                                 { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
-                          
+                                 { this.state.showAns?this.state.hasrecommend?<Button style = {{marginLeft: '5px'}} onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>:<Button disabled style = {{marginLeft: '5px'}} onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
                                  </div>
                               <div style={{marginTop: '20px'}} className="commentblock">
                                <div className="problemcomment"> { "Your evaluation is highly appreciated:"}</div>
@@ -445,7 +459,8 @@ function mapDispatchToProps (dispatch){
             prevdiy,
             nextdiy,
             changediydata,
-            loaddata
+            loaddata,
+            setchapter,
         },dispatch)
     };
 }

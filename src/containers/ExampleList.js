@@ -5,7 +5,7 @@ import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import { Button,Radio,Popconfirm,message,Rate,Spin,Input,Table} from 'antd';
-import {prevexample,nextexample,changeindexbyid,changeexampledata,loaddata} from '../actions/actions.js'
+import {prevexample,nextexample,changeindexbyid,changeexampledata,loaddata,setchapter} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import axios from 'axios';
@@ -42,7 +42,9 @@ class Question extends React.Component {
              Difficulty:3,
              Useful:3,
              commentvalue:"",
-             commentoriginData:[]
+             commentoriginData:[],
+             hastwin:false,
+             hasrecommend:false,
              // pkIndex:[]
         }
     }
@@ -57,7 +59,9 @@ class Question extends React.Component {
              Difficulty:3,
              Useful:3,
              commentvalue:"",
-             commentoriginData:[]});
+             commentoriginData:[],
+             hastwin:false,
+             hasrecommend:false});
         // let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
         //             let Data=this.props.exampleData;
         //             uurl+=Data[this.props.exampleIndex].pk;
@@ -72,7 +76,9 @@ class Question extends React.Component {
              Difficulty:3,
              Useful:3,
              commentvalue:"",
-             commentoriginData:[]});
+             commentoriginData:[],
+             hastwin:false,
+             hasrecommend:false});
     }
     componentDidMount = () =>{  
         // this._isMounted = true
@@ -144,6 +150,7 @@ class Question extends React.Component {
           pkIndex[AllData[i].pk]=i;
         }
         twinProblem=pkIndex[value];
+        this.setState({hastwin:true});
       }
       RecommendProblemChange = (value) =>{
         var pkIndex=[];
@@ -152,6 +159,7 @@ class Question extends React.Component {
           pkIndex[AllData[i].pk]=i;
         }
         RecommendProblem=pkIndex[value];
+        this.setState({hasrecommend:true});
       }
       showTwinProblem = () =>{
         this.props.actions.changeindexbyid(twinProblem);
@@ -178,8 +186,8 @@ class Question extends React.Component {
           let urlLikeability="http://lala.ust.hk:8000/get/api/users/";
           var userid = this.getCookie("id");
           var username = this.getCookie("userid");
-          // userid=14;
-          // username="chuac";
+          //var userid=14;
+          //var username="chuac";
           urlLikeability+=userid;
           urlLikeability+="/questions/";
           let Data=this.props.exampleData;
@@ -238,6 +246,7 @@ class Question extends React.Component {
         } 
        }
     render() {
+
         let AllData=this.props.allData;
         let Data=this.props.exampleData; 
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
@@ -265,6 +274,13 @@ class Question extends React.Component {
                 recommendOption.push(<Option  key={iddd+""} value={Data[this.props.exampleIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
                 }
             }
+            var neurondiv = [];
+            neurondiv.push(<span> Related Neurons: </span>)
+            var neuronsinformation = Data[this.props.exampleIndex].fields.linkneuron;
+            for (var i = 0; i < neuronsinformation.length;++i){
+                var chapter = neuronsinformation[i].chapter;
+                neurondiv.push(<span onClick = {()=>this.props.actions.setchapter(chapter)}><Link to="/Chart">{neuronsinformation[i].title}</Link>;  </span>)                   
+            }             
           }
         const columns = [{
             title: 'Name',
@@ -319,7 +335,7 @@ class Question extends React.Component {
                       </div>
                       <div className="questionCanvas">
                         <Spin spinning={this.state.loading} tip="Loading questions...">
-                        <div id="output" className="questionstem">{Data.length!=0?Data[this.props.exampleIndex].fields.problem.split("<br>").map(i => {
+                        <div id="output" className="questionstem">{Data.length!=0?(Data[this.props.exampleIndex].fields.problem+"<br>"+Data[this.props.exampleIndex].fields.solutions).split("<br>").map(i => {
                            return <div>{i}</div>;
                           }):null}
                          {Data.length!=0?Data[this.props.exampleIndex].fields.problempicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.problempicture1}/>:null}
@@ -331,21 +347,7 @@ class Question extends React.Component {
                         </div>
                         <div className="questionanswer">
                           <div className="questionresult">
-                          {Data.length!=0? Data[this.props.exampleIndex].fields.solutions.split("<br>").map(i => {
-                           return <div>{i}</div>;
-                          }) :null}
-                          <div> 
-                             { Data.length!=0?this.state.showAns?Data[this.props.exampleIndex].fields.alternativesolutions?
-                               <div style={{fontSize:16}}>Alternative Solutions</div>
-                              :null: null :null}
-                          </div>
-                          { Data.length!=0?this.state.showAns?Data[this.props.exampleIndex].fields.alternativesolutions.split("<br>").map(i => {
-                           return <div>{i}</div>;
-                          }): null :null}
-                         {Data.length!=0?Data[this.props.exampleIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture1}/>:null}
-                         {Data.length!=0?Data[this.props.exampleIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture2}/>:null}
-                         {Data.length!=0?Data[this.props.exampleIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.exampleIndex].fields.solutionspicture3}/>:null}
-                          <div style={{marginTop: '20px'}}> Related Neurons: {Data.length!=0?this.state.showAns?Data[this.props.exampleIndex].fields.linkneuron==""?null:Data[this.props.exampleIndex].fields.linkneuron:null:null}</div>
+                          <div style={{marginTop: '20px'}}>{Data.length!=0?this.state.showAns?neuronsinformation.length==0?null:neurondiv:null:null}</div>
                           <div style={{marginTop: '20px'}}>{
                                  <Select
                                     style={{ width: 200 }}
@@ -358,11 +360,11 @@ class Question extends React.Component {
                                      
                                      {twinOption}
                                   </Select>}
-                               { <Button onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button> }
+                               { this.state.hastwin?<Button style={{marginLeft: '5px'}} onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button>:<Button disabled style={{marginLeft: '5px'}} onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button> }
                               
                                { 
                                  <Select
-                                    style={{ width: 200 }}
+                                    style={{ width: 200,marginLeft: '10px'}}
                                     // defaultValue={twinOption[0]}
                                     placeholder="Select a Recommend problem"
                                     optionFilterProp="children"
@@ -372,7 +374,7 @@ class Question extends React.Component {
                                      
                                      {recommendOption}
                                   </Select>}
-                               { <Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button> }
+                               { this.state.hasrecommend?<Button style={{marginLeft: '5px'}} onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>:<Button disabled style={{marginLeft: '5px'}} onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button> }
                             </div>
                           <div style={{marginTop: '20px'}} className="commentblock">
                            <div className="problemcomment"> { "Your evaluation is highly appreciated:"}</div>
@@ -416,7 +418,8 @@ function mapDispatchToProps (dispatch){
             prevexample,
             nextexample,
             changeexampledata,
-            loaddata
+            loaddata,
+            setchapter,
         },dispatch)
     };
 }
