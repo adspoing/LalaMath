@@ -55,7 +55,6 @@ let question =  handleActions({
 		}
 	},
 	[PREV_QUESTION]: (state,action) => {
-		console.log(state.index);
 		return {
 			exerciseData:state.exerciseData,
 			index: state.index == 0 ? 0 : state.index-1,
@@ -75,7 +74,6 @@ let question =  handleActions({
 		}
 	},
 	[NEXT_QUESTION]: (state,action) => {
-		console.log(state.index);
 		return {
 			exerciseData:state.exerciseData,
 			index: state.index+1,
@@ -417,7 +415,6 @@ let question =  handleActions({
 		}
 	},
 	[NEXT_PROBLEM]: (state,action) => {
-		console.log("next");
 		return {
 			exampleIndex: state.exampleIndex,
 			questionData: state.questionData,
@@ -789,7 +786,6 @@ let searchstate =  handleActions({
 let graph =  handleActions({
 
 	['setchapter']: (state,action) => {
-		console.log("payload",action.payload);
 		return{
 			chapter:action.payload,
 		}

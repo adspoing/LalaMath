@@ -412,8 +412,7 @@ class DiyList extends React.Component {
                                       onChange={this.RecommendProblemChange}
                                       filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
-                                       
-                                       {recommendOption}
+                                    {recommendOption}
                                     </Select>:null}
                                  { this.state.showAns?this.state.hasrecommend?<Button style = {{marginLeft: '5px'}} onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>:<Button disabled style = {{marginLeft: '5px'}} onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
                                  </div>
