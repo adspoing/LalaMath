@@ -3,11 +3,10 @@ import ReactEcharts from 'echarts-for-react';  // or var ReactEcharts = require(
 import React from 'react';
 import Header from './Header.js';
 import SideBar from './SideBar.js';
-import AllData from '../data.js';
-import { Button,Breadcrumb,Icon,Select} from 'antd';
+import { Button,Breadcrumb,Icon,Select,Spin} from 'antd';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import echarts from 'echarts';
-import {changeindexbyid,setchapter} from '../actions/actions.js'
+import {changeindexbyid,setchapter,loaddata} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import axios from 'axios';
@@ -27,6 +26,7 @@ class Chart extends React.Component {
              example: [],
              exercise: [],
              chapter:"0",
+             loading: true
         }
     }
     getCookie = (name) =>{
@@ -191,7 +191,7 @@ class Chart extends React.Component {
         let option = [];
         let that = this;
         var userid = this.getCookie("id");
-        //var userid = 4;
+        //userid = 4;
         axios.get("http://lala.ust.hk:8000/get/api/neurons/"+chapter)
             .then(function(nodedata) {
                 //console.log(nodedata);
@@ -209,6 +209,7 @@ class Chart extends React.Component {
             })
         myChart.on('click', function (params) {
                 var pkIndex=[];
+                let AllData = that.props.allData;
                 for(var i=0;i<AllData.length;i++){
                         pkIndex[AllData[i].pk]=i;
                 }
@@ -234,21 +235,23 @@ class Chart extends React.Component {
                     }
                 }
                 that.setState({example:examplediv, exercise:exercisediv});
+
         });
-        console.log("From reducer", this.props.option);
         //this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"graphics");
     }
 
     componentDidMount= ()=> {
-        //let myChart = echarts.init(this.refs.graphics) //初始化echarts
-
-        //我们要定义一个setPieOption函数将data传入option里面
-        //let options = [];
-        //设置options
-        //var myChart = echarts.init(this.refs.graphics)
-        //myChart.setOption(this.props.option)
-        this.getOptionByChapter(this.props.chapter);
-        this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"graphics");
+        if(this.props.allData.length==0){
+          axios.get('http://lala.ust.hk:8000/get/questions/all')
+          .then(res => {
+            this.props.actions.loaddata(res.data);
+            this.setState({loading: false});
+            this.getOptionByChapter(this.props.chapter);
+          });
+        }else{
+              this.setState({loading: false});
+              this.getOptionByChapter(this.props.chapter);
+        }
     }
 
     componentDidUpdate = () =>{
@@ -301,14 +304,17 @@ class Chart extends React.Component {
                         <Option value="4"><Icon type="picture" />Chapter 6</Option>
                         <Option value="5"><Icon type="picture" />Chapter 7</Option>
                      </Select>
+
+                    <Spin spinning={this.state.loading} tip="Loading questions...">
                     <div>
-	            	<div ref="graphics" id="graphics" className="chart" ></div>
-                    <div className="neuraldetail">
-                    <div id="detail">{this.detail}</div>
-                    <div id="example">{this.state.example}</div>
-                    <div id="exercise">{this.state.exercise}</div>
+    	            	<div ref="graphics" id="graphics" className="chart" ></div>
+                        <div className="neuraldetail">
+                        <div id="detail">{this.detail}</div>
+                        <div id="example">{this.state.example}</div>
+                        <div id="exercise">{this.state.exercise}</div>
+                        </div>
                     </div>
-                    </div>
+                    </Spin>
 	            </div>
 	            </div>
         	</div>
@@ -318,6 +324,7 @@ class Chart extends React.Component {
 function mapStateToProps (state){
     return { 
             chapter:state.graph.chapter,
+            allData:state.question.allData,
             // userdata:state.chart.userData,
             // linkdata:state.chart.linkData,
         }
@@ -328,6 +335,7 @@ function mapDispatchToProps (dispatch){
         actions: bindActionCreators({
             changeindexbyid,
             setchapter,
+            loaddata
         },dispatch)
     };
 }

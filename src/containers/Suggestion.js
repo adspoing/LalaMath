@@ -37,23 +37,29 @@ class Suggestion extends React.Component {
     submitcomment = () =>{
         var userid = this.getCookie("id");
         var username = this.getCookie("userid");
-         userid=14;
-         username="chuac";
-        let urlcomment="http://lala.ust.hk:8000/get/api/suggestions/system/upload";
-        axios.post(urlcomment, 
-          qs.stringify({
-            'userid':userid,
-            'username':username,
-            'comment':this.state.commentvalue,
-         })
-          );
-        //console.log(this.state.commentvalue);
-        message.success('Thanks for your comment');
-        let uurl="http://lala.ust.hk:8000/get/api/suggestions/system/all";
-        axios.get(uurl)
-            .then(res => {
-                this.setState({commentoriginData:res.data});
-        });
+        //userid=14;
+        //username="chuac";
+        if (this.state.commentvalue == ''){
+          message.warning('Please Fill in the Comment');
+        }
+        else{
+          let urlcomment="http://lala.ust.hk:8000/get/api/suggestions/system/upload";
+          axios.post(urlcomment, 
+            qs.stringify({
+              'userid':userid,
+              'username':username,
+              'comment':this.state.commentvalue,
+           })
+            );
+          //console.log(this.state.commentvalue);
+          message.success('Thanks for your comment');
+          let uurl="http://lala.ust.hk:8000/get/api/suggestions/system/all";
+          axios.get(uurl)
+              .then(res => {
+                  this.setState({commentoriginData:res.data});
+          });
+        }
+        
       }
     handleComment = (e) =>{
            this.setState({ commentvalue :e.target.value });
@@ -68,11 +74,6 @@ class Suggestion extends React.Component {
         }
     render() {
         const columns = [{
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-            width: 100,
-          }, {
             title: 'Comment',
             dataIndex: 'comment',
             key: 'comment',
