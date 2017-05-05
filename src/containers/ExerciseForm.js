@@ -115,15 +115,23 @@ class ExerciseForm extends React.Component {
           parseInt(a.code.split('.')[2]) - parseInt(b.code.split('.')[2])
           :parseInt(a.code.split('.')[1]) - parseInt(b.code.split('.')[1]),
         }, {
-          title: 'Difficulty',
-          dataIndex: 'difficulty',
-          key: 'difficulty',
-          sorter: (a, b) => a.difficulty - b.difficulty,
-        }, {
           title: 'Correct Count/Submit Count',
           dataIndex: 'correctcount',
           key: 'correctcount',
         },{
+          title: 'Difficulty',
+          dataIndex: 'difficulty',
+          key: 'difficulty',
+          sorter: (a, b) => a.difficulty - b.difficulty,
+          filters: [
+            { text: '1', value: 1 },
+            { text: '2', value: 2 },
+            { text: '3', value: 3 },
+            { text: '4', value: 4 },
+            { text: '5', value: 5 },
+          ],
+          onFilter: (value, record) => record.difficulty==value,
+        }, {
           title: 'My submission',
           dataIndex: 'submitted',
           key: 'submitted',

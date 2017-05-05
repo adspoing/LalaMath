@@ -26,7 +26,6 @@ class Hottest extends React.Component {
       twoweekhot:[],
       Hottest:[],
       loading: true,
-      filteredInfo:null
     }
 
     SetAll = () =>{
@@ -35,12 +34,6 @@ class Hottest extends React.Component {
     SetTwoWeek = () =>{
         this.setState({Hottest:this.state.twoweekhot})
       }
-    handleChange = (pagination, filters) => {
-        this.setState({
-          filteredInfo: filters
-        });
-        console.log(filters);
-      }  
     onrowclick=(record, index)=>{
          var indexxx;
          // console.log(this.state.Hottest[index]);
@@ -128,7 +121,6 @@ class Hottest extends React.Component {
               { text: '4', value: 4 },
               { text: '5', value: 5 },
             ],
-            filteredValue: filteredInfo.difficulty || null,
             onFilter: (value, record) => record.difficulty==value,
             sorter: (a, b) => a.difficulty - b.difficulty,
           }];
@@ -151,7 +143,7 @@ class Hottest extends React.Component {
                     <Button style={{marginLeft: '10px'}} onClick = {this.SetTwoWeek}>Hottest In 2 Weeks</Button>
                     <div className="hottestResult">
                     <Spin spinning={this.state.loading} tip="Loading questions...">
-                    <Table dataSource={this.state.Hottest} columns={columns} onRowClick={this.onrowclick.bind(this)} onChange={this.handleChange} />
+                    <Table dataSource={this.state.Hottest} columns={columns} onRowClick={this.onrowclick.bind(this)} />
                     </Spin>
                     </div>
                 </div>
