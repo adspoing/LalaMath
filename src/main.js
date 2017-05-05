@@ -17,6 +17,8 @@ import { syncHistoryWithStore } from 'react-router-redux' // 利用react-router-
 import reducer from './reducers/index.js'  // 引入reducers集合
 import routes from './routes.js'   // 引入路由配置
 import store from './store/store.js';
+import enUS from 'antd/lib/locale-provider/en_US';
+import { LocaleProvider } from 'antd';
 
 // import './assets/css/bootstrap.min.css'  // 引入样式文件
 
@@ -28,9 +30,11 @@ const history = syncHistoryWithStore(browserHistory, store)
 
 render(
     <Provider store={store}>
+ 	    <LocaleProvider locale={enUS}>
         <div>
             <Router history={history} routes={routes} />
         </div>
+        </LocaleProvider>
     </Provider>,
     document.getElementById('container')
 )
