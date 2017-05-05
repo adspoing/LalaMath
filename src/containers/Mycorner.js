@@ -95,7 +95,7 @@ class Mycorner extends React.Component {
         let option = [];
         let that = this;
         var userid = this.getCookie("id");
-        //var userid = 4;
+        // userid = 14;
         axios.get("http://lala.ust.hk:8000/get/api/evaluate/"+ userid)
             .then(function(ability) {
                 option = that.process(ability.data);

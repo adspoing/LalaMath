@@ -96,7 +96,7 @@ class ProblemForm extends React.Component {
                 tm.code=Data[i].fields.code;
                 tm.difficulty=Data[i].fields.difficulty;
                 tm.correctcount=this.state.countarr.length==0?"0/0":this.state.countarr[pkIndex[Data[i].pk]].rightcount+"/"+this.state.countarr[pkIndex[Data[i].pk]].donecount;
-                tm.submitted=this.props.complete[pkIndex[Data[i].pk]].isdone+"";
+                tm.submitted=this.props.complete[pkIndex[Data[i].pk]].isdone+this.props.complete[pkIndex[Data[i].pk]].result;
                 count++;
                 dataSource.push(tm);
              }
@@ -125,10 +125,10 @@ class ProblemForm extends React.Component {
           dataIndex: 'correctcount',
           key: 'correctcount',
         },{
-          title: 'Submitted',
+          title: 'My submission',
           dataIndex: 'submitted',
           key: 'submitted',
-          render: text => <div>{text=="false"?<Icon style={{fontSize:20}} type="lock" />:<Icon style={{fontSize:20,color:"#00FF00"}} type="unlock" />}</div>
+          render: text => <div>{text=="false"?<Icon style={{fontSize:20}} type="lock" />:text=="trueright"?<Icon style={{fontSize:20,color:"#00FF00"}} type="unlock" />:<Icon style={{fontSize:20,color:"#FF0000"}} type="unlock" />}</div>
         }];
         return (
         	<div>
