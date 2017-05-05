@@ -25,28 +25,26 @@ class LectureNotes extends React.Component {
          this.setState({
             slideval:value
          })
-         console.log(this.state.slideval);
     }
     render() {
-        myiframe.push(<iframe src="https://app.box.com/embed/s/0wyx55ybmkp2x7jdkq31qvjbsmu9kvgx" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/rruml0s4g0r7bxujdkqlwxwdjx3mviw9" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/ncbebaaziikr1iui9vg3zjmfue5q8qjz" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/yt5bzm37a78bpt5oiuhezy5bg425szlp" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/fk4w56p5k855af4ymhc87l0n1do8y48z" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/iergcakozc09vdnlcsp9bgc60tjkc3on" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/dqpl2b75g6n4tf8b21gopzi4iy1y9vy1" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/sttm6y4gemohnf438wgresd2vz67fann" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/pn7tqoir4vzdgviq24szn50mrbmpsr2q" width="800" height="550" frameborder="0"></iframe>);        
-        myiframe.push(<iframe src="https://app.box.com/embed/s/6ng2kf0u6dp4ul9ofhhfkg9gp8r6kh9l" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/56h52lov7o948xfgvgjj0o6ty65pi7hj" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/k81y4gz1319crk530tyxv92x2sl4o72u" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/yp4uuz49j2twbfxfe2ew5twum462f5dn" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/pw0sc5ocpr22dm3h2ltkr18mkizhlywv" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/gm8z64fz1qiaviwqf83ykhixpmyhto4m" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/cstiozgf8ht78fz11pbtmujn94n78m8v" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/x1nqjtrj7ar1npv1mto68xj2v7vb2hxr" width="800" height="550" frameborder="0"></iframe>);
-        myiframe.push(<iframe src="https://app.box.com/embed/s/mkwgbbemwg1kqc1gt9nlez9xfxinpvxq" width="800" height="550" frameborder="0"></iframe>);
-        console.log(myiframe[this.state.value]);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/0wyx55ybmkp2x7jdkq31qvjbsmu9kvgx" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/rruml0s4g0r7bxujdkqlwxwdjx3mviw9" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/ncbebaaziikr1iui9vg3zjmfue5q8qjz" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/yt5bzm37a78bpt5oiuhezy5bg425szlp" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/fk4w56p5k855af4ymhc87l0n1do8y48z" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/iergcakozc09vdnlcsp9bgc60tjkc3on" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/dqpl2b75g6n4tf8b21gopzi4iy1y9vy1" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/sttm6y4gemohnf438wgresd2vz67fann" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/pn7tqoir4vzdgviq24szn50mrbmpsr2q" width="800" height="550"></iframe>);        
+        myiframe.push(<iframe src="https://app.box.com/embed/s/6ng2kf0u6dp4ul9ofhhfkg9gp8r6kh9l" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/56h52lov7o948xfgvgjj0o6ty65pi7hj" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/k81y4gz1319crk530tyxv92x2sl4o72u" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/yp4uuz49j2twbfxfe2ew5twum462f5dn" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/pw0sc5ocpr22dm3h2ltkr18mkizhlywv" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/gm8z64fz1qiaviwqf83ykhixpmyhto4m" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/cstiozgf8ht78fz11pbtmujn94n78m8v" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/x1nqjtrj7ar1npv1mto68xj2v7vb2hxr" width="800" height="550"></iframe>);
+        myiframe.push(<iframe src="https://app.box.com/embed/s/mkwgbbemwg1kqc1gt9nlez9xfxinpvxq" width="800" height="550"></iframe>);
         return (
         	<div>
                 <Header />

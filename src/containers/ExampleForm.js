@@ -150,7 +150,7 @@ class ExampleForm extends React.Component {
                 </Breadcrumb>
                 <div className="belowbread"> 
                  <Spin spinning={this.state.loading} tip="Loading List...">
-                 <Table dataSource={dataSource} columns={columns} onRowClick={this.onrowclick.bind(this)} />
+                       <Table dataSource={dataSource} columns={columns} onRowClick={this.onrowclick.bind(this)} />
                  </Spin>
                 </div>
                 </div>
