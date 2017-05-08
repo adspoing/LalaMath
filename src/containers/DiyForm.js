@@ -111,15 +111,23 @@ class DiyForm extends React.Component {
           sorter: (a, b) => a.code.split('.')[1]==b.code.split('.')[1]?
           parseInt(a.code.split('.')[2]) - parseInt(b.code.split('.')[2])
           :parseInt(a.code.split('.')[1]) - parseInt(b.code.split('.')[1]),
-        }, {
+        },{
+          title: 'Correct Count/Submit Count',
+          dataIndex: 'correctcount',
+          key: 'correctcount',
+        },{
           title: 'Difficulty',
           dataIndex: 'difficulty',
           key: 'difficulty',
           sorter: (a, b) => a.difficulty - b.difficulty,
-        }, {
-          title: 'Correct Count/Submit Count',
-          dataIndex: 'correctcount',
-          key: 'correctcount',
+          filters: [
+            { text: '1', value: 1 },
+            { text: '2', value: 2 },
+            { text: '3', value: 3 },
+            { text: '4', value: 4 },
+            { text: '5', value: 5 },
+          ],
+          onFilter: (value, record) => record.difficulty==value,
         },{
           title: 'My submission',
           dataIndex: 'submitted',

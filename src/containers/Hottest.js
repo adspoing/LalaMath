@@ -22,10 +22,18 @@ class Hottest extends React.Component {
     }
 
     state = {
+      allhot:[],
+      twoweekhot:[],
       Hottest:[],
-      loading: true
+      loading: true,
     }
 
+    SetAll = () =>{
+        this.setState({Hottest:this.state.allhot})
+      }
+    SetTwoWeek = () =>{
+        this.setState({Hottest:this.state.twoweekhot})
+      }
     onrowclick=(record, index)=>{
          var indexxx;
          // console.log(this.state.Hottest[index]);
@@ -67,11 +75,30 @@ class Hottest extends React.Component {
                 result.sort(function(a, b) {
                   return (b.acceptance - a.acceptance);
                   });
-                that.setState({Hottest:result});
+                that.setState({allhot:result});
             })
+      let twoweekresult = [];
+      axios.get("http://lala.ust.hk:8000/get/api/questions/2weekmostdone/")
+            .then(function(question) {
+                for (var i = 0; i < question.data.length; i++){
+                  let tm=new Object();
+                  tm.key=i;
+                  tm.code=questype[question.data[i].category]+question.data[i].code;
+                  tm.difficulty=question.data[i].difficulty;
+                  tm.acceptance=question.data[i].question_count;
+                  tm.category=question.data[i].category
+                  twoweekresult.push(tm);
+                }
+                twoweekresult.sort(function(a, b) {
+                  return (b.acceptance - a.acceptance);
+                  });
+                that.setState({twoweekhot:twoweekresult});
+            })
+
+      that.setState({Hottest:result});
     }
     render() {
-      
+        let filteredInfo = this.state.filteredInfo || {};
         let columns = [{
             title: 'Code',
             dataIndex: 'code',
@@ -79,15 +106,23 @@ class Hottest extends React.Component {
             render: text => <Link to="/ViewQuestion">{text}</Link>,
             sorter: (a, b) => a.code.split('.')[1]+a.code.split('.')[2] - (b.code.split('.')[1]+b.code.split('.')[2]),
           }, {
-            title: 'Difficulty',
-            dataIndex: 'difficulty',
-            key: 'difficulty',
-            sorter: (a, b) => a.difficulty - b.difficulty,
-          }, {
             title: 'Submissions ',
             dataIndex: 'acceptance',
             key: 'acceptance',
             sorter: (a, b) => a.acceptance - b.acceptance,
+          }, {
+            title: 'Difficulty',
+            dataIndex: 'difficulty',
+            key: 'difficulty',
+            filters: [
+              { text: '1', value: 1 },
+              { text: '2', value: 2 },
+              { text: '3', value: 3 },
+              { text: '4', value: 4 },
+              { text: '5', value: 5 },
+            ],
+            onFilter: (value, record) => record.difficulty==value,
+            sorter: (a, b) => a.difficulty - b.difficulty,
           }];
         return (
 
@@ -104,6 +139,8 @@ class Hottest extends React.Component {
                           <span>Hottest</span></Link>
                         </Breadcrumb.Item>
                     </Breadcrumb>
+                    <Button style={{marginTop: '10px'}} onClick = {this.SetAll}>Hottest</Button>
+                    <Button style={{marginLeft: '10px'}} onClick = {this.SetTwoWeek}>Hottest In 2 Weeks</Button>
                     <div className="hottestResult">
                     <Spin spinning={this.state.loading} tip="Loading questions...">
                     <Table dataSource={this.state.Hottest} columns={columns} onRowClick={this.onrowclick.bind(this)} />

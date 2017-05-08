@@ -114,15 +114,23 @@ class ExampleForm extends React.Component {
           sorter: (a, b) => a.code.split('.')[1]==b.code.split('.')[1]?
           parseInt(a.code.split('.')[2]) - parseInt(b.code.split('.')[2])
           :parseInt(a.code.split('.')[1]) - parseInt(b.code.split('.')[1]),
-        }, {
+        },{
+          title: 'View Count',
+          dataIndex: 'viewcount',
+          key: 'viewcount',
+        },{
           title: 'Difficulty',
           dataIndex: 'difficulty',
           key: 'difficulty',
           sorter: (a, b) => a.difficulty - b.difficulty,
-        }, {
-          title: 'View Count',
-          dataIndex: 'viewcount',
-          key: 'viewcount',
+          filters: [
+            { text: '1', value: 1 },
+            { text: '2', value: 2 },
+            { text: '3', value: 3 },
+            { text: '4', value: 4 },
+            { text: '5', value: 5 },
+          ],
+          onFilter: (value, record) => record.difficulty==value,
         },{
           title: 'Viewed',
           dataIndex: 'view',
