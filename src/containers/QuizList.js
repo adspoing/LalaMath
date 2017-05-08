@@ -1,11 +1,11 @@
 import React from 'react';
 import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
 import Data from '../quiz.js';
-import AllData from '../data.js'
+// import AllData from '../data.js'
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
-import { Button,Radio,Popconfirm,message,Rate} from 'antd';
-import {changeindexbyid,prevquiz,nextquiz,setchapter} from '../actions/actions.js'
+import { Button,Radio,Popconfirm,message,Rate,Spin} from 'antd';
+import {changeindexbyid,prevquiz,nextquiz,changequizdata,loaddata} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import axios from 'axios';
@@ -32,9 +32,7 @@ class QuizList extends React.Component {
              showResults: false,
              showAns: false,
              value: 0,
-             selvalue: 0,
-             hastwin:false,
-             hasrecommend:false,
+             selvalue: 0
         }
     }
     handleChange(value){
@@ -87,11 +85,11 @@ class QuizList extends React.Component {
     }
     nextQuestion = () =>{
         this.props.actions.nextquiz();
-        this.setState({ showResults: false,showAns: false, value: 0, selvalue: 0, hastwin:false,hasrecommend:false});
+        this.setState({ showResults: false,showAns: false, value: 0, selvalue: 0});
     }
     prevQuestion = () =>{
         this.props.actions.prevquiz();
-        this.setState({ showResults: false,showAns: false,value: 0, selvalue: 0, hastwin:false,hasrecommend:false});
+        this.setState({ showResults: false,showAns: false,value: 0, selvalue: 0});
     }
     componentDidMount = () =>{   
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
@@ -114,21 +112,21 @@ class QuizList extends React.Component {
         console.log(e.target.value);
       }
       twinProblemChange = (value) =>{
+          let AllData=this.props.allData;
          var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
         }
         twinProblem=pkIndex[value];
-        this.setState({hastwin:true});
         // twinProblem=value;
       }
       RecommendProblemChange = (value) =>{
+        let AllData=this.props.allData;
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
         }
         RecommendProblem=pkIndex[value];
-        this.setState({hasrecommend:true});
         // RecommendProblem=value;
       }
       showTwinProblem = () =>{
@@ -142,11 +140,33 @@ class QuizList extends React.Component {
       submitcomment = () =>{
           message.success('Thanks for your comment');
       }
-
+     componentWillMount = () =>{
+          if(this.props.allData.length==0){
+            axios.get('http://lala.ust.hk:8000/get/questions/all')
+            .then(res => {
+              this.props.actions.loaddata(res.data);
+              this.setState({loading: false});
+            });
+          }else{
+              this.setState({loading: false});
+          }
+          if(this.props.quizData.length==0){
+              axios.get('http://lala.ust.hk:8000/get/questions/all?category=5')
+              .then(res => {
+                this.props.actions.changequizdata(res.data);
+              });
+          }else{
+              this.setState({loading: false});
+          }
+      }
     render() {
         // let Data=this.props.Data;
+        // console.log(Data)
         // console.log(AllData)
         // console.log(this.props.quizIndex)
+        let AllData=this.props.allData;
+        let Data=this.props.quizData;
+        console.log(this.props.quizIndex);
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
@@ -159,54 +179,48 @@ class QuizList extends React.Component {
         var choiceE="";
         var choiceF="";
         var result="";
-        if(Data[this.props.quizIndex].fields.choicesa!=null){
-            choiceA+=Data[this.props.quizIndex].fields.choicesa;
-        }
         const radioStyle = {
           height: '30px',
           lineHeight: '30px',
         };
-        if(Data[this.props.quizIndex].fields.choicesb!=null){
-            choiceB+=Data[this.props.quizIndex].fields.choicesb;
-        }if(Data[this.props.quizIndex].fields.choicesc!=null){
-            choiceC+=Data[this.props.quizIndex].fields.choicesc;
-        }if(Data[this.props.quizIndex].fields.choicesd!=null){
-            choiceD+=Data[this.props.quizIndex].fields.choicesd;
-        }if(Data[this.props.quizIndex].fields.choicese!=null){
-            choiceE+=Data[this.props.quizIndex].fields.choicese;
-        }if(Data[this.props.quizIndex].fields.choicesf!=null){
-            choiceF+=Data[this.props.quizIndex].fields.choicesf;
-        }
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
-        var twinOption=[];
-        for(var i=0;i<Data[this.props.quizIndex].fields.twinproblems.length;i++){
-            var indexx=Data[this.props.quizIndex].fields.twinproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            twinOption.push(<Option key={iddd+""} value={Data[this.props.quizIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+        if(AllData.length!=0){
+                if(Data[this.props.quizIndex].fields.choicesa!=null){
+                    choiceA+=Data[this.props.quizIndex].fields.choicesa;
+                }
+                if(Data[this.props.quizIndex].fields.choicesb!=null){
+                    choiceB+=Data[this.props.quizIndex].fields.choicesb;
+                }if(Data[this.props.quizIndex].fields.choicesc!=null){
+                    choiceC+=Data[this.props.quizIndex].fields.choicesc;
+                }if(Data[this.props.quizIndex].fields.choicesd!=null){
+                    choiceD+=Data[this.props.quizIndex].fields.choicesd;
+                }if(Data[this.props.quizIndex].fields.choicese!=null){
+                    choiceE+=Data[this.props.quizIndex].fields.choicese;
+                }if(Data[this.props.quizIndex].fields.choicesf!=null){
+                    choiceF+=Data[this.props.quizIndex].fields.choicesf;
+                }
+                var twinOption=[];
+                for(var i=0;i<Data[this.props.quizIndex].fields.twinproblems.length;i++){
+                    var indexx=Data[this.props.quizIndex].fields.twinproblems[i];
+                    var iddd=AllData[pkIndex[indexx]].fields.code;
+                    twinOption.push(<Option key={iddd+""} value={Data[this.props.quizIndex].fields.twinproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+                }
+                var recommendOption=[];
+                if(Data[this.props.quizIndex].fields.answer==this.state.selvalue){
+                    for(var i=0;i<Data[this.props.quizIndex].fields.rightproblems.length;i++){
+                    var indexx=Data[this.props.quizIndex].fields.rightproblems[i];
+                    var iddd=AllData[pkIndex[indexx]].fields.code;
+                    recommendOption.push(<Option key={iddd+""} value={Data[this.props.quizIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+                    }
+                }
+                else{
+                    for(var i=0;i<Data[this.props.quizIndex].fields.wrongproblems.length;i++){
+                    var indexx=Data[this.props.quizIndex].fields.wrongproblems[i];
+                    var iddd=AllData[pkIndex[indexx]].fields.code;
+                    recommendOption.push(<Option key={iddd+""} value={Data[this.props.quizIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
+                    }
+                }
         }
-        var recommendOption=[];
-        if(Data[this.props.quizIndex].fields.answer==this.state.selvalue){
-            for(var i=0;i<Data[this.props.quizIndex].fields.rightproblems.length;i++){
-            var indexx=Data[this.props.quizIndex].fields.rightproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.quizIndex].fields.rightproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-            }
-        }
-        else{
-            for(var i=0;i<Data[this.props.quizIndex].fields.wrongproblems.length;i++){
-            var indexx=Data[this.props.quizIndex].fields.wrongproblems[i];
-            var iddd=AllData[pkIndex[indexx]].fields.code;
-            recommendOption.push(<Option key={iddd+""} value={Data[this.props.quizIndex].fields.wrongproblems[i]}>{questype[AllData[pkIndex[indexx]].fields.category]+iddd}</Option>)
-            }
-                     
-        }
-            var neurondiv = [];
-            neurondiv.push(<span> Related Neurons: </span>)
-            var neuronsinformation = Data[this.props.quizIndex].fields.linkneuron;
-            for (var i = 0; i < neuronsinformation.length;++i){
-                var chapter = neuronsinformation[i].chapter;
-                neurondiv.push(<span onClick = {()=>this.props.actions.setchapter(chapter)}><Link to="/Chart">{neuronsinformation[i].title}</Link>;  </span>)                   
-            }   
         return (
             <div>
                 <div className="exam-bg">
@@ -218,8 +232,8 @@ class QuizList extends React.Component {
                           <Link to="/Dashboard"><Icon type="home" />Home</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            {questype[Data[this.props.quizIndex].fields.category]}
-                            {Data[this.props.quizIndex].fields.code}
+                            {Data.length!=0?questype[Data[this.props.quizIndex].fields.category]:null}
+                            {Data.length!=0?Data[this.props.quizIndex].fields.code:null}
                         </Breadcrumb.Item>
                         </Breadcrumb>
                           <div className="pannel">
@@ -229,15 +243,16 @@ class QuizList extends React.Component {
                           </div>
                       </div>
                       <div className="questionCanvas">
-                        <div id="output" className="questionstem">{Data[this.props.quizIndex].fields.problem.split("<br>").map(i => {
+                        <Spin spinning={this.state.loading} tip="Loading questions...">
+                        <div id="output" className="questionstem">{Data.length!=0?Data[this.props.quizIndex].fields.problem.split("<br>").map(i => {
                            return <div>{i}</div>;
-                          })}
-                         {Data[this.props.quizIndex].fields.problempicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.problempicture1}/>}
-                         {Data[this.props.quizIndex].fields.problempicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.problempicture2}/>}
-                         {Data[this.props.quizIndex].fields.problempicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.problempicture3}/>}
-                         {Data[this.props.quizIndex].fields.problempicture4==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.problempicture4}/>}
-                         {Data[this.props.quizIndex].fields.problempicture5==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.problempicture5}/>}
-                         {Data[this.props.quizIndex].fields.problempicture6==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture6}/>}
+                          }):null}
+                         {Data.length!=0?Data[this.props.quizIndex].fields.problempicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.problempicture1}/>:null}
+                         {Data.length!=0?Data[this.props.quizIndex].fields.problempicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.problempicture2}/>:null}
+                         {Data.length!=0?Data[this.props.quizIndex].fields.problempicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.problempicture3}/>:null}
+                         {Data.length!=0?Data[this.props.quizIndex].fields.problempicture4==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.problempicture4}/>:null}
+                         {Data.length!=0?Data[this.props.quizIndex].fields.problempicture5==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.problempicture5}/>:null}
+                         {Data.length!=0?Data[this.props.quizIndex].fields.problempicture6==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.problemIndex].fields.problempicture6}/>:null}
                         </div>
                         <div className="questionchoice">
                           <RadioGroup onChange={this.onChange} value={this.state.value}>
@@ -273,22 +288,13 @@ class QuizList extends React.Component {
                           <div className="questionbutton">{ this.state.showResults?<Button className="submitQuestion" onClick = {this.showAns}>Show Result</Button>: null }</div>
                           <div className="questionresult">
     
-                          { this.state.showAns?Data[this.props.quizIndex].fields.solutions.split("<br>").map(i => {
-                           return <div>{i}</div>;
-                          }): null }
-                          <div> 
-                             { Data.length!=0?this.state.showAns?Data[this.props.quizIndex].fields.alternativesolutions?
-                               <div style={{fontSize:16}}>Alternative Solutions</div>
-                              :null: null :null}
-                          </div>
-                          { Data.length!=0?this.state.showAns?Data[this.props.quizIndex].fields.alternativesolutions.split("<br>").map(i => {
+                          {Data.length!=0? this.state.showAns?Data[this.props.quizIndex].fields.solutions.split("<br>").map(i => {
                            return <div>{i}</div>;
                           }): null :null}
-                         {this.state.showAns?Data[this.props.quizIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.solutionspicture1}/>:null}
-                         {this.state.showAns?Data[this.props.quizIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.solutionspicture2}/>:null}
-                         {this.state.showAns?Data[this.props.quizIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.solutionspicture3}/>:null}
-                          <div style={{marginTop: '20px'}}>{Data.length!=0?this.state.showAns?neuronsinformation.length==0?null:neurondiv:null:null}</div>
-                          <div style={{marginTop: '20px'}}>{ this.state.showAns?
+                         {Data.length!=0?this.state.showAns?Data[this.props.quizIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.solutionspicture1}/>:null:null}
+                         {Data.length!=0?this.state.showAns?Data[this.props.quizIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.solutionspicture2}/>:null:null}
+                         {Data.length!=0?this.state.showAns?Data[this.props.quizIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.solutionspicture3}/>:null:null}
+                            <div>{ this.state.showAns?
                                    <Select
                                       style={{ width: 200 }}
                                       // defaultValue={twinOption[0]}
@@ -300,12 +306,12 @@ class QuizList extends React.Component {
                                        
                                        {twinOption}
                                     </Select>:null}
-                                 { this.state.showAns?this.state.hastwin?<Button style = {{marginLeft: '5px'}} onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button>:<Button disabled style = {{marginLeft: '5px'}} onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
+                                 { this.state.showAns?<Button onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
                                 
                                  { this.state.showAns?
                                    <Select
-                                      style={{ width: 200,marginLeft: '10px'}}
-                                      // defaultValue={twinOption[0]}   
+                                      style={{ width: 200 }}
+                                      // defaultValue={twinOption[0]}
                                       placeholder="Select a Recommend problem"
                                       optionFilterProp="children"
                                       onChange={this.RecommendProblemChange}
@@ -314,11 +320,12 @@ class QuizList extends React.Component {
                                        
                                        {recommendOption}
                                     </Select>:null}
-                                  { this.state.showAns?this.state.hasrecommend?<Button style = {{marginLeft: '5px'}} onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>:<Button disabled style = {{marginLeft: '5px'}} onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
+                                 { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
                                  </div>
                             </div>
                  
                         </div>
+                        </Spin>
                       </div>
                   </div>
                 </div>
@@ -327,16 +334,11 @@ class QuizList extends React.Component {
         )
     }
 }
-           //<div className="problemcomment"> { this.state.showAns?"Giving an comment on this problem":null}</div>
-             //                { this.state.showAns?<Rate />:null}
-               //              { this.state.showAns?<Button onClick = {this.submitcomment}>submit</Button>:null}
-
 function mapStateToProps (state){
     return { 
-            Data:state.question.questionData,
-            // questionData:state.question.questionData
-            quizIndex:state.question.quizIndex,
-            index:state.question.index
+            allData:state.question.allData,
+            quizData:state.question.quizdata,
+            quizIndex:state.question.quizIndex
         }
 }
 
@@ -346,7 +348,8 @@ function mapDispatchToProps (dispatch){
             changeindexbyid,
             prevquiz,
             nextquiz,
-            setchapter,
+            changequizdata,
+            loaddata
         },dispatch)
     };
 }
