@@ -4,7 +4,7 @@ import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
 // import AllData from '../data.js'
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
-import { Button,Radio,Popconfirm,message,Rate,Spin,Input} from 'antd';
+import { Button,Radio,Popconfirm,message,Rate,Spin,Input,Table} from 'antd';
 import {changeindexbyid,prevexercise,nextexercise,loaddata,changeexercisedata,setchapter} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -43,6 +43,7 @@ class ExerciseList extends React.Component {
              commentvalue:"",
              hastwin:false,
              hasrecommend:false,
+             commentoriginData:[],
         }
     }
     handleChange(value){
@@ -55,6 +56,7 @@ class ExerciseList extends React.Component {
             config.description=Data[this.props.exerciseIndex].fields.messagesuccess;
             config.message="Right";
             config.duration=10;
+            config.placement="topLeft";
             notification.success(config);
         }
         else
@@ -63,6 +65,7 @@ class ExerciseList extends React.Component {
             config.description=Data[this.props.exerciseIndex].fields.messagefailure;
             config.message="Wrong";
             config.duration=10;
+            config.placement="topLeft";
             notification.error(config);
         }
         var url="http://lala.ust.hk:8000/get/api/users/";
@@ -127,14 +130,16 @@ class ExerciseList extends React.Component {
           axios.get(urlLikeability);
           axios.get(urlDifficulty);
           axios.get(urlUseful)
-          axios.post(urlcomment, 
-          qs.stringify({
-            'userid':userid,
-            'username':username,
-            'comment':this.state.commentvalue,
-            'questionid':Data[this.props.exerciseIndex].pk
-          })
-          );
+          if(this.state.commentvalue!=''){
+            axios.post(urlcomment, 
+            qs.stringify({
+              'userid':userid,
+              'username':username,
+              'comment':this.state.commentvalue,
+              'questionid':Data[this.props.exerciseIndex].pk
+            })
+            );
+          }
           message.success('Thanks for your comment');
       }
     getCookie = (name) =>{
@@ -152,6 +157,7 @@ class ExerciseList extends React.Component {
              Useful:3,
              commentvalue:"",
              hastwin:false,
+             commentoriginData:[],
              hasrecommend:false});
     }
     prevQuestion = () =>{
@@ -161,6 +167,7 @@ class ExerciseList extends React.Component {
              Useful:3,
              commentvalue:"",
              hastwin:false,
+             commentoriginData:[],
              hasrecommend:false});
     }
     componentDidMount = () =>{   
@@ -233,7 +240,17 @@ class ExerciseList extends React.Component {
               this.setState({loading: false});
           }
       }
-
+       querycomment = () =>{
+          let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
+                    let Data=this.props.exerciseData;
+                    if(this.props.exerciseData.length!=0){
+                        uurl+=Data[this.props.exerciseIndex].pk;
+                        axios.get(uurl)
+                        .then(res => {
+                        this.setState({commentoriginData:res.data});
+                        });
+        } 
+       }
     render() {
         let AllData=this.props.allData;
         let Data=this.props.exerciseData;
@@ -295,6 +312,25 @@ class ExerciseList extends React.Component {
                 var chapter = neuronsinformation[i].chapter;
                 neurondiv.push(<span onClick = {()=>this.props.actions.setchapter(chapter)}><Link to="/Chart">{neuronsinformation[i].title}</Link>;  </span>)                   
             }
+        }
+        const columns = [{
+            title: 'Comment',
+            dataIndex: 'comment',
+            key: 'comment',
+          }, {
+            title: 'Time',
+            dataIndex: 'time',
+            key: 'time',
+          }];
+        let commentdata = [];
+        for(var i=0;i<this.state.commentoriginData.length;i++){
+           if(this.state.commentoriginData[i].fields.comment.length!=0){
+             var tm=new Object();
+             tm.comment=this.state.commentoriginData[i].fields.comment;
+             tm.time=this.state.commentoriginData[i].fields.time.split('T')[0]+" "+this.state.commentoriginData[i].fields.time.split('T')[1];;
+             tm.key=i;
+             commentdata.push(tm);
+          }
         }
         return (
             <div>
@@ -425,6 +461,10 @@ class ExerciseList extends React.Component {
                                   onChange={this.handleComment} value={this.state.commentvalue}/>
                             { <Button onClick = {this.submitcomment}>submit</Button>}
                             </div>
+                             <div className="commentarea">Comment Area
+                                <Button className="commentareabutton" onClick = {this.querycomment}>Show Comment</Button>
+                             </div>
+                             <Table columns={columns} dataSource={commentdata}/>
                           </div>
                         </div>
                       </div>

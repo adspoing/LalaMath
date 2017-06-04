@@ -494,7 +494,7 @@ let question =  handleActions({
 			exerciseIndex:state.exerciseIndex,
 			problemIndex:state.problemIndex,
 			quizIndex:state.quizIndex,
-			diyIndex:state.diyIndex == 52 ? 52:state.diyIndex+1,
+			diyIndex:state.diyIndex == state.diyData.length-1 ? state.diyData.length-1:state.diyIndex+1,
 			exampleData:state.exampleData,
 			allData:state.allData,
 			quizdata: state.quizdata,

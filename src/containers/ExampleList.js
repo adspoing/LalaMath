@@ -192,14 +192,16 @@ class Question extends React.Component {
           axios.get(urlLikeability);
           axios.get(urlDifficulty);
           axios.get(urlUseful)
-          axios.post(urlcomment, 
-          qs.stringify({
-            'userid':userid,
-            'username':username,
-            'comment':this.state.commentvalue,
-            'questionid':Data[this.props.exampleIndex].pk
-          })
-          );
+          if(this.state.commentvalue!=''){
+            axios.post(urlcomment, 
+            qs.stringify({
+              'userid':userid,
+              'username':username,
+              'comment':this.state.commentvalue,
+              'questionid':Data[this.props.exampleIndex].pk
+            })
+            );
+          }
           message.success('Thanks for your comment');
       }
        getCookie = (name) =>{
@@ -260,10 +262,6 @@ class Question extends React.Component {
             }             
           }
         const columns = [{
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-          }, {
             title: 'Comment',
             dataIndex: 'comment',
             key: 'comment',
@@ -274,12 +272,13 @@ class Question extends React.Component {
           }];
         let commentdata = [];
         for(var i=0;i<this.state.commentoriginData.length;i++){
-           var tm=new Object();
-           tm.name=this.state.commentoriginData[i].fields.username;
-           tm.comment=this.state.commentoriginData[i].fields.comment;
-           tm.time=this.state.commentoriginData[i].fields.time;
-           tm.key=i;
-           commentdata.push(tm);
+           if(this.state.commentoriginData[i].fields.comment.length!=0){
+             var tm=new Object();
+             tm.comment=this.state.commentoriginData[i].fields.comment;
+             tm.time=this.state.commentoriginData[i].fields.time.split('T')[0]+" "+this.state.commentoriginData[i].fields.time.split('T')[1];;
+             tm.key=i;
+             commentdata.push(tm);
+          }
         }
         return (
         	<div>
@@ -363,7 +362,7 @@ class Question extends React.Component {
                           { <Button onClick = {this.submitcomment}>submit</Button>}
                           </div>
                           <div className="commentarea">Comment Area
-                                <Button onClick = {this.querycomment}>Show Comment</Button>
+                                <Button className="commentareabutton" onClick = {this.querycomment}>Show Comment</Button>
                           </div>
                           <Table columns={columns} dataSource={commentdata}/>
                           </div>

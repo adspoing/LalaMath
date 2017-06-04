@@ -1,6 +1,6 @@
 import React from 'react';
 import {Select, Breadcrumb, Menu, Dropdown, Icon, notification } from 'antd';
-import Data from '../quiz.js';
+// import Data from '../quiz.js';
 // import AllData from '../data.js'
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
@@ -40,11 +40,13 @@ class QuizList extends React.Component {
     }   
     submitQuestion = () =>{
         // this.props.clickSubmitQuestion();
+        let Data=this.props.quizData;
         if(Data[this.props.quizIndex].fields.answer==this.state.selvalue){
             var config={};
             config.description=Data[this.props.quizIndex].fields.messagesuccess;
             config.message="Right";
             config.duration=10;
+            config.placement="topLeft";
             notification.success(config);
         }
         else
@@ -53,6 +55,7 @@ class QuizList extends React.Component {
             config.description=Data[this.props.quizIndex].fields.messagefailure;
             config.message="Wrong";
             config.duration=10;
+            config.placement="topLeft";
             notification.error(config);
         }
         this.setState({ showResults: true });
@@ -63,9 +66,9 @@ class QuizList extends React.Component {
         var questionid = Data[this.props.quizIndex].pk;
         url+="/questions/";
         url+=questionid;
-        console.log(this.state.selvalue);
-        console.log(url);
-        console.log(this.getCookie("userid"));
+        // console.log(this.state.selvalue);
+        // console.log(url);
+        // console.log(this.getCookie("userid"));
         // axios.post('/foo', qs.stringify({ 'bar': 123 });
 
         axios.post(url, 
@@ -101,7 +104,7 @@ class QuizList extends React.Component {
         this.setState({ showAns: true});
     }
     onChange = (e) => {
-        console.log('radio checked', e.target.value);
+        // console.log('radio checked', e.target.value);
         this.setState({
           value: e.target.value,
           selvalue: e.target.value,
@@ -109,7 +112,7 @@ class QuizList extends React.Component {
         // selvalue=e.target.value;
       }
       showQuestion =(e)=>{
-        console.log(e.target.value);
+        // console.log(e.target.value);
       }
       twinProblemChange = (value) =>{
           let AllData=this.props.allData;
@@ -166,7 +169,7 @@ class QuizList extends React.Component {
         // console.log(this.props.quizIndex)
         let AllData=this.props.allData;
         let Data=this.props.quizData;
-        console.log(this.props.quizIndex);
+        // console.log(this.props.quizIndex);
         var pkIndex=[];
         for(var i=0;i<AllData.length;i++){
           pkIndex[AllData[i].pk]=i;
@@ -184,7 +187,7 @@ class QuizList extends React.Component {
           lineHeight: '30px',
         };
         let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
-        if(AllData.length!=0){
+        if(Data.length!=0){
                 if(Data[this.props.quizIndex].fields.choicesa!=null){
                     choiceA+=Data[this.props.quizIndex].fields.choicesa;
                 }
@@ -294,34 +297,7 @@ class QuizList extends React.Component {
                          {Data.length!=0?this.state.showAns?Data[this.props.quizIndex].fields.solutionspicture1==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.solutionspicture1}/>:null:null}
                          {Data.length!=0?this.state.showAns?Data[this.props.quizIndex].fields.solutionspicture2==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.solutionspicture2}/>:null:null}
                          {Data.length!=0?this.state.showAns?Data[this.props.quizIndex].fields.solutionspicture3==""?null:<img src={"http://lala.ust.hk:8000/"+Data[this.props.quizIndex].fields.solutionspicture3}/>:null:null}
-                            <div>{ this.state.showAns?
-                                   <Select
-                                      style={{ width: 200 }}
-                                      // defaultValue={twinOption[0]}
-                                      placeholder="Select a twin problem"
-                                      optionFilterProp="children"
-                                      onChange={this.twinProblemChange}
-                                      filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                    >
-                                       
-                                       {twinOption}
-                                    </Select>:null}
-                                 { this.state.showAns?<Button onClick = {this.showTwinProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
-                                
-                                 { this.state.showAns?
-                                   <Select
-                                      style={{ width: 200 }}
-                                      // defaultValue={twinOption[0]}
-                                      placeholder="Select a Recommend problem"
-                                      optionFilterProp="children"
-                                      onChange={this.RecommendProblemChange}
-                                      filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                    >
-                                       
-                                       {recommendOption}
-                                    </Select>:null}
-                                 { this.state.showAns?<Button onClick = {this.showRecommendProblem}><Link to="/ViewQuestion">Show</Link></Button>: null }
-                                 </div>
+            
                             </div>
                  
                         </div>
@@ -354,4 +330,4 @@ function mapDispatchToProps (dispatch){
     };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(QuizList);
-
+   

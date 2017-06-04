@@ -4,7 +4,7 @@ import {Select, Breadcrumb, Menu, Dropdown, Icon, notification,Rate } from 'antd
 // import AllData from '../data.js'
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
-import { Button,Radio,Popconfirm,message,Input,Spin} from 'antd';
+import { Button,Radio,Popconfirm,message,Input,Spin,Table} from 'antd';
 import {changeindexbyid,prevproblem,nextproblem,changeproblemdata,loaddata,setchapter,} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -40,6 +40,7 @@ class ProblemList extends React.Component {
              commentvalue:"",
              hastwin:false,
              hasrecommend:false,
+             commentoriginData:[],
         }
     }
     handleChange(value){
@@ -56,6 +57,7 @@ class ProblemList extends React.Component {
             config.description=Data[this.props.problemIndex].fields.messagesuccess;
             config.message="Right";
             config.duration=10;
+            config.placement="topLeft";
             notification.success(config);
         }
         else
@@ -64,6 +66,7 @@ class ProblemList extends React.Component {
             config.description=Data[this.props.problemIndex].fields.messagefailure;
             config.message="Wrong";
             config.duration=10;
+            config.placement="topLeft";
             notification.error(config);
         }
         this.setState({ showResults: true });
@@ -129,14 +132,16 @@ class ProblemList extends React.Component {
           axios.get(urlLikeability);
           axios.get(urlDifficulty);
           axios.get(urlUseful)
-          axios.post(urlcomment, 
-          qs.stringify({
-            'userid':userid,
-            'username':username,
-            'comment':this.state.commentvalue,
-            'questionid':Data[this.props.problemIndex].pk
-          })
-          );
+          if(this.state.commentvalue!=''){
+            axios.post(urlcomment, 
+            qs.stringify({
+              'userid':userid,
+              'username':username,
+              'comment':this.state.commentvalue,
+              'questionid':Data[this.props.problemIndex].pk
+            })
+            );
+          }
           message.success('Thanks for your comment');
       }
     getCookie = (name) =>{
@@ -151,12 +156,14 @@ class ProblemList extends React.Component {
         this.props.actions.nextproblem();
         this.setState({ showResults: false,showAns: false, value: 0, selvalue: 0,
              hastwin:false,
+             commentoriginData:[],
              hasrecommend:false});
     }
     prevQuestion = () =>{
         this.props.actions.prevproblem();
         this.setState({ showResults: false,showAns: false,value: 0, selvalue: 0,
              hastwin:false,
+             commentoriginData:[],
              hasrecommend:false});
     }
     componentDidMount = () =>{   
@@ -229,6 +236,18 @@ class ProblemList extends React.Component {
               this.setState({loading: false});
           }
       }
+    querycomment = () =>{
+        let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
+                  let Data=this.props.problemData;
+                  if(this.props.problemData.length!=0){
+                      uurl+=Data[this.props.problemIndex].pk;
+                      axios.get(uurl)
+                      .then(res => {
+                      this.setState({commentoriginData:res.data});
+                        // this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
+                      });
+      } 
+     }
     render() {
         let AllData=this.props.allData;
         let Data=this.props.problemData;
@@ -294,7 +313,25 @@ class ProblemList extends React.Component {
                 neurondiv.push(<span onClick = {()=>this.props.actions.setchapter(chapter)}><Link to="/Chart">{neuronsinformation[i].title}</Link>;  </span>)                   
               }
         }
-        
+        const columns = [{
+            title: 'Comment',
+            dataIndex: 'comment',
+            key: 'comment',
+          }, {
+            title: 'Time',
+            dataIndex: 'time',
+            key: 'time',
+          }];
+        let commentdata = [];
+        for(var i=0;i<this.state.commentoriginData.length;i++){
+           if(this.state.commentoriginData[i].fields.comment.length!=0){
+             var tm=new Object();
+             tm.comment=this.state.commentoriginData[i].fields.comment;
+             tm.time=this.state.commentoriginData[i].fields.time.split('T')[0]+" "+this.state.commentoriginData[i].fields.time.split('T')[1];;
+             tm.key=i;
+             commentdata.push(tm);
+          }
+        }
         return (
             <div>
                 <div className="exam-bg">
@@ -423,6 +460,10 @@ class ProblemList extends React.Component {
                                   onChange={this.handleComment} value={this.state.commentvalue}/>
                             { <Button onClick = {this.submitcomment}>submit</Button>}
                             </div>
+                            <div className="commentarea">Comment Area
+                                <Button className="commentareabutton" onClick = {this.querycomment}>Show Comment</Button>
+                            </div>
+                           <Table columns={columns} dataSource={commentdata}/>
                           </div>
                   
                         </div>

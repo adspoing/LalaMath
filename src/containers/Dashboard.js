@@ -19,7 +19,7 @@ class Dashboard extends React.Component {
         this.displayName = 'Dashboard';
     }
     componentDidMount = () =>{
-          console.log("aa");
+          // console.log("aa");
           if(this.props.allData.length==0){
             axios.get('http://lala.ust.hk:8000/get/questions/all')
             .then(res => {

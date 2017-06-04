@@ -5,7 +5,7 @@ import {Select, Breadcrumb, Menu, Dropdown, Icon, notification,Rate } from 'antd
 // import Data from '../data.js'
 import mySelect from './Select.js';
 import { Link } from 'react-router' // 引入Link处理导航跳转
-import { Button,Radio,Popconfirm,message,Input} from 'antd';
+import { Button,Radio,Popconfirm,message,Input,Table} from 'antd';
 import {changeindexbyid,prevproblem,nextproblem,setchapter} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -36,6 +36,7 @@ class VQuestion extends React.Component {
              selvalue: 0,
              hastwin:false,
              hasrecommend:false,
+             commentoriginData:[],
         }
     }
     handleChange(value){
@@ -125,14 +126,16 @@ class VQuestion extends React.Component {
           axios.get(urlLikeability);
           axios.get(urlDifficulty);
           axios.get(urlUseful)
-          axios.post(urlcomment, 
-          qs.stringify({
-            'userid':userid,
-            'username':username,
-            'comment':this.state.commentvalue,
-            'questionid':Data[this.props.questionIndex].pk
-          })
-          );
+          if(this.state.commentvalue!=''){
+            axios.post(urlcomment, 
+            qs.stringify({
+              'userid':userid,
+              'username':username,
+              'comment':this.state.commentvalue,
+              'questionid':Data[this.props.questionIndex].pk
+            })
+            );
+          }
           message.success('Thanks for your comment');
       }
     getCookie = (name) =>{
@@ -201,7 +204,18 @@ class VQuestion extends React.Component {
       submitcomment = () =>{
           message.success('Thanks for your comment');
       }
-
+    querycomment = () =>{
+        let uurl="http://lala.ust.hk:8000/get/api/suggestions/question/all?questionid=";
+                  let Data=this.props.allData;
+                  if(this.props.allData.length!=0){
+                      uurl+=Data[this.props.questionIndex].pk;
+                      axios.get(uurl)
+                      .then(res => {
+                      this.setState({commentoriginData:res.data});
+                        // this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
+                      });
+      } 
+     }
     render() {
         let Data=this.props.allData;
         var pkIndex=[];
@@ -264,6 +278,25 @@ class VQuestion extends React.Component {
                 var chapter = neuronsinformation[i].chapter;
                 neurondiv.push(<span onClick = {()=>this.props.actions.setchapter(chapter)}><Link to="/Chart">{neuronsinformation[i].title}</Link>;  </span>)                   
             } 
+        }
+        const columns = [{
+            title: 'Comment',
+            dataIndex: 'comment',
+            key: 'comment',
+          }, {
+            title: 'Time',
+            dataIndex: 'time',
+            key: 'time',
+          }];
+        let commentdata = [];
+        for(var i=0;i<this.state.commentoriginData.length;i++){
+           if(this.state.commentoriginData[i].fields.comment.length!=0){
+             var tm=new Object();
+             tm.comment=this.state.commentoriginData[i].fields.comment;
+             tm.time=this.state.commentoriginData[i].fields.time.split('T')[0]+" "+this.state.commentoriginData[i].fields.time.split('T')[1];;
+             tm.key=i;
+             commentdata.push(tm);
+          }
         }
         return (
             <div>
@@ -388,6 +421,10 @@ class VQuestion extends React.Component {
                                   onChange={this.handleComment} value={this.state.commentvalue}/>
                             { <Button onClick = {this.submitcomment}>submit</Button>}
                             </div>
+                            <div className="commentarea">Comment Area
+                                <Button className="commentareabutton" onClick = {this.querycomment}>Show Comment</Button>
+                            </div>
+                           <Table columns={columns} dataSource={commentdata}/>
                           </div>
                         </div>
                       </div>
