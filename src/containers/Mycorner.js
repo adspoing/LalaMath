@@ -4,14 +4,15 @@ import React from 'react';
 import Header from './Header.js';
 import SideBar from './SideBar.js';
 import AllData from '../data.js';
-import { Button,Breadcrumb,Icon,Progress} from 'antd';
+import { Button,Breadcrumb,Icon,Progress,Table,Spin} from 'antd';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import echarts from 'echarts';
-import {changeindexbyid,setchapter} from '../actions/actions.js'
+import {changeindexbyid,setchapter,loaddata} from '../actions/actions.js'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import axios from 'axios';
 
+let questype=[" ","Example ","Exercise ","Problem ","DIY ","Quiz "];
 class Mycorner extends React.Component {
 	constructor(props) {
         super(props);
@@ -21,13 +22,17 @@ class Mycorner extends React.Component {
           tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] }
         });
         this.state = {
+            loading: true,
+            wrong:[],
+            favorate:[],
+            userResult:[],
+            countarr: [],
             done:{"exercise":0,"example":0,"problem":0,"diy":0,"quiz":0},
             right:{"exercise":0,"example":0,"problem":0,"diy":0,"quiz":0},
             all:{"exercise":1,"example":1,"problem":1,"diy":1,"quiz":1},
         }
     }
     getCookie = (name) =>{
-        //var cookie = "PHPSESSID=ST-246654-9tH2qwejxfebKHMXyX15-cas1; token=eebec1e2aadbe04a81f503784f0d844c; userid=chuac; id=14; sessionid=f0x2txscpbtqq5vbbh48rbdl9ki36z6v; csrftoken=OCOoUA5LqTkIydLCfQWuIECH7ZgGEoBihL410VUmZsVK5iZG8Qryy0MCCM3YVeA1";
         var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
         if(arr=document.cookie.match(reg))
      
@@ -35,6 +40,13 @@ class Mycorner extends React.Component {
         else 
             return null; 
     }
+
+    SetWrong = () =>{
+        this.setState({userResult:this.state.wrong})
+      }
+    SetFavor = () =>{
+        this.setState({userResult:this.state.favorate})
+      }
 
     process = (ability) =>{
             var done = new Object();
@@ -95,7 +107,7 @@ class Mycorner extends React.Component {
         let option = [];
         let that = this;
         var userid = this.getCookie("id");
-        // userid = 14;
+        //userid = 14;
         axios.get("http://lala.ust.hk:8000/get/api/evaluate/"+ userid)
             .then(function(ability) {
                 option = that.process(ability.data);
@@ -110,19 +122,136 @@ class Mycorner extends React.Component {
             return((100 * a / b).toFixed(0))
     }
 
-    componentDidMount= ()=> {
-        //let myChart = echarts.init(this.refs.graphics) //初始化echarts
+    findQuestion = (questionid) =>{
+        let Data=this.props.allData;
+        let Counter=this.state.countarr;
+        let question=new Object();
+        for(var i=0;i<Data.length;i++){
+            if(Data[i].pk==questionid){
+                question.code = questype[Data[i].fields.category]+Data[i].fields.code;
+                question.difficulty = Data[i].fields.difficulty;
+                question.category=Data[i].fields.category;
+                for(var i=0;i<Counter.length;i++){
+                    if(Counter[i].questionid==questionid){
+                        question.correctcount=Counter[i].rightcount+"/"+Counter[i].donecount;
+                        return question;
+                    }
+                }
+            }
+        }
+    }
+    onrowclick=(record, index)=>{
+        var indexxx;
+        // console.log(this.state.Hottest[index]);
+        let Data=this.props.allData;
 
-        //我们要定义一个setPieOption函数将data传入option里面
-        //let options = [];
-        //设置options
+        for(var i=0;i<Data.length;i++){
+        if(Data[i].fields.code==record.code.split(' ')[1]&&
+            Data[i].fields.category==this.state.userResult[index].category){
+            indexxx=i;
+            }
+        }
+        this.props.actions.changeindexbyid(indexxx);
+    }
+    componentWillMount=()=>{
+        if(this.props.allData.length==0){
+          axios.get('http://lala.ust.hk:8000/get/questions/all')
+          .then(res => {
+            this.props.actions.loaddata(res.data);
+            this.setState({loading: false});
+          });
+        }else{
+              this.setState({loading: false});
+        }
+        if(this.state.countarr.length==0){
+                let url="http://lala.ust.hk:8000/get/api/questions/getcount";
+                axios.get(url)
+                .then(res => {
+                    this.setState({loading: false,countarr:res.data});
+                });
+        }
+    }
+    componentDidMount= ()=> {
+        var userid = this.getCookie("id");
+        //userid = 14;
+        let wrong = [];
+        let that = this;
+        axios.get("http://lala.ust.hk:8000/get/api/users/"+userid+"/questions/?right=wrong")
+            .then(function(question) {
+                for (var i = 0; i < question.data.length; i++){
+                    let tm=new Object();
+                    tm.key=i;
+                    var problem = that.findQuestion(question.data[i].fields.questionid)
+                    tm.code=problem.code;
+                    tm.category = problem.category;
+                    tm.difficulty = problem.difficulty;
+                    tm.correctcount = problem.correctcount;
+                    tm.time=question.data[i].fields.time;
+                    wrong.push(tm);
+                }
+                wrong.sort(function(a, b) {
+                    return ((a.code.split(' ')[0] > b.code.split(' ')[0])?1:-1);
+                });
+                that.setState({wrong:wrong});
+            })
+        let favorate = [];
+        axios.get("http://lala.ust.hk:8000/get/api/users/"+userid+"/questionslikes/")
+            .then(function(question) {
+                for (var i = 0; i < question.data.length; i++){
+                  let tm=new Object();
+                  tm.key=i;
+                  var problem = that.findQuestion(question.data[i].fields.questionid);
+                  tm.code=problem.code;
+                  tm.category = problem.category;
+                  tm.difficulty = problem.difficulty;
+                  tm.correctcount = problem.correctcount;
+                  favorate.push(tm);
+                }
+                favorate.sort(function(a, b) {
+                    return ((a.code.split(' ')[0] > b.code.split(' ')[0])?1:-1);
+                  });
+                that.setState({favorate:favorate});
+            })
+
+        that.setState({userResult:favorate});
         this.getOptionByUser();
     }
 
     render() {
-     	console.log(this.state)
         var username = this.getCookie("userid");
         //var username = "jlicy";
+        let columns = [{
+            title: 'Code',
+            dataIndex: 'code',
+            key: 'code',
+            render: text => <Link to="/ViewQuestion">{text}</Link>,
+            sorter: (a, b) => a.code.split(' ')[0] > b.code.split(' ')[0]?1:-1,
+            filters: [
+                { text: 'Example', value: 1 },
+                { text: 'Exercise', value: 2 },
+                { text: 'Problem', value: 3 },
+                { text: 'DIY', value: 4 },
+                { text: 'Quiz', value: 5 },
+            ],
+            onFilter: (value, record) => record.category==value,
+            }, {
+              title: 'Correct Count/Submit Count',
+              dataIndex: 'correctcount',
+              key: 'correctcount',
+            },{
+              title: 'Difficulty',
+              dataIndex: 'difficulty',
+              key: 'difficulty',
+              sorter: (a, b) => a.difficulty - b.difficulty,
+              filters: [
+                { text: '1', value: 1 },
+                { text: '2', value: 2 },
+                { text: '3', value: 3 },
+                { text: '4', value: 4 },
+                { text: '5', value: 5 },
+              ],
+              onFilter: (value, record) => record.difficulty==value,
+            }];
         return (
         	<div>
         		<Header />
@@ -156,6 +285,13 @@ class Mycorner extends React.Component {
                     <Progress percent={this.percent(this.state.right.quiz, this.state.done.quiz)} format={percent => `${percent} %`} strokeWidth={15}/>
                 </div>
 	            <div ref="graphics" id="graphics" className="radar" ></div>
+                <div className="userResult">
+                    <Button  onClick = {this.SetFavor}>Favorate</Button>
+                    <Button style={{marginLeft: '10px'}} onClick = {this.SetWrong}>Wrong</Button>
+                    <Spin spinning={this.state.loading} tip="Loading questions...">
+                    <Table dataSource={this.state.userResult} columns={columns} onRowClick={this.onrowclick.bind(this)} />
+                    </Spin>
+                </div>
 	            </div>
 	        </div>
         )
@@ -163,15 +299,14 @@ class Mycorner extends React.Component {
 }
 function mapStateToProps (state){
     return { 
-            //chapter:state.graph.chapter,
-            // userdata:state.chart.userData,
-            // linkdata:state.chart.linkData,
+            allData:state.question.allData,
         }
 }
 
 function mapDispatchToProps (dispatch){
     return{
         actions: bindActionCreators({
+            changeindexbyid,loaddata
         },dispatch)
     };
 }
