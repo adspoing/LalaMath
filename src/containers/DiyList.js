@@ -166,6 +166,26 @@ class DiyList extends React.Component {
              commentoriginData:[],
              hasrecommend:false});
     }
+    favoriteQuestion = () =>{
+        let Data=this.props.diyData;
+        var userid = this.getCookie("id");
+        // var userid = 14;
+        var questionid = Data[this.props.diyIndex].pk;
+        let url = "http://lala.ust.hk:8000";
+        url+="/get/api/users/";
+        url+=userid;
+        url+="/questionslikes/";
+        url+=questionid;
+        axios.get(url)
+        .then(function (response) {
+          if(response.data=="w"){
+             message.success('Successfully delete it from the favorite list');
+          }
+          else{
+             message.success('Successfully add it to the favorite list');
+          }
+        })
+    }
     componentDidMount = () =>{   
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
     }
@@ -248,7 +268,7 @@ class DiyList extends React.Component {
        }
     render() {
         // let Data=this.props.Data;
-        console.log(Data)
+        // console.log(Data)
         // console.log(AllData)
         // console.log(this.props.diyIndex)
         let AllData=this.props.allData;
@@ -361,6 +381,7 @@ class DiyList extends React.Component {
                                 <Button><Link to="/DIYForm">Quit</Link></Button>
                                 <Button type="prev" className="prevQuestion" onClick = {this.prevQuestion}>Prev</Button>
                                 <Button type="next" className="nextQuestion" onClick = {this.nextQuestion}>Next</Button>
+                                <Button type="favorite" className="favoriteQuestion" onClick = {this.favoriteQuestion}>Favorite</Button>
                           </div>
                       </div>
                       <div className="questionCanvas">

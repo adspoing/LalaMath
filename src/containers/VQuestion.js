@@ -315,6 +315,7 @@ class VQuestion extends React.Component {
                         </Breadcrumb>
                           <div className="pannel">
                                 <Button type="back" className="backQuestion" onClick = {browserHistory.goBack}>Back</Button>
+                                <Button type="favorite" className="favoriteQuestion" onClick = {this.favoriteQuestion}>Favorite</Button>
                           </div>
                       </div>
                       <div className="questionCanvas">

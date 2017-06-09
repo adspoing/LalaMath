@@ -69,6 +69,26 @@ class Question extends React.Component {
              hastwin:false,
              hasrecommend:false});
     }
+    favoriteQuestion = () =>{
+        let Data=this.props.exampleData;
+        var userid = this.getCookie("id");
+        // var userid = 14;
+        var questionid = Data[this.props.exampleIndex].pk;
+        let url = "http://lala.ust.hk:8000";
+        url+="/get/api/users/";
+        url+=userid;
+        url+="/questionslikes/";
+        url+=questionid;
+        axios.get(url)
+        .then(function (response) {
+          if(response.data=="w"){
+             message.success('Successfully delete it from the favorite list');
+          }
+          else{
+             message.success('Successfully add it to the favorite list');
+          }
+        })
+    }
     componentDidMount = () =>{  
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
     }
@@ -307,6 +327,7 @@ class Question extends React.Component {
                                 <Button><Link to="/ExampleForm">Quit</Link></Button>
                                 <Button type="prev" className="prevQuestion" onClick = {this.prevQuestion}>Prev</Button>
                                 <Button type="next" className="nextQuestion" onClick = {this.nextQuestion}>Next</Button>
+                                <Button type="favorite" className="favoriteQuestion" onClick = {this.favoriteQuestion}>Favorite</Button>
                           </div>
                       </div>
                       <div className="questionCanvas">
