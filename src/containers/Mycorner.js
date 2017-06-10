@@ -4,7 +4,7 @@ import React from 'react';
 import Header from './Header.js';
 import SideBar from './SideBar.js';
 import AllData from '../data.js';
-import { Button,Breadcrumb,Icon,Progress,Table,Spin} from 'antd';
+import { Button,Breadcrumb,Icon,Progress,Table,Spin,message,Popconfirm} from 'antd';
 import { Link } from 'react-router' // 引入Link处理导航跳转
 import echarts from 'echarts';
 import {changeindexbyid,setchapter,loaddata} from '../actions/actions.js'
@@ -35,7 +35,6 @@ class Mycorner extends React.Component {
     getCookie = (name) =>{
         var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
         if(arr=document.cookie.match(reg))
-     
             return unescape(arr[2]); 
         else 
             return null; 
@@ -100,6 +99,19 @@ class Mycorner extends React.Component {
         this.props.actions.changeindexbyid(index);
       }
 
+    reset = () =>{
+        var userid = this.getCookie("id");
+        axios.get("http://lala.ust.hk:8000/get/api/users/"+userid+"/setquestions/")
+            .then(function(response) {
+                console.log(response);
+                if (response.status == 200)
+                    message.success('Successfully reset all the record');
+                else
+                    message.error('Status:'+response.status);
+            })
+
+
+    }
     getOptionByUser = ()=>{  
         //let chapter = this.state.chapter;
         //console.log(chapter);
@@ -219,7 +231,7 @@ class Mycorner extends React.Component {
 
     render() {
         var username = this.getCookie("userid");
-        //var username = "jlicy";
+        var username = "jlicy";
         let columns = [{
             title: 'Code',
             dataIndex: 'code',
@@ -266,7 +278,15 @@ class Mycorner extends React.Component {
                       <span>Mycorner</span></Link>
                     </Breadcrumb.Item>
                 </Breadcrumb>
-                <div className="welcome"><h1>Hi, {username}</h1></div>
+                <div className="welcome">
+                <div className="hi"><h1>Hi, {username}</h1></div>
+                <div>
+                <Popconfirm placement="top" title={"Are you sure to reset the record? This operation can not be recalled."} onConfirm={this.reset} okText="Yes" cancelText="No">
+                <Button style={{marginLeft: '10px',marginTop: '5px'}}>Reset</Button>
+                </Popconfirm>
+                </div>
+                </div>
+                
                 <div className="completation"> 
                     <h1>Example</h1>
                     <Progress percent={this.percent(this.state.done.example, this.state.all.example)} format={percent => `${this.state.done.example} / ${this.state.all.example}`} strokeWidth={15}/>
