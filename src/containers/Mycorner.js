@@ -143,6 +143,7 @@ class Mycorner extends React.Component {
     reset = () =>{
         var userid = this.getCookie("id");
         //userid = 4;
+
         axios.get("http://lala.ust.hk:8000/get/api/users/"+userid+"/setquestions/")
             .then(function(response) {
                 console.log(response);
@@ -231,7 +232,6 @@ class Mycorner extends React.Component {
 
     render() {
         var username = this.getCookie("userid");
-        //var username = "jlicy";
         let columns = [{
             title: 'Code',
             dataIndex: 'code',
@@ -264,6 +264,12 @@ class Mycorner extends React.Component {
               ],
               onFilter: (value, record) => record.difficulty==value,
             }];
+            // <div>
+            // <Popconfirm placement="top" title={"Are you sure to reset the record? This operation can not be recalled."} onConfirm={this.reset} okText="Yes" cancelText="No">
+            // <Button style={{marginLeft: '10px',marginTop: '5px'}}>Reset</Button>
+            // </Popconfirm>
+            // </div>
+
         return (
         	<div>
         		<Header />
@@ -280,11 +286,7 @@ class Mycorner extends React.Component {
                 </Breadcrumb>
                 <div className="welcome">
                 <div className="hi"><h1>Hi, {username}</h1></div>
-                <div>
-                <Popconfirm placement="top" title={"Are you sure to reset the record? This operation can not be recalled."} onConfirm={this.reset} okText="Yes" cancelText="No">
-                <Button style={{marginLeft: '10px',marginTop: '5px'}}>Reset</Button>
-                </Popconfirm>
-                </div>
+                
                 </div>
                 
                 <div className="completation"> 

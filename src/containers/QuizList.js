@@ -121,6 +121,10 @@ class QuizList extends React.Component {
         this.state.mathjax.Hub.Queue(["Typeset",this.state.mathjax.Hub],"output");
     }
     showAns = () =>{
+        var userid = this.getCookie("id");
+        let Data=this.props.quizData;
+        var questionid = Data[this.props.quizIndex].pk;
+        axios.get("http://lala.ust.hk:8000/get/api/users/"+userid+"/showresult/"+questionid)
         this.setState({ showAns: true});
     }
     onChange = (e) => {
