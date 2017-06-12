@@ -41,10 +41,51 @@ class Mycorner extends React.Component {
     }
 
     SetWrong = () =>{
-        this.setState({userResult:this.state.wrong})
+        var userid = this.getCookie("id");
+        //userid = 14;
+        let wrong = [];
+        let that = this;
+        axios.get("http://lala.ust.hk:8000/get/api/users/"+userid+"/questions/?right=wrong")
+            .then(function(question) {
+                for (var i = 0; i < question.data.length; i++){
+                    let tm=new Object();
+                    tm.key=i;
+                    var problem = that.findQuestion(question.data[i].fields.questionid)
+                    tm.code=problem.code;
+                    tm.category = problem.category;
+                    tm.difficulty = problem.difficulty;
+                    tm.correctcount = problem.correctcount;
+                    tm.time=question.data[i].fields.time;
+                    wrong.push(tm);
+                }
+                wrong.sort(function(a, b) {
+                    return ((a.code.split(' ')[0] > b.code.split(' ')[0])?1:-1);
+                });
+                that.setState({userResult:wrong});
+            })
       }
     SetFavor = () =>{
-        this.setState({userResult:this.state.favorate})
+        var userid = this.getCookie("id");
+        //userid = 14;
+        let that = this;
+        let favorate = [];
+        axios.get("http://lala.ust.hk:8000/get/api/users/"+userid+"/questionslikes/")
+            .then(function(question) {
+                for (var i = 0; i < question.data.length; i++){
+                  let tm=new Object();
+                  tm.key=i;
+                  var problem = that.findQuestion(question.data[i].fields.questionid);
+                  tm.code=problem.code;
+                  tm.category = problem.category;
+                  tm.difficulty = problem.difficulty;
+                  tm.correctcount = problem.correctcount;
+                  favorate.push(tm);
+                }
+                favorate.sort(function(a, b) {
+                    return ((a.code.split(' ')[0] > b.code.split(' ')[0])?1:-1);
+                  });
+                that.setState({userResult:favorate});
+            })
       }
 
     process = (ability) =>{
@@ -101,6 +142,7 @@ class Mycorner extends React.Component {
 
     reset = () =>{
         var userid = this.getCookie("id");
+        //userid = 4;
         axios.get("http://lala.ust.hk:8000/get/api/users/"+userid+"/setquestions/")
             .then(function(response) {
                 console.log(response);
@@ -184,54 +226,12 @@ class Mycorner extends React.Component {
         }
     }
     componentDidMount= ()=> {
-        var userid = this.getCookie("id");
-        //userid = 14;
-        let wrong = [];
-        let that = this;
-        axios.get("http://lala.ust.hk:8000/get/api/users/"+userid+"/questions/?right=wrong")
-            .then(function(question) {
-                for (var i = 0; i < question.data.length; i++){
-                    let tm=new Object();
-                    tm.key=i;
-                    var problem = that.findQuestion(question.data[i].fields.questionid)
-                    tm.code=problem.code;
-                    tm.category = problem.category;
-                    tm.difficulty = problem.difficulty;
-                    tm.correctcount = problem.correctcount;
-                    tm.time=question.data[i].fields.time;
-                    wrong.push(tm);
-                }
-                wrong.sort(function(a, b) {
-                    return ((a.code.split(' ')[0] > b.code.split(' ')[0])?1:-1);
-                });
-                that.setState({wrong:wrong});
-            })
-        let favorate = [];
-        axios.get("http://lala.ust.hk:8000/get/api/users/"+userid+"/questionslikes/")
-            .then(function(question) {
-                for (var i = 0; i < question.data.length; i++){
-                  let tm=new Object();
-                  tm.key=i;
-                  var problem = that.findQuestion(question.data[i].fields.questionid);
-                  tm.code=problem.code;
-                  tm.category = problem.category;
-                  tm.difficulty = problem.difficulty;
-                  tm.correctcount = problem.correctcount;
-                  favorate.push(tm);
-                }
-                favorate.sort(function(a, b) {
-                    return ((a.code.split(' ')[0] > b.code.split(' ')[0])?1:-1);
-                  });
-                that.setState({favorate:favorate});
-            })
-
-        that.setState({userResult:favorate});
         this.getOptionByUser();
     }
 
     render() {
         var username = this.getCookie("userid");
-        var username = "jlicy";
+        //var username = "jlicy";
         let columns = [{
             title: 'Code',
             dataIndex: 'code',
